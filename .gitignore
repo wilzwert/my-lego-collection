@@ -1,0 +1,19 @@
+# Symfony
+/back/var/
+/back/vendor/
+/back/.env.local
+/back/.env.*.local
+
+# Frontend
+/front/node_modules/
+/front/dist/
+/front/.env.local
+
+# Docker
+docker/data/
+docker/volumes/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/
