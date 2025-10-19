@@ -3,8 +3,6 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
-use App\CollectionManagement\Domain\Model\LocalSet;
-use App\CollectionManagement\Domain\Model\SetCollection;
 
 interface SetService
 {

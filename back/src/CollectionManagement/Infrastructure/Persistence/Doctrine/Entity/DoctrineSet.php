@@ -16,8 +16,10 @@ class DoctrineSet
     private string $id;
 
     // TODO : uniqueness
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: "string", unique: true)]
     private string $externalId;
+
+
 
     public function __construct(string $id, string $externalId)
     {

@@ -1,0 +1,5 @@
+controllers:
+    resource:
+        path: ../src/CollectionManagement/Infrastructure/Controller
+        namespace: App\CollectionManagement\Infrastructure\Controller
+    type: attribute

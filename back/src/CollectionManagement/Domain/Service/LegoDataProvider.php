@@ -30,7 +30,7 @@ class LegoDataProvider
         foreach($this->legoDataLoaders as $legoDataLoader) {
             $sets = $legoDataLoader->findSets($search);
             if(!empty($sets)) {
-                break;
+                return new SetCollection($sets);
             }
         }
         return new SetCollection([]);

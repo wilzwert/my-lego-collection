@@ -33,8 +33,8 @@ class DefaultSetService implements SetService
             );
         }
 
-        // enrich with user data
-        // get user UserSet as an array
+        // enrich with available user data
+        // get user's UserSets as an array
         $userSets = $this->userSetRepository->findByUserAndExternalIds(
             $userId,
             array_flip(array_map(fn($set) => $set->getExternalId(), $externalSets->toArray())),

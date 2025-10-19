@@ -2,6 +2,8 @@
 
 namespace App\Shared\Domain;
 
+use Random\RandomException;
+
 final class Uuid
 {
     private string $value;
@@ -16,9 +18,12 @@ final class Uuid
         return new self($value);
     }
 
+    /**
+     * @throws RandomException
+     */
     public static function generate(): self
     {
-        // génération simple d'un UUID v4
+        // Simple UUID v4 generation
         $data = random_bytes(16);
         $data[6] = chr((ord($data[6]) & 0x0f) | 0x40); // version 4
         $data[8] = chr((ord($data[8]) & 0x3f) | 0x80); // variant

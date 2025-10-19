@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  app:
+    image: ${DOCKER_REGISTRY}/symfony-app:latest
+    container_name: symfony_app
+    restart: always
+    environment:
+      APP_ENV: prod
+      APP_SECRET: ${APP_SECRET}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - ./data/public:/app/public # Assets uploadés (optionnel)
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7
+    container_name: symfony_redis
+    restart: always
+    ports:
+      - "6379:6379"
