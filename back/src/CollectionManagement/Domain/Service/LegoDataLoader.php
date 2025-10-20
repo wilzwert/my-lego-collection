@@ -2,10 +2,9 @@
 
 namespace App\CollectionManagement\Domain\Service;
 
-use App\CollectionManagement\Domain\Model\External\ExternalElement;
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
-use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 
 interface LegoDataLoader
@@ -20,9 +19,9 @@ interface LegoDataLoader
     /**
      * Find parts for a given search string
      * @param string $search
-     * @return ExternalPartCollection|null
+     * @return PartCollection|null
      */
-    public function findParts(string $search): ?ExternalPartCollection;
+    public function findParts(string $search): ?PartCollection;
 
     /**
      * Retrieve a part list for a given set

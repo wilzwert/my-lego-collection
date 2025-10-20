@@ -6,9 +6,9 @@ use App\CollectionManagement\Domain\Model\External\ExternalElement;
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
-use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
 use App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader;
@@ -107,7 +107,7 @@ final class RebrickableDataLoaderTest extends TestCase
     {
         $search = 'part search';
 
-        $expectedParts = new ExternalPartCollection([
+        $expectedParts = new PartCollection([
             new ExternalPart('legoId1', 'externalId1', 'Cached part 1', ''),
             new ExternalPart('legoId2', 'externalId2', 'Cached part 2', ''),
         ]);
@@ -134,7 +134,7 @@ final class RebrickableDataLoaderTest extends TestCase
     {
         $search = 'part search';
         $cacheManager = $this->createMock(RebrickableCacheManager::class);
-        $externalParts = new ExternalPartCollection(array(
+        $externalParts = new PartCollection(array(
             new ExternalPart('1', '1-1', 'BaseSet 1', ''),
             new ExternalPart('2', '2-1', 'BaseSet 2', '')
         ));
@@ -143,7 +143,7 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($search, $this->callback(function ($callback) use ($search, $externalParts) {
                 // fake cache miss
                 $result = $callback($search);
-                $this->assertInstanceOf(ExternalPartCollection::class, $result);
+                $this->assertInstanceOf(PartCollection::class, $result);
                 $this->assertCount(2, $result);
                 $this->assertEquals($externalParts, $result);
                 return true;

@@ -44,7 +44,7 @@ class DefaultSetService implements SetService
             array_map(
                 fn($set) => new EnrichedSet(
                     $set,
-                    array_find($userSets, fn($s) => $s->getExternalId() === $set->getExternalId())
+                    array_find($userSets, fn($s) => $s->getLocalSet()->getExternalId() === $set->getExternalId())
                 ),
                 $externalSets->toArray()
             )

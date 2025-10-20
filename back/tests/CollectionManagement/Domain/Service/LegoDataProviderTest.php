@@ -4,7 +4,7 @@ namespace App\Tests\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
-use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Service\LegoDataLoader;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
@@ -52,7 +52,7 @@ class LegoDataProviderTest extends TestCase
             ->with('search')
             ->willReturn(null);
 
-        $expectedResults = new ExternalPartCollection([
+        $expectedResults = new PartCollection([
             new ExternalPart('legoId1', 'externalId1', 'name', 'image1'),
             new ExternalPart('legoId2', 'externalId2', 'name2', 'image2'),
         ]);
@@ -69,7 +69,7 @@ class LegoDataProviderTest extends TestCase
 
         $result = $provider->findParts('search');
 
-        $this->assertInstanceOf(ExternalPartCollection::class, $result);
+        $this->assertInstanceOf(PartCollection::class, $result);
         $this->assertCount(2, $result);
     }
 }

@@ -2,33 +2,12 @@
 
 namespace App\CollectionManagement\Domain\Model\External;
 
+use App\CollectionManagement\Domain\Model\BasePart;
+
 /**
  * @author W. Zwertvaegher
  * A representation of an external Part  retrieved from an external source
  */
-final readonly class ExternalPart
+final readonly class ExternalPart extends BasePart
 {
-    public function __construct(
-        private string $externalId,
-        private string $name,
-        private string $imagePath
-    )
-    {}
-
-    public function getExternalId(): string
-    {
-        return $this->externalId;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function getImagePath(): string
-    {
-        return $this->imagePath;
-    }
-
-
 }

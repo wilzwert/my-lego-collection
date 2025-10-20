@@ -10,9 +10,7 @@ use App\Shared\Domain\Collection;
 /**
  * @author W. Zwertvaegher
  * Collection of UserSet
- * @see BaseSet
- * @see Set
- * @see ExternalSet
+
  * @extends Collection<UserSet>
  */
 final class UserSetCollection extends Collection

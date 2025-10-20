@@ -2,6 +2,9 @@
 
 namespace App\CollectionManagement\Domain\Service;
 
+use App\CollectionManagement\Domain\Model\PartCollection;
+use App\Shared\Domain\Uuid;
+
 class DefaultPartService implements PartService
 {
     public function __construct(
@@ -11,12 +14,9 @@ class DefaultPartService implements PartService
     /**
      * @inheritDoc
      */
-    public function findSets(string $search): array
+    public function findParts(string $search, ?Uuid $userId = null): PartCollection
     {
         // get parts from data provider
-        $data = $this->legoDataProvider->findParts($search);
-        return $data;
-        // TODO enrich with user data from local db when possible
+        return $this->legoDataProvider->findParts($search);
     }
-
 }

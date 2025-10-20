@@ -8,7 +8,7 @@ use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
-use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Service\LegoDataLoader;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
@@ -80,14 +80,15 @@ class RebrickableDataLoader implements LegoDataLoader
         );
     }
 
-    private function fetchPartsFromExternalApi(string $search): ?ExternalPartCollection {
+    private function fetchPartsFromExternalApi(string $search): ?PartCollection {
         $results = $this->fetchFromExternalApi(sprintf('parts/?search=%s', $search));
         if($results === null){
             return null;
         }
-        return new ExternalPartCollection(
+        return new PartCollection(
             array_map(
                 fn($item) => new ExternalPart(
+                    $item['part_num'],
                     $item['part_num'],
                     $item['name'],
                     $item['part_img_url'] ?? ''
@@ -147,7 +148,7 @@ class RebrickableDataLoader implements LegoDataLoader
     }
 
     #[\Override]
-    public function findParts(string $search): ?ExternalPartCollection
+    public function findParts(string $search): ?PartCollection
     {
         return $this->cacheManager->getParts($search, fn($s) => $this->fetchPartsFromExternalApi($s));
     }

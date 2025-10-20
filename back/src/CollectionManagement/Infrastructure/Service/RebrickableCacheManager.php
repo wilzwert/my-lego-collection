@@ -3,8 +3,8 @@
 namespace App\CollectionManagement\Infrastructure\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
-use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
@@ -31,7 +31,7 @@ class RebrickableCacheManager
         });
     }
 
-    public function getParts(string $search, callable $callback): ?ExternalPartCollection
+    public function getParts(string $search, callable $callback): ?PartCollection
     {
         // return cache when present
         return $this->cache->get('search_part_'.md5(strtolower($search)), function (ItemInterface $item) use ($search, $callback) {

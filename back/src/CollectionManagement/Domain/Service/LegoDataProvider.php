@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Domain\Service;
 
-use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 
 /***
@@ -37,7 +37,7 @@ class LegoDataProvider
         return new SetCollection([]);
     }
 
-    public function findParts(string $search): ExternalPartCollection
+    public function findParts(string $search): PartCollection
     {
         // loaders may load from cache, from an external source, or any other source
         // infrastructure must set them in the optimal order, e.g. cache first, then external source
@@ -47,6 +47,6 @@ class LegoDataProvider
                 return $parts;
             }
         }
-        return new ExternalPartCollection([]);
+        return new PartCollection([]);
     }
 }
