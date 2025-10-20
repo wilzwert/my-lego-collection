@@ -2,6 +2,10 @@
 
 namespace App\CollectionManagement\Infrastructure\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalPartCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
+use App\CollectionManagement\Domain\Model\SetCollection;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -18,12 +22,39 @@ class RebrickableCacheManager
     )
     {}
 
-    public function getSets(string $search, callable $callback): array
+    public function getSets(string $search, callable $callback): ?SetCollection
     {
         // return cache when present
         return $this->cache->get('search_set_'.md5(strtolower($search)), function (ItemInterface $item) use ($search, $callback) {
             $item->expiresAfter(self::TTL);
             return $callback($search);
+        });
+    }
+
+    public function getParts(string $search, callable $callback): ?ExternalPartCollection
+    {
+        // return cache when present
+        return $this->cache->get('search_part_'.md5(strtolower($search)), function (ItemInterface $item) use ($search, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($search);
+        });
+    }
+
+    public function getPartElements(string $partExternalId, callable $callback): ?ExternalElementCollection
+    {
+        // return cache when present
+        return $this->cache->get('get_part_elements'.md5(strtolower($partExternalId)), function (ItemInterface $item) use ($partExternalId, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($partExternalId);
+        });
+    }
+
+    public function getSetElements(string $setExternalId, callable $callback): ?ExternalSetElementCollection
+    {
+        // return cache when present
+        return $this->cache->get('get_set_elements'.md5(strtolower($setExternalId)), function (ItemInterface $item) use ($setExternalId, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($setExternalId);
         });
     }
 

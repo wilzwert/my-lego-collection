@@ -2,12 +2,11 @@
 
 namespace App\CollectionManagement\Domain\Repository;
 
-use App\CollectionManagement\Domain\Model\LocalSet;
-use App\CollectionManagement\Domain\Model\SetCollection;
+use App\CollectionManagement\Domain\Model\Local\Set;
 
 interface LocalSetRepository
 {
-    public function add(LocalSet $localSet): void;
+    public function add(Set $localSet): void;
 
-    public function update(LocalSet $localSet): void;
+    public function update(Set $localSet): void;
 }

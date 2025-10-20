@@ -10,10 +10,10 @@ services:
       - XDEBUG_MODE=debug
       - XDEBUG_CONFIG=client_host=host.docker.internal
       - POSTGRES_HOST=db
-      - POSTGRES_DB=symfony
-      - POSTGRES_USER=symfony
-      - POSTGRES_PASSWORD=secret
-      - REDIS_HOST=redis
+      - POSTGRES_DB=mylego_collection
+      - POSTGRES_USER=mylego_collection
+      - POSTGRES_PASSWORD=mylego_collection_pass
+      - REDIS_URL=redis://mylego_collection_redis
     ports:
       - "8080:80"   # FrankenPHP
     depends_on:
@@ -26,9 +26,9 @@ services:
     image: postgres:16
     container_name: mylego_collection_db
     environment:
-      POSTGRES_DB: symfony
-      POSTGRES_USER: symfony
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: mylego_collection
+      POSTGRES_USER: mylego_collection
+      POSTGRES_PASSWORD: mylego_collection_pass
     ports:
       - "5432:5432"
     volumes:

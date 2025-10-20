@@ -2,53 +2,19 @@
 
 namespace App\CollectionManagement\Domain\Model;
 
-use ArrayObject;
+use App\Shared\Domain\Collection;
 
 /**
  * @author W. Zwertvaegher
- * Collection of EnrichedSet which encapsulate an object implementing Set and metadata
- * such as current status if current user has already added the Set to their collection
+ * Collection of EnrichedSet which encapsulate an object implementing BaseSet and metadata
+ * such as current status if current user has already added the BaseSet to their collection
  * @see EnrichedSet
+ * @extends Collection<EnrichedSet>
  */
-
-final class EnrichedSetCollection implements \IteratorAggregate, \Countable
+final class EnrichedSetCollection extends Collection
 {
-    /** @var EnrichedSet[] */
-    private array $sets;
-
-    /**
-     * @param EnrichedSet[] $sets
-     */
-    public function __construct(array $sets = [])
+    public function __construct(array $elements = [])
     {
-        foreach ($sets as $set) {
-            if (!$set instanceof EnrichedSet) {
-                throw new \InvalidArgumentException('All elements must be EnrichedSet');
-            }
-        }
-        $this->sets = $sets;
-    }
-
-    public function add(EnrichedSet $set): void
-    {
-        $this->sets[] = $set;
-    }
-
-    public function getIterator(): \ArrayIterator
-    {
-        return new \ArrayIterator($this->sets);
-    }
-
-    /**
-     * @return EnrichedSet[]
-     */
-    public function toArray(): array
-    {
-        return $this->sets;
-    }
-
-    public function count(): int
-    {
-        return count($this->sets);
+        parent::__construct(EnrichedSet::class, $elements);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
-use App\CollectionManagement\Domain\Model\UserSet;
+use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\Shared\Domain\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 

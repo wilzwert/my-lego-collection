@@ -1,10 +1,16 @@
 <?php
 
-namespace App\CollectionManagement\Domain\Model;
+namespace App\CollectionManagement\Domain\Model\Local;
 
+use App\CollectionManagement\Domain\Model\BaseSet;
 use App\Shared\Domain\Uuid;
 
-final readonly class LocalSet extends Set
+/**
+ * @author W. Zwertvaegher
+ * A BaseSet that exists locally (i.e. saved in local DB)
+ */
+
+final readonly class Set extends BaseSet
 {
     /**
      * @param Uuid $id

@@ -2,54 +2,22 @@
 
 namespace App\CollectionManagement\Domain\Model;
 
-use ArrayObject;
-use Traversable;
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
+use App\CollectionManagement\Domain\Model\Local\Set;
+use App\Shared\Domain\Collection;
 
 /**
  * @author W. Zwertvaegher
- * Collection objects implementing Set
+ * Collection of objects extending BaseSet
+ * @see BaseSet
  * @see Set
- * @see LocalSet
  * @see ExternalSet
+ * @extends Collection<BaseSet>
  */
-final class SetCollection implements \IteratorAggregate, \Countable
+final class SetCollection extends Collection
 {
-    /** @var Set[] */
-    private array $sets;
-
-    /**
-     * @param Set[] $sets
-     */
-    public function __construct(array $sets = [])
+    public function __construct(array $elements = [])
     {
-        foreach ($sets as $set) {
-            if (!$set instanceof Set) {
-                throw new \InvalidArgumentException('All elements must be LocalSet');
-            }
-        }
-        $this->sets = $sets;
-    }
-
-    public function add(Set $set): void
-    {
-        $this->sets[] = $set;
-    }
-
-    public function getIterator(): Traversable
-    {
-        return new \ArrayIterator($this->sets);
-    }
-
-    /**
-     * @return Set[]
-     */
-    public function toArray(): array
-    {
-        return $this->sets;
-    }
-
-    public function count(): int
-    {
-        return count($this->sets);
+        parent::__construct(BaseSet::class, $elements);
     }
 }

@@ -23,9 +23,14 @@ services:
 
     App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager:
         arguments:
-            $cache: '@app.cache.rebrickable_search'
+            $cache: '@cache.rebrickable_search'
 
     App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader:
         arguments:
             $cacheManager: '@App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager'
             $apiKey: '%env(REBRICKABLE_API_KEY)%'
+
+    App\CollectionManagement\Domain\Service\LegoDataProvider:
+        arguments:
+            $legoDataLoaders:
+                - '@App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader'

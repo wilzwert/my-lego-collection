@@ -2,9 +2,9 @@
 
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
+use App\CollectionManagement\Domain\Model\Local\Set;
 use App\Shared\Domain\Uuid;
 use Doctrine\ORM\Mapping as ORM;
-use App\CollectionManagement\Domain\Model\LocalSet;
 
 /**
  * @ORM\Entity
@@ -27,9 +27,9 @@ class DoctrineSet
         $this->externalId = $externalId;
     }
 
-    public function toDomain(): LocalSet
+    public function toDomain(): Set
     {
-        return new LocalSet(Uuid::fromString($this->id), $this->externalId);
+        return new Set(Uuid::fromString($this->id), $this->externalId);
     }
 }
 

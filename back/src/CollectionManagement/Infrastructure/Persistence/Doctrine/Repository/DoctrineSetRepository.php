@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\CollectionManagement\Domain\Model\LocalSet;
+use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Repository\LocalSetRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -15,19 +15,19 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
 {
     public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, LocalSet::class);
+        parent::__construct($managerRegistry, Set::class);
     }
 
     #[\Override]
-    public function add(LocalSet $localSet): void
+    public function add(Set $localSet): void
     {
         $this->entityManager->persist($localSet);
     }
 
-    public function update(LocalSet $localSet): void
+    public function update(Set $localSet): void
     {
         // Nothing to do as we use Doctrine, and all changes to the entity are implicitly handled by doctrine
-        // as long as the LocalSet is handled by doctrine itself which MUST be the case here
+        // as long as the Set is handled by doctrine itself which MUST be the case here
     }
 
     public function findByUserAndExternalIds(string $userId, array $externalIds): SetCollection

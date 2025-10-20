@@ -2,9 +2,8 @@
 
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\CollectionManagement\Domain\Model\LocalSet;
-use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Domain\Model\UserSet;
+use App\CollectionManagement\Domain\Model\Local\Set;
+use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Model\UserSetCollection;
 use App\CollectionManagement\Domain\Repository\UserSetRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineUserSet;
@@ -17,7 +16,7 @@ class DoctrineUserSetRepository extends ServiceEntityRepository implements UserS
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($managerRegistry, LocalSet::class);
+        parent::__construct($managerRegistry, Set::class);
     }
 
     public function findByUserAndExternalIds(string $userId, array $externalIds): UserSetCollection

@@ -1,18 +1,14 @@
 <?php
 
-namespace App\CollectionManagement\Domain\Model;
+namespace App\CollectionManagement\Domain\Model\Local;
 
-use App\Shared\Domain\Uuid;
-
-abstract readonly class Set
+class Part
 {
     public function __construct(
         private string $legoId,
         private string $externalId,
         private string $name,
-        private string $partCount,
-        private string $imagePath,
-        private string $productionYear,
+        private string $imagePath
     )
     {}
 
@@ -30,16 +26,6 @@ abstract readonly class Set
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getProductionYear(): int
-    {
-        return $this->productionYear;
-    }
-
-    public function getPartCount(): int
-    {
-        return $this->partCount;
     }
 
     public function getImagePath(): string

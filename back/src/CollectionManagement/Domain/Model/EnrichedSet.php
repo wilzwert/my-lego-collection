@@ -2,12 +2,14 @@
 
 namespace App\CollectionManagement\Domain\Model;
 
+use App\CollectionManagement\Domain\Model\Local\UserSet;
+
 final readonly class EnrichedSet
 {
-    public function __construct(private readonly Set $set, private readonly ?UserSet $userSet = null)
+    public function __construct(private readonly BaseSet $set, private readonly ?UserSet $userSet = null)
     {}
 
-    public function getSet(): Set
+    public function getSet(): BaseSet
     {
         return $this->set;
     }
