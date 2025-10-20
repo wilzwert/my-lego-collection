@@ -1,11 +1,10 @@
-# Dockerfile.dev
 FROM dunglas/frankenphp:php8.4
 
-# Arguments pour user/group
+# user/group
 ARG UID=1000
 ARG GID=1000
 
-# Crée un utilisateur pour éviter de travailler en root
+# Create a user to avoir working as root
 RUN addgroup --gid $GID symfony \
  && adduser --uid $UID --gid $GID --disabled-password --gecos "" symfony
  
@@ -14,7 +13,7 @@ RUN addgroup --gid $GID symfony \
 RUN mkdir -p /data/caddy \
     && chown -R symfony:symfony /data/caddy
  
-# Installe les extensions nécessaires pour Symfony + PostgreSQL + Redis
+# Install PHP extensions for Symfony + PostgreSQL + Redis
 RUN install-php-extensions \
     pdo_pgsql \
     redis \
@@ -22,30 +21,30 @@ RUN install-php-extensions \
     intl \
     zip
 	
-# Installe Xdebug
+# Install Xdebug
 RUN install-php-extensions xdebug
 
 # Configure PHP
 COPY docker/dev/php.ini /usr/local/etc/php/php.ini
-COPY docker/dev/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+# COPY docker/dev/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
 WORKDIR /app
 
-# Installer Composer
+# Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Installer dépendances Symfony
 COPY back/composer.json back/composer.lock ./
 RUN composer install --no-scripts --no-interaction --no-progress
 
-# Copier le code
+# Copy app code
 COPY back/ ./
 
-# Utiliser FrankenPHP comme serveur web
+# Use FrankenPHP as web server
 CMD php bin/console cache:clear --no-warmup && \
     exec frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile
 
-# Changer ownership
+# Change app ownership
 RUN chown -R symfony:symfony /app
 
 # Clear + warmup cache dev
@@ -54,8 +53,8 @@ RUN php bin/console cache:clear --env=dev --no-warmup \
 
 USER symfony
 
-# Copier le Caddyfile dans le conteneur
+# Copy Caddyfile to container
 COPY docker/dev/frankenphp/Caddyfile /etc/caddy/Caddyfile
 
-# Lancer FrankenPHP via Caddy
+# Launch FrankenPHP
 CMD frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile
