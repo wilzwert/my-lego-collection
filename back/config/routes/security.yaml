@@ -1,0 +1,4 @@
+# no need for automatic logout
+# _security_logout:
+#    resource: security.route_loader.logout
+#    type: Service
