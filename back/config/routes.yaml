@@ -1,5 +1,12 @@
-controllers:
+user_controllers:
+    resource:
+        path: ../src/User/Infrastructure/Controller
+        namespace: App\User\Infrastructure\Controller
+    type: attribute
+
+collection_controllers:
     resource:
         path: ../src/CollectionManagement/Infrastructure/Controller
         namespace: App\CollectionManagement\Infrastructure\Controller
     type: attribute
+

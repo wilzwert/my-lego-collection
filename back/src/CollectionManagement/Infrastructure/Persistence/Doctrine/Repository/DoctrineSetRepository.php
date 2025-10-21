@@ -5,6 +5,7 @@ namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repositor
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Repository\LocalSetRepository;
+use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,7 +16,7 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
 {
     public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, Set::class);
+        parent::__construct($managerRegistry, DoctrineSet::class);
     }
 
     #[\Override]
@@ -32,14 +33,18 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
 
     public function findByUserAndExternalIds(string $userId, array $externalIds): SetCollection
     {
-        return new SetCollection($this->createQueryBuilder('s')
-            ->join('s.userSets', 'us')
-            ->where('us.user = :userId')
-            ->andWhere('s.externalId IN (:externalIds)')
-            ->setParameter('userId', $userId)
-            ->setParameter('externalIds', $externalIds)
-            ->getQuery()
-            ->getResult()
+        return new SetCollection(
+            array_map(
+                fn(DoctrineSet $s) => $s->toDomain(),
+                $this->createQueryBuilder('s')
+                    ->join('s.userSets', 'us')
+                    ->where('us.user = :userId')
+                    ->andWhere('s.externalId IN (:externalIds)')
+                    ->setParameter('userId', $userId)
+                    ->setParameter('externalIds', $externalIds)
+                    ->getQuery()
+                    ->getResult()
+            )
         );
     }
 }
