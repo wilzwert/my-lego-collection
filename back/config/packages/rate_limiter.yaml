@@ -4,11 +4,17 @@ framework:
         register_by_ip:
             policy: 'fixed_window'
             limit: 5
-            interval: '1 hour'
+            interval: '1 minute'
             cache_pool: 'cache.rate_limiter'
 
         # limit all other public endpoints
         public_api_by_ip:
+            policy: 'sliding_window'
+            limit: 30
+            interval: '1 minute'
+            cache_pool: 'cache.rate_limiter'
+
+        api_by_user:
             policy: 'sliding_window'
             limit: 60
             interval: '1 minute'

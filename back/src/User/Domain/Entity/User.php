@@ -2,17 +2,19 @@
 
 namespace App\User\Domain\Entity;
 
+use App\Shared\Domain\Uuid;
+
 final readonly class User
 {
     public function __construct(
-        private string $id,
+        private Uuid $id,
         private string $email,
         private string $username,
         private string $passwordHash,
         private array $roles = ['ROLE_USER']
     ) {}
 
-    public function getId(): string
+    public function getId(): Uuid
     {
         return $this->id;
     }

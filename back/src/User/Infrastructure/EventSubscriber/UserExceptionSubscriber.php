@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class UserExceptionSubscriber implements EventSubscriberInterface
 {
 
-    private static $supportedExceptionTypes = [
+    private static array $supportedExceptionTypes = [
         UserAlreadyExistsException::class => Response::HTTP_CONFLICT
     ];
 

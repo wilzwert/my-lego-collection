@@ -19,7 +19,16 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findByEmail(string $email): ?User
     {
-        $doctrineUser = parent::findByEmail($email);
+        $doctrineUser = parent::findOneByEmail($email);
+        if(!$doctrineUser){
+            return null;
+        }
+        return $doctrineUser->toDomain();
+    }
+
+    public function findByUsername(string $username): ?User
+    {
+        $doctrineUser = parent::findOneByUsername($username);
         if(!$doctrineUser){
             return null;
         }

@@ -16,3 +16,6 @@ lexik_jwt_authentication:
     token_extractors:
         cookie:
             name: token
+
+    set_cookies:
+        token: ~

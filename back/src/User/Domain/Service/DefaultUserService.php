@@ -33,4 +33,9 @@ class DefaultUserService implements UserService
             return $user;
         });
     }
+
+    public function getUserByIdentifier(string $identifier): ?User
+    {
+        return $this->userRepository->findByIdentifier($identifier);
+    }
 }
