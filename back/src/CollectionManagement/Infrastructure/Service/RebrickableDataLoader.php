@@ -54,6 +54,7 @@ class RebrickableDataLoader implements LegoDataLoader
             // convert rebrickable data to an array of ExternalSet
             return $response->toArray()['results'];
         }
+        // TODO : properly handle this throwable
         catch (\Throwable $e) {
             return null;
         }

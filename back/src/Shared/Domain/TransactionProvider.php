@@ -9,6 +9,7 @@ interface TransactionProvider
      * Rollback is triggered if an exception occurs
      * @param callable(): mixed $callback
      * @return mixed
+     * @throws TransactionProviderException
      */
     public function transactional(callable $callback): mixed;
 }

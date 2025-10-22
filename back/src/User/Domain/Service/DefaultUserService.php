@@ -13,6 +13,7 @@ class DefaultUserService implements UserService
 {
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly PasswordHasher $passwordHasher,
         private readonly TransactionProvider $transactionProvider
     )
     {}
@@ -27,7 +28,7 @@ class DefaultUserService implements UserService
             if($user) {
                 throw new UserAlreadyExistsException('User already exists');
             }
-            $user = new User(Uuid::generate(), $command->getEmail(), $command->getUsername(), $command->getPassword());
+            $user = new User(Uuid::generate(), $command->getEmail(), $command->getUsername(), $this->passwordHasher->hash($command->getPassword()));
             $this->userRepository->save($user);
             return $user;
         });

@@ -31,7 +31,9 @@ class RegistrationController extends AbstractController
         #[CurrentUser] ?UserInterface $user
     ) :JsonResponse
     {
+
+
         ($this->registerUserHandler)(new RegisterUserCommand($registerUserRequest->getEmail(), $registerUserRequest->getUsername(), $registerUserRequest->getPassword()));
-        return $this->json(null);
+        return $this->json('');
     }
 }

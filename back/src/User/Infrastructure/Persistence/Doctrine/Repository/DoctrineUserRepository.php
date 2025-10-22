@@ -2,7 +2,6 @@
 
 namespace App\User\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\CollectionManagement\Domain\Model\Local\Set;
 use App\Shared\Domain\Uuid;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepository;
@@ -29,13 +28,15 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findByEmailOrUsername(string $email, string $username): ?User
     {
-        return $this->createQueryBuilder('u')
+        $doctrineUser = $this->createQueryBuilder('u')
             ->where('u.email = :email')
             ->orWhere('u.username = :username')
             ->setParameter('email', $email)
             ->setParameter('username', $username)
             ->getQuery()
             ->getOneOrNullResult();
+
+        return $doctrineUser ? $doctrineUser->toDomain() : null;
     }
 
     public function findByIdentifier(string $identifier): ?User
@@ -48,7 +49,8 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findById(Uuid $uuid): ?User
     {
-        return parent::findById($uuid->__toString());
+        $user = parent::findById($uuid->__toString());
+        return $user ? $user->toDomain() : null;
     }
 
     public function save(User $user): void

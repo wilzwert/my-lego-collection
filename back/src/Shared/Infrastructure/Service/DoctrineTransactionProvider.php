@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Shared\Infrastructure;
+namespace App\Shared\Infrastructure\Service;
 
 use App\Shared\Domain\TransactionProvider;
+use App\Shared\Domain\TransactionProviderException;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DoctrineTransactionProvider implements TransactionProvider
@@ -12,6 +13,10 @@ class DoctrineTransactionProvider implements TransactionProvider
     {
     }
 
+    /**
+     * @inheritDoc
+     */
+    #[\Override]
     public function transactional(callable $callback): mixed
     {
         $this->entityManager->beginTransaction();
@@ -24,6 +29,10 @@ class DoctrineTransactionProvider implements TransactionProvider
         }
         catch (\Throwable $e) {
             $this->entityManager->rollback();
+            // TODO log the transaction error
+
+            // then rethrow the exception as is, because it may (should ?) be a domain Exception with meaning
+            // throw new TransactionProviderException($e);
             throw $e;
         }
     }
