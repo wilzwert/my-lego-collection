@@ -5,8 +5,8 @@ namespace App\CollectionManagement\Domain\Model;
 abstract readonly class BaseSet
 {
     public function __construct(
-        private string $legoId,
         private string $externalId,
+        private string $legoId,
         private string $name,
         private string $partCount,
         private string $imagePath,

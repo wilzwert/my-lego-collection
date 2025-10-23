@@ -14,7 +14,6 @@ use Symfony\Contracts\Cache\ItemInterface;
 #[Autoconfigure]
 class RebrickableCacheManager
 {
-
     private const TTL = 86400;
 
     public function __construct(

@@ -2,59 +2,129 @@
 
 namespace App\Tests\CollectionManagement\Infrastructure\Service;
 
-use PHPUnit\Framework\Attributes\Test;
+use App\CollectionManagement\Domain\Model\External\ExternalElement;
+use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalPart;
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
+use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
+use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
+use App\CollectionManagement\Domain\Model\PartCollection;
+use App\CollectionManagement\Domain\Model\SetCollection;
+use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
+use Doctrine\ORM\Cache;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\Component\Cache\Adapter\AbstractAdapter;
 
 class RebrickableCacheManagerTest extends TestCase
 {
+    private CacheInterface $cache;
+    private RebrickableCacheManager $manager;
 
-    #[Test]
-    public function testCacheManager()
+    protected function setUp(): void
     {
-        // TODO
-        /*
-        $search = 'Star Wars';
+        $this->cache = $this->createMock(CacheInterface::class);
+        $this->manager = new RebrickableCacheManager($this->cache);
+    }
 
-        $cacheItem = $this->createMock(ItemInterface::class);
-        $cacheItem->expects($this->once())
-            ->method('expiresAfter')
-            ->with(86400);
+    public function test_getSets_calls_cache_with_correct_key_and_callback()
+    {
+        $search = 'Millennium Falcon';
+        $expectedKey = 'search_set_' . md5(strtolower($search));
+        $expectedSets = new SetCollection([
+            new ExternalSet('externalId1', 'legoId1', 'Cached set 1', 100, '', 2005),
+            new ExternalSet('externalId2', 'legoId2', 'Cached set 2', 200, '', 2006),
+        ]);
 
-        $cache = $this->createMock(CacheInterface::class);
-        $cache->expects($this->once())
+        $this->cache->expects($this->once())
             ->method('get')
-            ->with($cacheKey, $this->callback(function ($callback) use ($cacheItem) {
-                // On exécute le callback en simulant le cache miss
-                $result = $callback($cacheItem);
-                $this->assertIsArray($result);
-                return true;
-            }))
-            ->willReturn(['set1', 'set2']);
-
-        $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())
-            ->method('toArray')
-            ->willReturn(['set1', 'set2']);
-
-        $expectedOptions = [
-            'headers' => [
-                'Authorization' => 'Authorization: key FAKE_API_KEY',
-            ],
-        ];
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->once())
-            ->method('request')
             ->with(
-                'GET',
-                $this->stringContains('sets/'),
-                $expectedOptions
+                $this->equalTo($expectedKey),
+                $this->callback(function ($callback) use ($search, $expectedSets) {
+                    // Simule le comportement de Symfony Cache : le callback reçoit un ItemInterface
+                    $item = $this->createMock(ItemInterface::class);
+                    $item->expects($this->once())->method('expiresAfter')->with(86400);
+
+                    $result = $callback($item);
+                    return $result === $expectedSets;
+                })
             )
-            ->willReturn($response);
+            ->willReturn($expectedSets);
 
-        $loader = new RebrickableDataLoader($cache, $httpClient, 'FAKE_API_KEY');
+        $result = $this->manager->getSets($search, fn() => $expectedSets);
+        $this->assertSame($expectedSets, $result);
+    }
 
-        $sets = $loader->findSets($search);
+    public function test_getParts_uses_correct_cache_key()
+    {
+        $search = 'Brick';
+        $expectedKey = 'search_part_' . md5(strtolower($search));
 
-        $this->assertSame(['set1', 'set2'], $sets);*/
+        $expectedParts = new PartCollection([
+            new ExternalPart('externalId1', 'legoId1', 'Cached part 1', ''),
+            new ExternalPart('externalId2', 'legoId2', 'Cached part 2', ''),
+        ]);
+
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo($expectedKey), $this->anything())
+            ->willReturn($expectedParts);
+
+        $this->manager->getParts($search, fn() => $expectedParts);
+    }
+
+    public function test_getPartElements_uses_correct_cache_key()
+    {
+        $id = '3001';
+        $expectedKey = 'get_part_elements' . md5(strtolower($id));
+
+        $expectedElements = new ExternalElementCollection([
+            new ExternalElement('externalId1', 'legoId1', 'externalPartId1', '', 0, 'Black'),
+            new ExternalElement('externalId2', 'legoId2', 'externalPartId2', '', 4, 'Red'),
+        ]);
+
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo($expectedKey), $this->anything())
+            ->willReturn($expectedElements);
+
+        $this->manager->getPartElements($id, fn() => $expectedElements);
+    }
+
+    public function test_getSetElements_uses_correct_cache_key()
+    {
+        $id = '75257';
+        $expectedKey = 'get_set_elements' . md5(strtolower($id));
+
+        $expectedElements = new ExternalSetElementCollection([
+            new ExternalSetElement('externalId1', '93061', 'externalPartId1', 5),
+            new ExternalSetElement('externalId2', '93061', 'externalPartId2', 10),
+        ]);
+
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with($this->equalTo($expectedKey), $this->anything())
+            ->willReturn($expectedElements);
+
+        $this->manager->getSetElements($id, fn() => $expectedElements);
+    }
+
+    public function test_clear_calls_clear_if_cache_is_abstract_adapter()
+    {
+        $adapter = $this->createMock(AbstractAdapter::class);
+        $adapter->expects($this->once())->method('clear');
+
+        $manager = new RebrickableCacheManager($adapter);
+        $manager->clear();
+    }
+
+    public function test_clear_does_nothing_if_not_abstract_adapter()
+    {
+        $adapter = $this->createMock(MockCacheInterfaceImplementation::class);
+        $manager = new RebrickableCacheManager($adapter);
+
+        $adapter->expects($this->never())->method('clear');
+        $this->manager->clear();
     }
 }

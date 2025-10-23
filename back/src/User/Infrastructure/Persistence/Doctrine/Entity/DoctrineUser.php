@@ -2,6 +2,7 @@
 
 namespace App\User\Infrastructure\Persistence\Doctrine\Entity;
 
+use App\Shared\Domain\Uuid;
 use App\User\Domain\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -64,7 +65,7 @@ class DoctrineUser
     public function toDomain(): User
     {
         return new User(
-            $this->id,
+            Uuid::fromString($this->id),
             $this->email,
             $this->username,
             $this->passwordHash,

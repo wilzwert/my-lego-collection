@@ -69,8 +69,8 @@ class RebrickableDataLoader implements LegoDataLoader
         return new SetCollection(
             array_map(
                 fn($item) => new ExternalSet(
-                    preg_replace('/-.*$/', '', $item['set_num']),
                     $item['set_num'],
+                    preg_replace('/-.*$/', '', $item['set_num']),
                     $item['name'],
                     $item['num_parts'],
                     $item['set_img_url'] ?? '',
@@ -86,11 +86,12 @@ class RebrickableDataLoader implements LegoDataLoader
         if($results === null){
             return null;
         }
+
         return new PartCollection(
             array_map(
                 fn($item) => new ExternalPart(
                     $item['part_num'],
-                    $item['part_num'],
+                    isset($item['external_ids']['LEGO']) ? $item['external_ids']['LEGO'][0] : '',
                     $item['name'],
                     $item['part_img_url'] ?? ''
                 ),

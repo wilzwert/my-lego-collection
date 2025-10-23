@@ -14,10 +14,10 @@ class SetCollectionTest extends TestCase
     public function testExternalSetCollection()
     {
         $collection = new SetCollection([
-           new ExternalSet('legoId1', 'externalId1', 'BaseSet 1', 100, '', 2008),
-           new ExternalSet('legoId2', 'externalId2', 'BaseSet 2', 200, '', 2009),
+           new ExternalSet('externalId1', 'legoId1', 'BaseSet 1', 100, '', 2008),
+           new ExternalSet('externalId2', 'legoId2', 'BaseSet 2', 200, '', 2009),
         ]);
-        $collection->add(new ExternalSet('legoId3', 'externalId3', 'BaseSet 3', 50, '', 2006),);
+        $collection->add(new ExternalSet('externalId3', 'legoId3', 'BaseSet 3', 50, '', 2006),);
 
         $this->assertCount(3, $collection);
         $this->assertInstanceOf(ExternalSet::class, $collection->get(0));
@@ -30,14 +30,15 @@ class SetCollectionTest extends TestCase
     public function whenPassingWrongType_thenShouldThrowInvalidArgumentException()
     {
         $collection = new SetCollection([
-            new ExternalSet('legoId1', 'externalId1', 'BaseSet 1', 100, '', 2008),
-            new ExternalSet('legoId2', 'externalId2', 'BaseSet 2', 200, '', 2009),
+            new ExternalSet('externalId1', 'legoId1', 'BaseSet 1', 100, '', 2008),
+            new ExternalSet('externalId2', 'legoId2', 'BaseSet 2', 200, '', 2009),
         ]);
 
+        // adding a Part to a SetCollection should not be possible
         $this->expectException(\InvalidArgumentException::class);
-        $collection->add(new ExternalPart('partExernalId', 'Part', ''));
+        $collection->add(new ExternalPart('partExernalId', 'legoId','Part', ''));
 
-        $collection->add(new ExternalSet('legoId3', 'externalId3', 'BaseSet 3', 50, '', 2006),);
+        $collection->add(new ExternalSet('externalId3', 'legoId3', 'BaseSet 3', 50, '', 2006),);
         $this->assertCount(3, $collection);
     }
 }

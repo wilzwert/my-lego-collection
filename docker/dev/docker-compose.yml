@@ -6,6 +6,7 @@ services:
     container_name: mylego_collection_app
     volumes:
       - ../../back/src:/app/src
+      - ../../back/tests:/app/tests
       - ../../back/config:/app/config
       - ../../back/templates:/app/templates
       - ../../back/public:/app/public
