@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\CollectionManagement\Domain;
+namespace App\Tests\CollectionManagement\Domain\Model;
 
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
