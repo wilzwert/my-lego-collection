@@ -19,6 +19,8 @@ Backend :
 
 ## Roadmap
 Backend :
+- shift to TDD or at least better testing strategy
+- setup quality control tools (coverage, linting, static analysis)
 - add sets and parts to the user's collection
 - browse user's collection (view sets, search for part/elements)
 
