@@ -1,5 +1,17 @@
-controllers:
+api_login:
+    path: /api/login
+    format: json
+
+user_controllers:
+    resource:
+        path: ../src/User/Infrastructure/Controller
+        namespace: App\User\Infrastructure\Controller
+    type: attribute
+    format: json
+
+collection_controllers:
     resource:
         path: ../src/CollectionManagement/Infrastructure/Controller
         namespace: App\CollectionManagement\Infrastructure\Controller
     type: attribute
+    format: json

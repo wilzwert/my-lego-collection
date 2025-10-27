@@ -26,8 +26,8 @@ final class RebrickableDataLoaderTest extends TestCase
         $search = 'Star Wars';
 
         $expectedSets = new SetCollection([
-            new ExternalSet('legoId1', 'externalId1', 'Cached set 1', 100, '', 2005),
-            new ExternalSet('legoId2', 'externalId2', 'Cached set 2', 200, '', 2006),
+            new ExternalSet('externalId1', 'legoId1', 'Cached set 1', 100, '', 2005),
+            new ExternalSet('externalId2', 'legoId2', 'Cached set 2', 200, '', 2006),
         ]);
 
         $cacheManager = $this->createMock(RebrickableCacheManager::class);
@@ -53,8 +53,8 @@ final class RebrickableDataLoaderTest extends TestCase
         $search = 'Star Wars';
         $cacheManager = $this->createMock(RebrickableCacheManager::class);
         $externalSets = new SetCollection(array(
-          new ExternalSet('1', '1-1', 'BaseSet 1', 10, '', 2008),
-          new ExternalSet('2', '2-1', 'BaseSet 2', 20, '', 2007)
+          new ExternalSet('1-1', '1', 'BaseSet 1', 10, '', 2008),
+          new ExternalSet('2-1', '2', 'BaseSet 2', 20, '', 2007)
         ));
         $cacheManager->expects($this->once())
             ->method('getSets')
@@ -108,8 +108,8 @@ final class RebrickableDataLoaderTest extends TestCase
         $search = 'part search';
 
         $expectedParts = new PartCollection([
-            new ExternalPart('legoId1', 'externalId1', 'Cached part 1', ''),
-            new ExternalPart('legoId2', 'externalId2', 'Cached part 2', ''),
+            new ExternalPart('externalId1', 'legoId1', 'Cached part 1', ''),
+            new ExternalPart('externalId2', 'legoId2', 'Cached part 2', ''),
         ]);
 
         $cacheManager = $this->createMock(RebrickableCacheManager::class);
@@ -135,8 +135,8 @@ final class RebrickableDataLoaderTest extends TestCase
         $search = 'part search';
         $cacheManager = $this->createMock(RebrickableCacheManager::class);
         $externalParts = new PartCollection(array(
-            new ExternalPart('1', '1-1', 'BaseSet 1', ''),
-            new ExternalPart('2', '2-1', 'BaseSet 2', '')
+            new ExternalPart('1-1', '1', 'Part 1', ''),
+            new ExternalPart('2-1', '2', 'Part 2', '')
         ));
         $cacheManager->expects($this->once())
             ->method('getParts')
@@ -156,8 +156,8 @@ final class RebrickableDataLoaderTest extends TestCase
             ->willReturn(
                 array(
                     'results' => [
-                        ['part_num' => '1-1', 'name' => 'BaseSet 1', 'part_img_url' => ''],
-                        ['part_num' => '2-1', 'name' => 'BaseSet 2', 'part_img_url' => '']
+                        ['part_num' => '1-1', 'name' => 'Part 1', 'part_img_url' => '', 'external_ids' => ['LEGO' => ['1']]],
+                        ['part_num' => '2-1', 'name' => 'Part 2', 'part_img_url' => '', 'external_ids' => ['LEGO' => ['2']]],
                     ]
                 )
             );
@@ -189,8 +189,8 @@ final class RebrickableDataLoaderTest extends TestCase
         $externalPartId = '93061';
 
         $expectedElements = new ExternalElementCollection([
-            new ExternalElement('legoId1', 'externalId1', 'externalPartId1', '', 0, 'Black'),
-            new ExternalElement('legoId2', 'externalId2', 'externalPartId2', '', 4, 'Red'),
+            new ExternalElement('externalId1', 'legoId1', 'externalPartId1', '', 0, 'Black'),
+            new ExternalElement('externalId2', 'legoId2', 'externalPartId2', '', 4, 'Red'),
         ]);
 
         $cacheManager = $this->createMock(RebrickableCacheManager::class);

@@ -5,8 +5,8 @@ namespace App\CollectionManagement\Domain\Model\External;
 final readonly class ExternalElement
 {
     public function __construct(
-        private string $legoId,
         private string $externalId,
+        private string $legoId,
         private string $externalPartId,
         private string $imagePath,
         private string $externalColorId,

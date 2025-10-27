@@ -3,6 +3,7 @@
 	skip_install_trust
 	log {
 		output stdout
+		format console
 	}
     order php_server before file_server
     auto_https off
@@ -13,12 +14,6 @@
 
     encode zstd br gzip
 
-    # Logs
-    log {
-        output stdout
-        format json
-    }
-	
 	@phpRoute {
 		not file {path}
 	}
