@@ -35,3 +35,18 @@ You can use the docker/dev/docker-compose.yml to provide
 - a Caddy / FrankenPHP server (with XDebug)
 - a PostgreSQL server
 - a Redis cache server
+
+## Testing
+
+### Backend
+
+
+`cd back`
+
+To execute tests with code coverage and HTML report :  
+  `XDEBUG_MODE=coverage vendor/bin/phpunit`
+
+To execute tests without coverage :
+ `vendor/bin/phpunit --no-coverage`
+
+  There are 2 tests suites : 'Unit' and 'Integration'. You can use the `--testsuites` command line option to select one.
