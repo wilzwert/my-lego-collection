@@ -4,6 +4,7 @@ services:
       context: ../..
       dockerfile: docker/dev/frankenphp/Dockerfile
     container_name: mylego_collection_app
+    restart: unless-stopped
     volumes:
       - ../../back/src:/app/src
       - ../../back/tests:/app/tests
@@ -37,6 +38,7 @@ services:
   db:
     image: postgres:16
     container_name: mylego_collection_db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: mylego_collection
       POSTGRES_USER: mylego_collection
@@ -51,6 +53,7 @@ services:
   redis:
     image: redis:7
     container_name: mylego_collection_redis
+    restart: unless-stopped
     ports:
       - "6379:6379"
     networks:

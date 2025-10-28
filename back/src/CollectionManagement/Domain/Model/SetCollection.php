@@ -7,7 +7,7 @@ use App\CollectionManagement\Domain\Model\Local\Set;
 use App\Shared\Domain\Collection;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Collection of objects extending BaseSet
  * @see BaseSet
  * @see Set

@@ -31,4 +31,6 @@ interface LegoDataLoader
     public function getSetParts(string $setExternalId): ?ExternalSetElementCollection;
 
     public function getPartElements(string $partExternalId): ?ExternalElementCollection;
+
+    public function getSetElements(string $setExternalId): ?ExternalSetElementCollection;
 }

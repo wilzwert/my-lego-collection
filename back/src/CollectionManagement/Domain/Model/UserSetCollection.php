@@ -8,7 +8,7 @@ use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\Shared\Domain\Collection;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Collection of UserSet
 
  * @extends Collection<UserSet>

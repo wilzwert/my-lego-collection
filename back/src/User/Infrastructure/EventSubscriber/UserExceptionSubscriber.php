@@ -8,9 +8,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ * Handles domain specific exceptions to generate appropriate HttpException
+ *
+ * @author Wilhelm Zwertvaegher
+ *
+ */
 class UserExceptionSubscriber implements EventSubscriberInterface
 {
 
+    /**
+     * @var array<class-string<\Throwable>,int>
+     */
     private static array $supportedExceptionTypes = [
         UserAlreadyExistsException::class => Response::HTTP_CONFLICT
     ];

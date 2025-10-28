@@ -8,9 +8,9 @@ abstract readonly class BaseSet
         private string $externalId,
         private string $legoId,
         private string $name,
-        private string $partCount,
+        private int $partCount,
         private string $imagePath,
-        private string $productionYear,
+        private int $productionYear,
     )
     {}
 

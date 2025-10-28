@@ -5,9 +5,10 @@ namespace App\Shared\Domain;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Generic collection
  * @template T
+ * @implements \IteratorAggregate<int, T>
  */
 class Collection implements \IteratorAggregate, \Countable
 {
@@ -17,6 +18,9 @@ class Collection implements \IteratorAggregate, \Countable
     /** @var T[] */
     private array $elements;
 
+    /**
+     * @return \ArrayIterator<int, T>
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->elements);

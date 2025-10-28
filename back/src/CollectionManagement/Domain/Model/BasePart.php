@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Model;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * A representation of an external Part  retrieved from an external source
  */
 readonly class BasePart

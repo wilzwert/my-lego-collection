@@ -6,7 +6,7 @@ use App\CollectionManagement\Domain\Model\BaseSet;
 use App\Shared\Domain\Uuid;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * A BaseSet that exists locally (i.e. saved in local DB)
  */
 
@@ -18,15 +18,15 @@ final readonly class Set extends BaseSet
      */
     public function __construct(
         private Uuid $id,
-        string $legoId,
         string $externalId,
+        string $legoId,
         string $name,
-        string $partCount,
+        int $partCount,
         string $imagePath,
-        string $productionYear,
+        int $productionYear,
     )
     {
-        parent::__construct($legoId, $externalId, $name, $partCount, $imagePath, $productionYear);
+        parent::__construct($externalId, $legoId, $name, $partCount, $imagePath, $productionYear);
     }
 
     /**

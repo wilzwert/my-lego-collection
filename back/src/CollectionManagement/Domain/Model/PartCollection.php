@@ -6,7 +6,7 @@ use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\Shared\Domain\Collection;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Collection of objects extending Part
  * @see Part
  * @see LocalPart

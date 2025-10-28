@@ -11,7 +11,7 @@ final readonly class UserDto
     private string $username;
 
     /**
-     * @var string[]
+     * @var list<string>
      */
     private array $roles;
 
@@ -32,6 +32,9 @@ final readonly class UserDto
         return $this->username;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getRoles(): array
     {
         return $this->roles;

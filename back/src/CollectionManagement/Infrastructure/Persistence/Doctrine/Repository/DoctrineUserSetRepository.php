@@ -11,6 +11,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+/**
+ * @author W.Zwertvaegher
+ * @extends ServiceEntityRepository<Set>
+ */
 #[Autoconfigure]
 class DoctrineUserSetRepository extends ServiceEntityRepository implements UserSetRepository
 {

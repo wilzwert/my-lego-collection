@@ -6,7 +6,7 @@ use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 
 /***
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * This provider may be used to search Lego data
  * Several loader implementing LegoDataLoader may be defined by the infra and use various sources,
  * including cache, local DB, multiple external sources...
