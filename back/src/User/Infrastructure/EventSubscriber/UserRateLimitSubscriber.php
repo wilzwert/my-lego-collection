@@ -13,17 +13,17 @@ use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 class UserRateLimitSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private Security $security,
-        private RateLimiterFactoryInterface $registerByIpLimiter,
-        private RateLimiterFactoryInterface $publicApiByIpLimiter,
-        private RateLimiterFactoryInterface $apiByUserLimiter
-    )
-    {
+        private readonly Security                    $security,
+        private readonly RateLimiterFactoryInterface $registerByIpLimiter,
+        private readonly RateLimiterFactoryInterface $publicApiByIpLimiter,
+        private readonly RateLimiterFactoryInterface $apiByUserLimiter
+    ) {
 
     }
 
-    public function onKernelController(ControllerEvent $event): void {
-        if($event->getRequestType() !== HttpKernelInterface::MAIN_REQUEST) {
+    public function onKernelController(ControllerEvent $event): void
+    {
+        if ($event->getRequestType() !== HttpKernelInterface::MAIN_REQUEST) {
             return;
         }
 
@@ -35,21 +35,19 @@ class UserRateLimitSubscriber implements EventSubscriberInterface
             'api_sets_search',
         ];
         $route = $request->attributes->get('_route');
-        if(!in_array($route, $routesToLimit, true)) {
+        if (!in_array($route, $routesToLimit, true)) {
             return;
         }
 
-        if($route === 'api_user_register') {
+        if ($route === 'api_user_register') {
             $factory = $this->registerByIpLimiter;
             $limiter = $factory->create($request->getClientIp());
-
-        }
-        else {
+        } else {
             $factory = ($user ? $this->apiByUserLimiter : $this->publicApiByIpLimiter);
             $limiter = $factory->create($user ? $user->getUserIdentifier() : $request->getClientIp());
         }
 
-        if (false === $limiter->consume(1)->isAccepted()) {
+        if (false === $limiter->consume()->isAccepted()) {
             throw new TooManyRequestsHttpException();
         }
     }

@@ -15,6 +15,11 @@ final readonly class Set extends BaseSet
     /**
      * @param Uuid $id
      * @param string $externalId
+     * @param string $legoId
+     * @param string $name
+     * @param int $partCount
+     * @param string $imagePath
+     * @param int $productionYear
      */
     public function __construct(
         private Uuid $id,

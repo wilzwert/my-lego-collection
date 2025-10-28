@@ -5,7 +5,7 @@ namespace App\User\Application\Command;
 final readonly class GetUserQuery
 {
     public function __construct(
-        private readonly string $identifier
+        private string $identifier
     )
     {}
 

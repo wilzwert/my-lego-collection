@@ -13,8 +13,8 @@ readonly class BasePart
         private string $legoId,
         private string $name,
         private string $imagePath
-    )
-    {}
+    ) {
+    }
 
     public function getExternalId(): string
     {
@@ -35,6 +35,4 @@ readonly class BasePart
     {
         return $this->imagePath;
     }
-
-
 }

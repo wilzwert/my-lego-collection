@@ -2,15 +2,18 @@
 
 namespace App\Shared\Domain;
 
-use App\CollectionManagement\Domain\Model\EnrichedSet;
+use ArrayIterator;
+use Countable;
+use InvalidArgumentException;
+use IteratorAggregate;
 
 /**
  * @author Wilhelm Zwertvaegher
  * Generic collection
  * @template T
- * @implements \IteratorAggregate<int, T>
+ * @implements IteratorAggregate<int, T>
  */
-class Collection implements \IteratorAggregate, \Countable
+class Collection implements IteratorAggregate, Countable
 {
 
     private string $className;
@@ -19,11 +22,11 @@ class Collection implements \IteratorAggregate, \Countable
     private array $elements;
 
     /**
-     * @return \ArrayIterator<int, T>
+     * @return ArrayIterator<int, T>
      */
-    public function getIterator(): \ArrayIterator
+    public function getIterator(): ArrayIterator
     {
-        return new \ArrayIterator($this->elements);
+        return new ArrayIterator($this->elements);
     }
 
     /**
@@ -35,7 +38,7 @@ class Collection implements \IteratorAggregate, \Countable
     {
         foreach ($elements as $element) {
             if (!$element instanceof $className) {
-                throw new \InvalidArgumentException(sprintf('All elements must be %s', $className));
+                throw new InvalidArgumentException(sprintf('All elements must be %s', $className));
             }
         }
         $this->className = $className;
@@ -50,7 +53,7 @@ class Collection implements \IteratorAggregate, \Countable
     public function add($element): void
     {
         if (!$element instanceof $this->className) {
-            throw new \InvalidArgumentException(sprintf('All elements must be %s', $this->className));
+            throw new InvalidArgumentException(sprintf('All elements must be %s', $this->className));
         }
         $this->elements[] = $element;
     }

@@ -7,8 +7,8 @@ use App\Shared\Domain\Uuid;
 final readonly class SearchPartQuery
 {
     public function __construct(
-        private readonly string $search,
-        private readonly ?Uuid $userId = null
+        private string $search,
+        private ?Uuid $userId = null
     )
     {}
 

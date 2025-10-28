@@ -158,6 +158,6 @@ class RebrickableCacheManagerTest extends TestCase
         $manager = new RebrickableCacheManager($adapter);
 
         $adapter->expects($this->never())->method('clear');
-        $this->manager->clear();
+        $manager->clear();
     }
 }

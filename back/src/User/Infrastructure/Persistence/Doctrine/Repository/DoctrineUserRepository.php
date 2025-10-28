@@ -24,7 +24,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
     public function findByEmail(string $email): ?User
     {
         $doctrineUser = parent::findOneBy(['email' => $email]);
-        if(!$doctrineUser){
+        if (!$doctrineUser) {
             return null;
         }
         return $doctrineUser->toDomain();
@@ -33,7 +33,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
     public function findByUsername(string $username): ?User
     {
         $doctrineUser = parent::findOneBy(['username' => $username]);
-        if(!$doctrineUser){
+        if (!$doctrineUser) {
             return null;
         }
         return $doctrineUser->toDomain();
@@ -54,7 +54,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findByIdentifier(string $identifier): ?User
     {
-        if(!str_contains($identifier, '@')){
+        if (!str_contains($identifier, '@')) {
             return $this->findByUsername($identifier);
         }
         return $this->findByEmail($identifier);

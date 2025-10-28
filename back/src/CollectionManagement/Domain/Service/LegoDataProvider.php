@@ -14,23 +14,23 @@ use App\CollectionManagement\Domain\Model\SetCollection;
  * As PHP does not allow generics, we rely on custom collections to ensure types are as expected
  *
  */
-class LegoDataProvider
+readonly class LegoDataProvider
 {
     /**
      * @param LegoDataLoader[] $legoDataLoaders
      */
     public function __construct(
         private readonly array $legoDataLoaders,
-    )
-    {}
+    ) {
+    }
 
     public function findSets(string $search): SetCollection
     {
         // loaders may load from cache, from an external source, or any other source
         // we let the infrastructure set the optimal order
-        foreach($this->legoDataLoaders as $legoDataLoader) {
+        foreach ($this->legoDataLoaders as $legoDataLoader) {
             $sets = $legoDataLoader->findSets($search);
-            if(!empty($sets)) {
+            if (!empty($sets)) {
                 return $sets;
             }
         }
@@ -41,9 +41,9 @@ class LegoDataProvider
     {
         // loaders may load from cache, from an external source, or any other source
         // infrastructure must set them in the optimal order, e.g. cache first, then external source
-        foreach($this->legoDataLoaders as $legoDataLoader) {
+        foreach ($this->legoDataLoaders as $legoDataLoader) {
             $parts = $legoDataLoader->findParts($search);
-            if(!empty($parts)) {
+            if (!empty($parts)) {
                 return $parts;
             }
         }

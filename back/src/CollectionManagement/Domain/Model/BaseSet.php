@@ -11,16 +11,16 @@ abstract readonly class BaseSet
         private int $partCount,
         private string $imagePath,
         private int $productionYear,
-    )
-    {}
+    ) {
+    }
 
-        public function getLegoId(): string
+    public function getLegoId(): string
     {
         return $this->legoId;
     }
 
 
-        public function getExternalId(): string
+    public function getExternalId(): string
     {
         return $this->externalId;
     }

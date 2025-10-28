@@ -42,8 +42,7 @@ class DoctrineSet
         int $partCount,
         string $imagePath,
         int $productionYear
-    )
-    {
+    ) {
         $this->id = $id;
         $this->externalId = $externalId;
         $this->legoId = $legoId;
@@ -101,4 +100,3 @@ class DoctrineSet
         );
     }
 }
-

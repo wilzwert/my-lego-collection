@@ -23,7 +23,7 @@ class DoctrineUser
      * @var list<string>
      */
     #[ORM\Column(type: "json")]
-    private array $roles = [];
+    private array $roles;
 
     #[ORM\Column(type: "string", nullable: false)]
     private string $passwordHash;
@@ -41,8 +41,7 @@ class DoctrineUser
         string $username,
         string $passwordHash,
         array $roles
-    )
-    {
+    ) {
         $this->id = $id;
         $this->email = $email;
         $this->username = $username;
@@ -89,4 +88,3 @@ class DoctrineUser
         );
     }
 }
-

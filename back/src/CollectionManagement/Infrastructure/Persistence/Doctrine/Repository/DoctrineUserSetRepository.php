@@ -27,7 +27,7 @@ class DoctrineUserSetRepository extends ServiceEntityRepository implements UserS
     {
         return new UserSetCollection(
             array_map(
-                fn(DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
+                fn (DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
                 $this->createQueryBuilder('us')
                     ->join('us.set', 's')
                     ->where('us.user = :userId')

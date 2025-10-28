@@ -2,7 +2,6 @@
 
 namespace App\Tests\CollectionManagement\Infrastructure\Service;
 
-use App\CollectionManagement\Domain\Model\External\ExternalElement;
 use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;

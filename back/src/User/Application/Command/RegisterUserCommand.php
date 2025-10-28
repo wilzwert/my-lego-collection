@@ -5,11 +5,10 @@ namespace App\User\Application\Command;
 final readonly class RegisterUserCommand
 {
     public function __construct(
-        private readonly string $email,
-        private readonly string $username,
-        private readonly string $password
-    )
-    {
+        private string $email,
+        private string $username,
+        private string $password
+    ) {
     }
 
     public function getEmail(): string
