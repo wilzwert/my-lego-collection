@@ -9,8 +9,8 @@ final readonly class SearchPartQuery
     public function __construct(
         private string $search,
         private ?Uuid $userId = null
-    )
-    {}
+    ) {
+    }
 
     public function getSearch(): string
     {

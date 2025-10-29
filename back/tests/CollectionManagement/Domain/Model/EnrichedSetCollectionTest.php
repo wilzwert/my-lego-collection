@@ -21,11 +21,11 @@ class EnrichedSetCollectionTest extends TestCase
         ]);
         $collection->add(new EnrichedSet(new ExternalSet('externalId3', 'legoId3', 'BaseSet 3', 50, '', 2006)));
 
-        $this->assertCount(3, $collection);
-        $this->assertInstanceOf(EnrichedSet::class, $collection->get(0));
-        $this->assertInstanceOf(EnrichedSet::class, $collection->get(1));
-        $this->assertNull($collection->get(3));
-        $this->assertEquals('legoId1', $collection->get(0)->getSet()->getLegoId());
+        self::assertCount(3, $collection);
+        self::assertInstanceOf(EnrichedSet::class, $collection->get(0));
+        self::assertInstanceOf(EnrichedSet::class, $collection->get(1));
+        self::assertNull($collection->get(3));
+        self::assertEquals('legoId1', $collection->get(0)->getSet()->getLegoId());
     }
 
     #[Test]
@@ -42,6 +42,6 @@ class EnrichedSetCollectionTest extends TestCase
         $collection->add(new ExternalPart('partExternalId', 'legoId', 'Part', ''));
 
         $collection->add(new EnrichedSet(new ExternalSet('externalId3', 'legoId3', 'BaseSet 3', 50, '', 2006)));
-        $this->assertCount(3, $collection);
+        self::assertCount(3, $collection);
     }
 }

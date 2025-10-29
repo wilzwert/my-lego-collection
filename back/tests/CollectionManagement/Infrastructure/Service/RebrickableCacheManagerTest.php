@@ -54,7 +54,7 @@ class RebrickableCacheManagerTest extends TestCase
             ->willReturn($expectedSets);
 
         $result = $this->manager->getSets($search, fn () => $expectedSets);
-        $this->assertSame($expectedSets, $result);
+        self::assertSame($expectedSets, $result);
     }
 
     #[Test]
@@ -82,7 +82,7 @@ class RebrickableCacheManagerTest extends TestCase
             ->willReturn($expectedParts);
 
         $result = $this->manager->getParts($search, fn () => $expectedParts);
-        $this->assertSame($expectedParts, $result);
+        self::assertSame($expectedParts, $result);
     }
 
     #[Test]

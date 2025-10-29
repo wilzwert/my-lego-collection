@@ -4,7 +4,7 @@ namespace App\Shared\Domain;
 
 use Random\RandomException;
 
-final class Uuid
+class Uuid
 {
     private string $value;
 

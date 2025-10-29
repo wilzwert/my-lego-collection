@@ -44,7 +44,7 @@ final class RebrickableDataLoaderTest extends TestCase
 
         $sets = $loader->findSets($search);
 
-        $this->assertSame($expectedSets, $sets);
+        self::assertSame($expectedSets, $sets);
     }
 
     #[Test]
@@ -61,9 +61,9 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($search, $this->callback(function ($callback) use ($search, $externalSets) {
                 // fake cache miss
                 $result = $callback($search);
-                $this->assertInstanceOf(SetCollection::class, $result);
-                $this->assertCount(2, $result);
-                $this->assertEquals($externalSets, $result);
+                self::assertInstanceOf(SetCollection::class, $result);
+                self::assertCount(2, $result);
+                self::assertEquals($externalSets, $result);
                 return true;
             }))
             ->willReturn($externalSets);
@@ -98,7 +98,7 @@ final class RebrickableDataLoaderTest extends TestCase
         $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
 
         $sets = $loader->findSets($search);
-        $this->assertSame($externalSets, $sets);
+        self::assertSame($externalSets, $sets);
     }
 
 
@@ -126,7 +126,7 @@ final class RebrickableDataLoaderTest extends TestCase
 
         $parts = $loader->findParts($search);
 
-        $this->assertSame($expectedParts, $parts);
+        self::assertSame($expectedParts, $parts);
     }
 
     #[Test]
@@ -143,9 +143,9 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($search, $this->callback(function ($callback) use ($search, $externalParts) {
                 // fake cache miss
                 $result = $callback($search);
-                $this->assertInstanceOf(PartCollection::class, $result);
-                $this->assertCount(2, $result);
-                $this->assertEquals($externalParts, $result);
+                self::assertInstanceOf(PartCollection::class, $result);
+                self::assertCount(2, $result);
+                self::assertEquals($externalParts, $result);
                 return true;
             }))
             ->willReturn($externalParts);
@@ -180,7 +180,7 @@ final class RebrickableDataLoaderTest extends TestCase
         $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
 
         $parts = $loader->findParts($search);
-        $this->assertSame($externalParts, $parts);
+        self::assertSame($externalParts, $parts);
     }
 
     #[Test]
@@ -207,7 +207,7 @@ final class RebrickableDataLoaderTest extends TestCase
 
         $elements = $loader->getPartElements($externalPartId);
 
-        $this->assertSame($expectedElements, $elements);
+        self::assertSame($expectedElements, $elements);
     }
 
     #[Test]
@@ -224,9 +224,9 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($externalPartId, $this->callback(function ($callback) use ($externalPartId, $externalElements) {
                 // fake cache miss
                 $result = $callback($externalPartId);
-                $this->assertInstanceOf(ExternalElementCollection::class, $result);
-                $this->assertCount(2, $result);
-                $this->assertEquals($externalElements, $result);
+                self::assertInstanceOf(ExternalElementCollection::class, $result);
+                self::assertCount(2, $result);
+                self::assertEquals($externalElements, $result);
                 return true;
             }))
             ->willReturn($externalElements);
@@ -261,7 +261,7 @@ final class RebrickableDataLoaderTest extends TestCase
         $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
 
         $elements = $loader->getPartElements($externalPartId);
-        $this->assertSame($externalElements, $elements);
+        self::assertSame($externalElements, $elements);
     }
 
     #[Test]
@@ -288,7 +288,7 @@ final class RebrickableDataLoaderTest extends TestCase
 
         $elements = $loader->getSetElements($externalSetId);
 
-        $this->assertSame($expectedElements, $elements);
+        self::assertSame($expectedElements, $elements);
     }
 
     #[Test]
@@ -305,9 +305,9 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($externalSetId, $this->callback(function ($callback) use ($externalSetId, $externalElements) {
                 // fake cache miss
                 $result = $callback($externalSetId);
-                $this->assertInstanceOf(ExternalSetElementCollection::class, $result);
-                $this->assertCount(2, $result);
-                $this->assertEquals($externalElements, $result);
+                self::assertInstanceOf(ExternalSetElementCollection::class, $result);
+                self::assertCount(2, $result);
+                self::assertEquals($externalElements, $result);
                 return true;
             }))
             ->willReturn($externalElements);
@@ -343,6 +343,6 @@ final class RebrickableDataLoaderTest extends TestCase
         $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
 
         $elements = $loader->getSetElements($externalSetId);
-        $this->assertSame($externalElements, $elements);
+        self::assertSame($externalElements, $elements);
     }
 }

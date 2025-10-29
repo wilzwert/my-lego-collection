@@ -11,8 +11,9 @@ final readonly class ExternalElement
         private string $imagePath,
         private string $externalColorId,
         private string $colorName
-    )
-    {}
+    ) {
+
+    }
 
     public function getExternalId(): string
     {

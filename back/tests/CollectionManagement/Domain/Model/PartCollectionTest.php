@@ -20,11 +20,11 @@ class PartCollectionTest extends TestCase
         ]);
         $collection->add(new ExternalPart('externalId3', 'legoId3', 'Part 3', 'image3'));
 
-        $this->assertCount(3, $collection);
-        $this->assertInstanceOf(ExternalPart::class, $collection->get(0));
-        $this->assertInstanceOf(ExternalPart::class, $collection->get(1));
-        $this->assertNull($collection->get(3));
-        $this->assertEquals('legoId1', $collection->get(0)->getLegoId());
+        self::assertCount(3, $collection);
+        self::assertInstanceOf(ExternalPart::class, $collection->get(0));
+        self::assertInstanceOf(ExternalPart::class, $collection->get(1));
+        self::assertNull($collection->get(3));
+        self::assertEquals('legoId1', $collection->get(0)->getLegoId());
     }
 
     #[Test]
@@ -41,6 +41,6 @@ class PartCollectionTest extends TestCase
         $collection->add(new ExternalSet('exernalId', 'legoId', 'Set', 100, '', 2006));
 
         $collection->add(new ExternalPart('externalId', 'legoId', 'Part', 'part'));
-        $this->assertCount(3, $collection);
+        self::assertCount(3, $collection);
     }
 }

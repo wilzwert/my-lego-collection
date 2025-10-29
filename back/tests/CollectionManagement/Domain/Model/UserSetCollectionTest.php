@@ -28,13 +28,13 @@ class UserSetCollectionTest extends TestCase
         ]);
         $collection->add(new UserSet(Uuid::fromString('userSetId3'), $localSet3));
 
-        $this->assertCount(3, $collection);
-        $this->assertInstanceOf(UserSet::class, $collection->get(0));
-        $this->assertInstanceOf(UserSet::class, $collection->get(1));
-        $this->assertInstanceOf(UserSet::class, $collection->get(2));
-        $this->assertNull($collection->get(3));
-        $this->assertEquals($localSet1, $collection->get(0)->getLocalSet());
-        $this->assertEquals('userSetId1', $collection->get(0)->getId()->__toString());
+        self::assertCount(3, $collection);
+        self::assertInstanceOf(UserSet::class, $collection->get(0));
+        self::assertInstanceOf(UserSet::class, $collection->get(1));
+        self::assertInstanceOf(UserSet::class, $collection->get(2));
+        self::assertNull($collection->get(3));
+        self::assertEquals($localSet1, $collection->get(0)->getLocalSet());
+        self::assertEquals('userSetId1', $collection->get(0)->getId()->__toString());
     }
 
     #[Test]
@@ -55,6 +55,6 @@ class UserSetCollectionTest extends TestCase
         $collection->add(new ExternalPart('partExternalId', 'legoId', 'Part', ''));
 
         $collection->add(new UserSet(Uuid::fromString('userSetId3'), $localSet3));
-        $this->assertCount(3, $collection);
+        self::assertCount(3, $collection);
     }
 }

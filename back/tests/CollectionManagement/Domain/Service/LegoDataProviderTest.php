@@ -39,8 +39,33 @@ class LegoDataProviderTest extends TestCase
 
         $result = $provider->findSets('search');
 
-        $this->assertInstanceOf(SetCollection::class, $result);
-        $this->assertCount(2, $result);
+        self::assertCount(2, $result);
+    }
+
+    #[Test]
+    public function shouldReturnEmptySetCollection_whenNoResultsFromLoaders() :void
+    {
+        $loaderMock1 = $this->createMock(LegoDataLoader::class);
+        $loaderMock1->expects($this->once())
+            ->method('findSets')
+            ->with('search')
+            ->willReturn(null);
+
+        $provider = new LegoDataProvider([$loaderMock1]);
+
+        $result = $provider->findSets('search');
+
+        self::assertCount(0, $result);
+    }
+
+    #[Test]
+    public function shouldReturnEmptySetCollection_whenNoLoader() :void
+    {
+        $provider = new LegoDataProvider([]);
+
+        $result = $provider->findSets('search');
+
+        self::assertCount(0, $result);
     }
 
     #[Test]
@@ -69,7 +94,32 @@ class LegoDataProviderTest extends TestCase
 
         $result = $provider->findParts('search');
 
-        $this->assertInstanceOf(PartCollection::class, $result);
-        $this->assertCount(2, $result);
+        self::assertCount(2, $result);
+    }
+
+    #[Test]
+    public function shouldReturnEmptyPartCollection_whenNoResultsFromLoaders() :void
+    {
+        $loaderMock1 = $this->createMock(LegoDataLoader::class);
+        $loaderMock1->expects($this->once())
+            ->method('findParts')
+            ->with('search')
+            ->willReturn(null);
+
+        $provider = new LegoDataProvider([$loaderMock1]);
+
+        $result = $provider->findParts('search');
+
+        self::assertCount(0, $result);
+    }
+
+    #[Test]
+    public function shouldReturnEmptyPartCollection_whenNoLoader() :void
+    {
+        $provider = new LegoDataProvider([]);
+
+        $result = $provider->findParts('search');
+
+        self::assertCount(0, $result);
     }
 }
