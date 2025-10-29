@@ -4,7 +4,7 @@ namespace App\User\Domain\Entity;
 
 use App\Shared\Domain\Uuid;
 
-final readonly class User
+readonly class User
 {
     /**
      * @param Uuid $id

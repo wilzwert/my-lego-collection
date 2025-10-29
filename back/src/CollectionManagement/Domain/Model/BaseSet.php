@@ -30,11 +30,6 @@ abstract readonly class BaseSet
         return $this->name;
     }
 
-    public function getProductionYear(): int
-    {
-        return $this->productionYear;
-    }
-
     public function getPartCount(): int
     {
         return $this->partCount;
@@ -43,5 +38,10 @@ abstract readonly class BaseSet
     public function getImagePath(): string
     {
         return $this->imagePath;
+    }
+
+    public function getProductionYear(): int
+    {
+        return $this->productionYear;
     }
 }

@@ -7,7 +7,7 @@ use App\Shared\Domain\Uuid;
 
 /**
  * @author Wilhelm Zwertvaegher
- * A BaseSet that exists locally (i.e. saved in local DB)
+ * A BaseSet that exists locally (i.e. is saved locally)
  */
 
 final readonly class Set extends BaseSet
@@ -29,15 +29,15 @@ final readonly class Set extends BaseSet
         int $partCount,
         string $imagePath,
         int $productionYear,
-    )
-    {
+    ) {
         parent::__construct($externalId, $legoId, $name, $partCount, $imagePath, $productionYear);
     }
 
     /**
      * @return Uuid
      */
-     public function getId(): Uuid {
+    public function getId(): Uuid
+    {
         return $this->id;
     }
 }

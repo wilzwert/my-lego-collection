@@ -4,9 +4,15 @@ namespace App\CollectionManagement\Domain\Model\Local;
 
 use App\Shared\Domain\Uuid;
 
-class UserSet
+/**
+ * A local user's set which consists of an id and a local set
+ * TODO : add meaningful information, such as status (OWNED, WANTED...), status last update, rating...
+ *
+ * @author Wilhelm Zwertvaegher
+ */
+readonly class UserSet
 {
-    public function __construct(private readonly Uuid $uuid, private readonly Set $localSet)
+    public function __construct(private Uuid $id, private Set $localSet)
     {
     }
 
@@ -15,9 +21,9 @@ class UserSet
         return $this->localSet;
     }
 
-    public function getUuid(): Uuid
+    public function getId(): Uuid
     {
-        return $this->uuid;
+        return $this->id;
     }
 
 }

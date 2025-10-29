@@ -12,6 +12,14 @@ use Symfony\Contracts\Cache\CacheInterface;
  */
 class MockCacheInterfaceImplementation implements CacheInterface
 {
+
+    /**
+     * @param string $key
+     * @param callable $callback
+     * @param float|null $beta
+     * @param array|null $metadata
+     * @return null
+     */
     public function get(string $key, callable $callback, ?float $beta = null, ?array &$metadata = null): null
     {
         return null;

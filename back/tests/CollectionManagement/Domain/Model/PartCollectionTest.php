@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class PartCollectionTest extends TestCase
 {
     #[Test]
-    public function testExternalPartCollection()
+    public function testPartCollection(): void
     {
         $collection = new PartCollection([
            new ExternalPart('externalId1', 'legoId1', 'Part 1', 'image1'),
@@ -28,15 +28,16 @@ class PartCollectionTest extends TestCase
     }
 
     #[Test]
-    public function whenPassingWrongType_thenShouldThrowInvalidArgumentException()
+    public function whenPassingWrongType_thenShouldThrowInvalidArgumentException(): void
     {
         $collection = new PartCollection([
-            new ExternalPart('externalId1', 'legoId1', 'Part 1', '', 2008),
-            new ExternalPart('externalId2', 'legoId2', 'Part 2', '', 2009),
+            new ExternalPart('externalId1', 'legoId1', 'Part 1', ''),
+            new ExternalPart('externalId2', 'legoId2', 'Part 2', ''),
         ]);
 
-        // adding a Part to a PartCollection should not be possible
+        // adding a ExternalSet to a PartCollection should not be possible
         $this->expectException(InvalidArgumentException::class);
+        // @phpstan-ignore argument.type
         $collection->add(new ExternalSet('exernalId', 'legoId', 'Set', 100, '', 2006));
 
         $collection->add(new ExternalPart('externalId', 'legoId', 'Part', 'part'));

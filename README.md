@@ -40,6 +40,7 @@ You can use the docker/dev/docker-compose.yml to provide
 
 ### Backend
 
+Run tests in your docker container.
 
 `cd back`
 
@@ -50,3 +51,14 @@ To execute tests without coverage :
  `vendor/bin/phpunit --no-coverage`
 
   There are 2 tests suites : 'Unit' and 'Integration'. You can use the `--testsuites` command line option to select one.
+  
+
+## Quality
+
+### Backend
+
+Run PHPStan in your docker container.
+
+`cd back`
+
+`vendor/bin/phpstan`

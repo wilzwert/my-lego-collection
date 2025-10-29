@@ -6,7 +6,7 @@ namespace App\CollectionManagement\Domain\Model;
  * @author Wilhelm Zwertvaegher
  * A representation of an external Part  retrieved from an external source
  */
-readonly class BasePart
+abstract readonly class BasePart
 {
     public function __construct(
         private string $externalId,
