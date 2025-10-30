@@ -12,14 +12,14 @@ use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
 #[Autoconfigure]
-class RebrickableCacheManager
+class ExternalDataCacheManager
 {
-    private const TTL = 86400;
+    private const int TTL = 86400;
 
     public function __construct(
         private readonly CacheInterface $cache,
-    )
-    {}
+    ) {
+    }
 
     public function getSets(string $search, callable $callback): ?SetCollection
     {
@@ -59,7 +59,7 @@ class RebrickableCacheManager
 
     public function clear(): void
     {
-        if($this->cache instanceof AbstractAdapter){
+        if ($this->cache instanceof AbstractAdapter) {
             $this->cache->clear();
         }
     }

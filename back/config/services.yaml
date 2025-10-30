@@ -21,13 +21,13 @@ services:
     # please note that last definitions always *replace* previous ones
     App\CollectionManagement\Domain\RepositorySetRepository: '@App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repository\DoctrineSetRepository'
 
-    App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager:
+    App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager:
         arguments:
             $cache: '@cache.rebrickable_search'
 
     App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader:
         arguments:
-            $cacheManager: '@App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager'
+            $cacheManager: '@App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager'
             $apiKey: '%env(REBRICKABLE_API_KEY)%'
 
     App\CollectionManagement\Domain\Service\LegoDataProvider:

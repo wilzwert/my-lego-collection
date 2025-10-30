@@ -28,9 +28,9 @@ class RebrickableDataLoader implements LegoDataLoader
     private const API_BASE_URL = 'https://rebrickable.com/api/v3/lego/';
 
     public function __construct(
-        private readonly RebrickableCacheManager $cacheManager,
-        private readonly HttpClientInterface $httpClient,
-        private readonly string $apiKey
+        private readonly ExternalDataCacheManager $cacheManager,
+        private readonly HttpClientInterface      $httpClient,
+        private readonly string                   $apiKey
     ) {
     }
 

@@ -10,7 +10,7 @@ use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
+use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
 use App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -30,7 +30,7 @@ final class RebrickableDataLoaderTest extends TestCase
             new ExternalSet('externalId2', 'legoId2', 'Cached set 2', 200, '', 2006),
         ]);
 
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $cacheManager->expects($this->once())
             ->method('getSets')
             ->with($search, $this->anything())
@@ -51,7 +51,7 @@ final class RebrickableDataLoaderTest extends TestCase
     public function shouldGetSetsWithHttpClient(): void
     {
         $search = 'Star Wars';
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $externalSets = new SetCollection(array(
           new ExternalSet('1-1', '1', 'BaseSet 1', 10, '', 2008),
           new ExternalSet('2-1', '2', 'BaseSet 2', 20, '', 2007)
@@ -112,7 +112,7 @@ final class RebrickableDataLoaderTest extends TestCase
             new ExternalPart('externalId2', 'legoId2', 'Cached part 2', ''),
         ]);
 
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $cacheManager->expects($this->once())
             ->method('getParts')
             ->with($search, $this->anything())
@@ -133,7 +133,7 @@ final class RebrickableDataLoaderTest extends TestCase
     public function shouldGetPartsWithHttpClient(): void
     {
         $search = 'part search';
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $externalParts = new PartCollection(array(
             new ExternalPart('1-1', '1', 'Part 1', ''),
             new ExternalPart('2-1', '2', 'Part 2', '')
@@ -193,7 +193,7 @@ final class RebrickableDataLoaderTest extends TestCase
             new ExternalElement('externalId2', 'legoId2', 'externalPartId2', '', '4', 'Red'),
         ]);
 
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $cacheManager->expects($this->once())
             ->method('getPartElements')
             ->with($externalPartId, $this->anything())
@@ -214,7 +214,7 @@ final class RebrickableDataLoaderTest extends TestCase
     public function shouldGetPartElementsWithHttpClient(): void
     {
         $externalPartId = '93061';
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $externalElements = new ExternalElementCollection([
             new ExternalElement('legoId1', 'legoId1', '93061', '', '0', 'Black'),
             new ExternalElement('legoId2', 'legoId2', '93061', '', '4', 'Red'),
@@ -274,7 +274,7 @@ final class RebrickableDataLoaderTest extends TestCase
             new ExternalSetElement('externalId2', '93061', 'externalPartId2', 10),
         ]);
 
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $cacheManager->expects($this->once())
             ->method('getSetElements')
             ->with($externalSetId, $this->anything())
@@ -295,7 +295,7 @@ final class RebrickableDataLoaderTest extends TestCase
     public function shouldGetSetElementsWithHttpClient(): void
     {
         $externalSetId = '93061';
-        $cacheManager = $this->createMock(RebrickableCacheManager::class);
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
         $externalElements = new ExternalSetElementCollection([
             new ExternalSetElement('externalId1', '93061', 'externalPartId1', 5),
             new ExternalSetElement('externalId2', '93061', 'externalPartId2', 10),

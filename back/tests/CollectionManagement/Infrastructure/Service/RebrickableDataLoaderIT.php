@@ -2,7 +2,7 @@
 
 namespace App\Tests\CollectionManagement\Infrastructure\Service;
 
-use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
+use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use PHPUnit\Framework\Attributes\Test;
@@ -11,7 +11,7 @@ use App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader;
 class RebrickableDataLoaderIT extends KernelTestCase
 {
 
-    private RebrickableCacheManager $cacheManager;
+    private ExternalDataCacheManager $cacheManager;
 
     private RebrickableDataLoader $underTest;
 
@@ -19,7 +19,7 @@ class RebrickableDataLoaderIT extends KernelTestCase
     {
         self::bootKernel();
         $container = self::getContainer();
-        $this->cacheManager = new RebrickableCacheManager($container->get('cache.rebrickable_search'));
+        $this->cacheManager = new ExternalDataCacheManager($container->get('cache.rebrickable_search'));
         $this->cacheManager->clear();
         $httpClient = $container->get(HttpClientInterface::class);
         $this->underTest = new RebrickableDataLoader($this->cacheManager, $httpClient, $_ENV['REBRICKABLE_API_KEY']);

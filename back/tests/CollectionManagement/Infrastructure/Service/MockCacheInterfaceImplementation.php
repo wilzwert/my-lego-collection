@@ -6,7 +6,7 @@ use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @author W. Zwertvaegher
- * To test that RebrickableCacheManager may call the clear method only it its CacheInterface
+ * To test that ExternalDataCacheManager may call the clear method only it its CacheInterface
  * is an instance of AbstractAdapter, we need a mock CacheInterface which has a clear() method.
  * This allows to mock it and check that the clear() method is never called
  */

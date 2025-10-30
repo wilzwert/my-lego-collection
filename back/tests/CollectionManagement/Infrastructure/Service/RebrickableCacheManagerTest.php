@@ -10,7 +10,7 @@ use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
+use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -21,12 +21,12 @@ use Symfony\Component\Cache\Adapter\AbstractAdapter;
 class RebrickableCacheManagerTest extends TestCase
 {
     private MockObject $cache;
-    private RebrickableCacheManager $manager;
+    private ExternalDataCacheManager $manager;
 
     protected function setUp(): void
     {
         $this->cache = $this->createMock(CacheInterface::class);
-        $this->manager = new RebrickableCacheManager($this->cache);
+        $this->manager = new ExternalDataCacheManager($this->cache);
     }
 
     #[Test]
@@ -148,7 +148,7 @@ class RebrickableCacheManagerTest extends TestCase
         $adapter = $this->createMock(AbstractAdapter::class);
         $adapter->expects($this->once())->method('clear');
 
-        $manager = new RebrickableCacheManager($adapter);
+        $manager = new ExternalDataCacheManager($adapter);
         $manager->clear();
     }
 
@@ -156,7 +156,7 @@ class RebrickableCacheManagerTest extends TestCase
     public function whenCacheIsNotAbstractAdapter_thenClearShouldDoNothing(): void
     {
         $adapter = $this->createMock(MockCacheInterfaceImplementation::class);
-        $manager = new RebrickableCacheManager($adapter);
+        $manager = new ExternalDataCacheManager($adapter);
 
         $adapter->expects($this->never())->method('clear');
         $manager->clear();
