@@ -2,26 +2,24 @@
 
 namespace App\User\Application\Command;
 
-final readonly class RegisterUserCommand
+final class RegisterUserCommand
 {
     public function __construct(
-        private string $email,
-        private string $username,
-        private string $password
+        public string $email {
+            get {
+                return $this->email;
+            }
+        },
+        public string $username {
+            get {
+                return $this->username;
+            }
+        },
+        public string $password {
+            get {
+                return $this->password;
+            }
+        }
     ) {
-    }
-
-    public function getEmail(): string
-    {
-        return $this->email;
-    }
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
     }
 }

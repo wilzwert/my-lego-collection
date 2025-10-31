@@ -15,7 +15,7 @@ readonly class User
      */
     public function __construct(
         private Uuid $id,
-        private string $email,
+        public string $email,
         private string $username,
         private string $passwordHash,
         private array $roles = ['ROLE_USER']

@@ -26,11 +26,11 @@ readonly class DefaultUserService implements UserService
     public function createUser(RegisterUserCommand $command): ?User
     {
         return $this->transactionProvider->transactional(function () use ($command) {
-            $user = $this->userRepository->findByEmailOrUsername($command->getEmail(), $command->getUsername());
+            $user = $this->userRepository->findByEmailOrUsername($command->email, $command->username);
             if ($user) {
                 throw new UserAlreadyExistsException('User already exists');
             }
-            $user = new User(Uuid::generate(), $command->getEmail(), $command->getUsername(), $this->passwordHasher->hash($command->getPassword()));
+            $user = new User(Uuid::generate(), $command->email, $command->username, $this->passwordHasher->hash($command->password));
             $this->userRepository->save($user);
             return $user;
         });

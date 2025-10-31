@@ -9,7 +9,7 @@ use App\User\Domain\Service\UserService;
 readonly class GetUserHandler
 {
     public function __construct(
-        private readonly UserService $userService
+        private UserService $userService
     )
     {}
 

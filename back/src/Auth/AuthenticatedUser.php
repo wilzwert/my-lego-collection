@@ -3,9 +3,10 @@
 namespace App\Auth;
 
 use App\User\Domain\Entity\User;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-readonly class AuthenticatedUser implements UserInterface
+readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
     public function __construct(private User $user)
     {
