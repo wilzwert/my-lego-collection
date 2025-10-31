@@ -29,7 +29,7 @@ Frontend :
 
 ## Usage
 
-### Docker for dev
+### Docker for dev backend
 
 You can use the docker/dev/docker-compose.yml to provide
 - a Caddy / FrankenPHP server (with XDebug)
@@ -40,7 +40,7 @@ You can use the docker/dev/docker-compose.yml to provide
 
 ### Backend
 
-Run tests in your docker container.
+Your can run tests (unit and integration) in your docker dev container :
 
 `cd back`
 
@@ -50,8 +50,9 @@ To execute tests with code coverage and HTML report :
 To execute tests without coverage :
  `vendor/bin/phpunit --no-coverage`
 
-  There are 2 tests suites : 'Unit' and 'Integration'. You can use the `--testsuites` command line option to select one.
-  
+There are 2 tests suites : 'Unit' and 'Integration'. You can use the `--testsuites` command line option to select one.
+
+You may also execute tests in your IDE but this requires a bit of configuration (at least in PHPStorm). 
 
 ## Quality
 
