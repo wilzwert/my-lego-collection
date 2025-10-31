@@ -8,7 +8,7 @@ use App\User\Infrastructure\Dto\UserDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\ObjectMapper\ObjectMapper;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -27,6 +27,10 @@ class UserController extends AbstractController
     public function me(
         #[CurrentUser] ?UserInterface $user
     ) :JsonResponse {
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+
         $retrievedUser = ($this->getUserHandler)(new GetUserQuery($user->getUserIdentifier()));
         if (!$retrievedUser) {
             throw new NotFoundHttpException();
