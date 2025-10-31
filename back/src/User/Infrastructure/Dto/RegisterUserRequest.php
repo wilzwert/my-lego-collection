@@ -2,8 +2,11 @@
 
 namespace App\User\Infrastructure\Dto;
 
+use App\User\Application\Command\RegisterUserCommand;
+use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
+#[Map(target: RegisterUserCommand::class)]
 readonly class RegisterUserRequest
 {
     #[Assert\Email(

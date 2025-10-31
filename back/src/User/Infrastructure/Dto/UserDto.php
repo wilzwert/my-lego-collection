@@ -3,24 +3,19 @@
 namespace App\User\Infrastructure\Dto;
 
 use App\User\Domain\Entity\User;
+use Symfony\Component\ObjectMapper\Attribute\Map;
 
-final readonly class UserDto
+#[Map(source: User::class)]
+final class UserDto
 {
-    private string $email;
+    public string $email;
 
-    private string $username;
+    public string $username;
 
     /**
      * @var list<string>
      */
-    private array $roles;
-
-    public function __construct(User $user)
-    {
-        $this->email = $user->getEmail();
-        $this->username = $user->getUsername();
-        $this->roles = $user->getRoles();
-    }
+    public array $roles;
 
     public function getEmail(): string
     {
