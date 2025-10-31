@@ -90,7 +90,7 @@ class RebrickableDataLoaderIT extends KernelTestCase
         $setExternalId = '75353-1';
         $elements = $this->underTest->getSetElements($setExternalId);
 
-        self::assertCount(85, $elements);
+        self::assertCount(86, $elements);
         self::assertEquals($elements, $this->cacheManager->getSetElements($setExternalId, fn () => $this->fail("Should have been cached")));
         self::assertEquals("6302313", $elements->get(0)->getExternalId());
         self::assertEquals("75353-1", $elements->get(0)->getExternalSetId());

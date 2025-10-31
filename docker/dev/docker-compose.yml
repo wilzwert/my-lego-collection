@@ -5,11 +5,15 @@ services:
       dockerfile: docker/dev/frankenphp/Dockerfile
     container_name: mylego_collection_app
     restart: unless-stopped
+    # run as root to allow TestContainers to start
+    # DO NOT USE in production environments
+    user: root
     volumes:
       - ../../back/src:/app/src
       - ../../back/tests:/app/tests
       - ../../back/config:/app/config
       - ../../back/coverage:/app/coverage
+      - ../../back/migrations:/app/migrations
       - ../../back/templates:/app/templates
       - ../../back/public:/app/public
       - ../../back/composer.json:/app/composer.json
@@ -20,15 +24,18 @@ services:
       - ../../back/phpunit.xml:/app/phpunit.xml
       # bad performance when mounting vendor on windows machines
       # - ../../back/vendor:/app/vendor
+      # necessary to enable TestContainer to create containers
+      - /var/run/docker.sock:/var/run/docker.sock
     environment:
       - XDEBUG_MODE=debug
       - XDEBUG_START_WITH_REQUEST=yes
       - XDEBUG_CONFIG=client_host=host.docker.internal
-      - POSTGRES_HOST=db
-      - POSTGRES_DB=mylego_collection
-      - POSTGRES_USER=mylego_collection
-      - POSTGRES_PASSWORD=mylego_collection_pass
-      - REDIS_URL=redis://mylego_collection_redis
+#      - POSTGRES_HOST=db
+#      - POSTGRES_DB=mylego_collection
+#      - POSTGRES_USER=mylego_collection
+#      - POSTGRES_PASSWORD=mylego_collection_pass
+#      - REDIS_URL=redis://mylego_collection_redis
+      # - DOCKER_HOST=tcp://host.docker.internal:2375
     ports:
       - "8080:80"   # FrankenPHP
     depends_on:
