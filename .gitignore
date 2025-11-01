@@ -10,8 +10,7 @@
 /front/.env.local
 
 # Docker
-docker/data/
-docker/volumes/
+docker/dev/db_data/
 
 # OS / IDE
 .DS_Store
