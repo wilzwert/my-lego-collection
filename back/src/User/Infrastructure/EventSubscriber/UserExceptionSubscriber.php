@@ -29,7 +29,7 @@ class UserExceptionSubscriber implements EventSubscriberInterface
     {
         $httpStatusCode =  self::$supportedExceptionTypes[get_class($event->getThrowable())] ?? null;
         // wrap the domain exception into an HttpException with the appropriate status code
-        if($httpStatusCode) {
+        if ($httpStatusCode) {
             throw new HttpException(
                 $httpStatusCode,
                 $event->getThrowable()->getMessage(),
