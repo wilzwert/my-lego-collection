@@ -8,19 +8,19 @@ abstract readonly class BaseSet
         private string $externalId,
         private string $legoId,
         private string $name,
-        private string $partCount,
+        private int $partCount,
         private string $imagePath,
-        private string $productionYear,
-    )
-    {}
+        private int $productionYear,
+    ) {
+    }
 
-        public function getLegoId(): string
+    public function getLegoId(): string
     {
         return $this->legoId;
     }
 
 
-        public function getExternalId(): string
+    public function getExternalId(): string
     {
         return $this->externalId;
     }
@@ -28,11 +28,6 @@ abstract readonly class BaseSet
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function getProductionYear(): int
-    {
-        return $this->productionYear;
     }
 
     public function getPartCount(): int
@@ -43,5 +38,10 @@ abstract readonly class BaseSet
     public function getImagePath(): string
     {
         return $this->imagePath;
+    }
+
+    public function getProductionYear(): int
+    {
+        return $this->productionYear;
     }
 }

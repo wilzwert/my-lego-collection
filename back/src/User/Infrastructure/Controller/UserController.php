@@ -2,21 +2,14 @@
 
 namespace App\User\Infrastructure\Controller;
 
-use App\Auth\AuthenticatedUser;
 use App\User\Application\Command\GetUserQuery;
-use App\User\Application\Command\RegisterUserCommand;
 use App\User\Application\Handler\GetUserHandler;
-use App\User\Application\Handler\RegisterUserHandler;
-use App\User\Domain\Entity\User;
-use App\User\Domain\Service\UserService;
-use App\User\Infrastructure\Dto\RegisterUserRequest;
 use App\User\Infrastructure\Dto\UserDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
@@ -25,19 +18,23 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class UserController extends AbstractController
 {
     public function __construct(
-        private readonly GetUserHandler $getUserHandler
-    )
-    {}
+        private readonly GetUserHandler $getUserHandler,
+        private readonly ObjectMapperInterface $objectMapper
+    ) {
+    }
 
     #[Route('/me', name: 'api_user_me', methods: ['GET'])]
     public function me(
         #[CurrentUser] ?UserInterface $user
-    ) :JsonResponse
-    {
+    ) :JsonResponse {
+        if (!$user) {
+            throw $this->createAccessDeniedException();
+        }
+
         $retrievedUser = ($this->getUserHandler)(new GetUserQuery($user->getUserIdentifier()));
-        if(!$retrievedUser) {
+        if (!$retrievedUser) {
             throw new NotFoundHttpException();
         }
-        return $this->json(new UserDto($retrievedUser));
+        return $this->json($this->objectMapper->map($retrievedUser, UserDto::class));
     }
 }

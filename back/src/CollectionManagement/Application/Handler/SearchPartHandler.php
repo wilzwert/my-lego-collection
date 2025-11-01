@@ -10,10 +10,11 @@ final readonly class SearchPartHandler
 {
     public function __construct(
         private PartService $partService
-    ) {}
+    ) {
+    }
 
     public function __invoke(SearchPartQuery $query): PartCollection
     {
-        return $this->partService->findParts($query->getSearch(),$query->getUserId());
+        return $this->partService->findParts($query->getSearch(), $query->getUserId());
     }
 }

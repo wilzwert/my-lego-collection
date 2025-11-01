@@ -2,13 +2,11 @@
 
 namespace App\CollectionManagement\Domain\Model;
 
-use App\CollectionManagement\Domain\Model\External\ExternalSet;
-use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\Shared\Domain\Collection;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Collection of UserSet
 
  * @extends Collection<UserSet>

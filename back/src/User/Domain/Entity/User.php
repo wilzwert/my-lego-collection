@@ -4,11 +4,18 @@ namespace App\User\Domain\Entity;
 
 use App\Shared\Domain\Uuid;
 
-final readonly class User
+readonly class User
 {
+    /**
+     * @param Uuid $id
+     * @param string $email
+     * @param string $username
+     * @param string $passwordHash
+     * @param list<string> $roles
+     */
     public function __construct(
         private Uuid $id,
-        private string $email,
+        public string $email,
         private string $username,
         private string $passwordHash,
         private array $roles = ['ROLE_USER']
@@ -30,6 +37,10 @@ final readonly class User
     {
         return $this->passwordHash;
     }
+
+    /**
+     * @return list<string>
+     */
     public function getRoles(): array
     {
         return $this->roles;

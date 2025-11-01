@@ -9,8 +9,14 @@ use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\Doctrine
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+/**
+ * @author Wilhelm Zwertvaegher
+ * @extends ServiceEntityRepository<DoctrineSet>
+ *
+ */
 #[Autoconfigure]
 class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetRepository
 {
@@ -19,23 +25,25 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
         parent::__construct($managerRegistry, DoctrineSet::class);
     }
 
-    #[\Override]
+    #[Override]
     public function add(Set $localSet): void
     {
         $this->entityManager->persist($localSet);
     }
 
+    #[Override]
     public function update(Set $localSet): void
     {
         // Nothing to do as we use Doctrine, and all changes to the entity are implicitly handled by doctrine
         // as long as the Set is handled by doctrine itself which MUST be the case here
     }
 
+    #[Override]
     public function findByUserAndExternalIds(string $userId, array $externalIds): SetCollection
     {
         return new SetCollection(
             array_map(
-                fn(DoctrineSet $s) => $s->toDomain(),
+                fn (DoctrineSet $s) => $s->toDomain(),
                 $this->createQueryBuilder('s')
                     ->join('s.userSets', 'us')
                     ->where('us.user = :userId')

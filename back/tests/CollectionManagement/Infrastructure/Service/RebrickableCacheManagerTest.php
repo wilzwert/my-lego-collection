@@ -10,8 +10,9 @@ use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Infrastructure\Service\RebrickableCacheManager;
+use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -19,17 +20,17 @@ use Symfony\Component\Cache\Adapter\AbstractAdapter;
 
 class RebrickableCacheManagerTest extends TestCase
 {
-    private CacheInterface $cache;
-    private RebrickableCacheManager $manager;
+    private MockObject $cache;
+    private ExternalDataCacheManager $manager;
 
     protected function setUp(): void
     {
         $this->cache = $this->createMock(CacheInterface::class);
-        $this->manager = new RebrickableCacheManager($this->cache);
+        $this->manager = new ExternalDataCacheManager($this->cache);
     }
 
     #[Test]
-    public function getSetsShouldCallCacheWithCorrectKeyAndCallback()
+    public function getSetsShouldCallCacheWithCorrectKeyAndCallback(): void
     {
         $search = 'Millennium Falcon';
         $expectedKey = 'search_set_' . md5(strtolower($search));
@@ -42,7 +43,7 @@ class RebrickableCacheManagerTest extends TestCase
             ->method('get')
             ->with(
                 $this->equalTo($expectedKey),
-                $this->callback(function ($callback) use ($search, $expectedSets) {
+                $this->callback(function ($callback) use ($expectedSets) {
                     $item = $this->createMock(ItemInterface::class);
                     $item->expects($this->once())->method('expiresAfter')->with(86400);
 
@@ -52,12 +53,12 @@ class RebrickableCacheManagerTest extends TestCase
             )
             ->willReturn($expectedSets);
 
-        $result = $this->manager->getSets($search, fn() => $expectedSets);
-        $this->assertSame($expectedSets, $result);
+        $result = $this->manager->getSets($search, fn () => $expectedSets);
+        self::assertSame($expectedSets, $result);
     }
 
     #[Test]
-    public function getPartsShouldCallCacheWithCorrectKeyAndCallback()
+    public function getPartsShouldCallCacheWithCorrectKeyAndCallback(): void
     {
         $search = 'Millennium Falcon';
         $expectedKey = 'search_part_' . md5(strtolower($search));
@@ -70,7 +71,7 @@ class RebrickableCacheManagerTest extends TestCase
             ->method('get')
             ->with(
                 $this->equalTo($expectedKey),
-                $this->callback(function ($callback) use ($search, $expectedParts) {
+                $this->callback(function ($callback) use ($expectedParts) {
                     $item = $this->createMock(ItemInterface::class);
                     $item->expects($this->once())->method('expiresAfter')->with(86400);
 
@@ -80,12 +81,12 @@ class RebrickableCacheManagerTest extends TestCase
             )
             ->willReturn($expectedParts);
 
-        $result = $this->manager->getParts($search, fn() => $expectedParts);
-        $this->assertSame($expectedParts, $result);
+        $result = $this->manager->getParts($search, fn () => $expectedParts);
+        self::assertSame($expectedParts, $result);
     }
 
     #[Test]
-    public function getPartsShouldUseCorrectCacheKey()
+    public function getPartsShouldUseCorrectCacheKey(): void
     {
         $search = 'Brick';
         $expectedKey = 'search_part_' . md5(strtolower($search));
@@ -100,18 +101,18 @@ class RebrickableCacheManagerTest extends TestCase
             ->with($this->equalTo($expectedKey), $this->anything())
             ->willReturn($expectedParts);
 
-        $this->manager->getParts($search, fn() => $expectedParts);
+        $this->manager->getParts($search, fn () => $expectedParts);
     }
 
     #[Test]
-    public function getPartElementsShouldUseCorrectCacheKey()
+    public function getPartElementsShouldUseCorrectCacheKey(): void
     {
         $id = '3001';
         $expectedKey = 'get_part_elements' . md5(strtolower($id));
 
         $expectedElements = new ExternalElementCollection([
-            new ExternalElement('externalId1', 'legoId1', 'externalPartId1', '', 0, 'Black'),
-            new ExternalElement('externalId2', 'legoId2', 'externalPartId2', '', 4, 'Red'),
+            new ExternalElement('externalId1', 'legoId1', 'externalPartId1', '', '0', 'Black'),
+            new ExternalElement('externalId2', 'legoId2', 'externalPartId2', '', '4', 'Red'),
         ]);
 
         $this->cache->expects($this->once())
@@ -119,11 +120,11 @@ class RebrickableCacheManagerTest extends TestCase
             ->with($this->equalTo($expectedKey), $this->anything())
             ->willReturn($expectedElements);
 
-        $this->manager->getPartElements($id, fn() => $expectedElements);
+        $this->manager->getPartElements($id, fn () => $expectedElements);
     }
 
     #[Test]
-    public function getSetElementsShouldUseCorrectCacheKey()
+    public function getSetElementsShouldUseCorrectCacheKey(): void
     {
         $id = '75257';
         $expectedKey = 'get_set_elements' . md5(strtolower($id));
@@ -138,26 +139,26 @@ class RebrickableCacheManagerTest extends TestCase
             ->with($this->equalTo($expectedKey), $this->anything())
             ->willReturn($expectedElements);
 
-        $this->manager->getSetElements($id, fn() => $expectedElements);
+        $this->manager->getSetElements($id, fn () => $expectedElements);
     }
 
     #[Test]
-    public function whenCacheIsAbstractAdapter_thenShouldClear()
+    public function whenCacheIsAbstractAdapter_thenShouldClear(): void
     {
         $adapter = $this->createMock(AbstractAdapter::class);
         $adapter->expects($this->once())->method('clear');
 
-        $manager = new RebrickableCacheManager($adapter);
+        $manager = new ExternalDataCacheManager($adapter);
         $manager->clear();
     }
 
     #[Test]
-    public function whenCacheIsNotAbstractAdapter_thenClearShouldDoNothing()
+    public function whenCacheIsNotAbstractAdapter_thenClearShouldDoNothing(): void
     {
         $adapter = $this->createMock(MockCacheInterfaceImplementation::class);
-        $manager = new RebrickableCacheManager($adapter);
+        $manager = new ExternalDataCacheManager($adapter);
 
         $adapter->expects($this->never())->method('clear');
-        $this->manager->clear();
+        $manager->clear();
     }
 }

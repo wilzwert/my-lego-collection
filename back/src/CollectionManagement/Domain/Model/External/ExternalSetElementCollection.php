@@ -5,7 +5,7 @@ namespace App\CollectionManagement\Domain\Model\External;
 use App\Shared\Domain\Collection;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * @extends Collection<ExternalSetElement>
  */
 final class ExternalSetElementCollection extends Collection

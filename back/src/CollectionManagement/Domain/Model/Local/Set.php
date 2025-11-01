@@ -6,8 +6,8 @@ use App\CollectionManagement\Domain\Model\BaseSet;
 use App\Shared\Domain\Uuid;
 
 /**
- * @author W. Zwertvaegher
- * A BaseSet that exists locally (i.e. saved in local DB)
+ * @author Wilhelm Zwertvaegher
+ * A BaseSet that exists locally (i.e. is saved locally)
  */
 
 final readonly class Set extends BaseSet
@@ -15,24 +15,29 @@ final readonly class Set extends BaseSet
     /**
      * @param Uuid $id
      * @param string $externalId
+     * @param string $legoId
+     * @param string $name
+     * @param int $partCount
+     * @param string $imagePath
+     * @param int $productionYear
      */
     public function __construct(
         private Uuid $id,
-        string $legoId,
         string $externalId,
+        string $legoId,
         string $name,
-        string $partCount,
+        int $partCount,
         string $imagePath,
-        string $productionYear,
-    )
-    {
-        parent::__construct($legoId, $externalId, $name, $partCount, $imagePath, $productionYear);
+        int $productionYear,
+    ) {
+        parent::__construct($externalId, $legoId, $name, $partCount, $imagePath, $productionYear);
     }
 
     /**
      * @return Uuid
      */
-     public function getId(): Uuid {
+    public function getId(): Uuid
+    {
         return $this->id;
     }
 }

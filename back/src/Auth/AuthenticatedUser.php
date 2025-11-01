@@ -3,11 +3,14 @@
 namespace App\Auth;
 
 use App\User\Domain\Entity\User;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-readonly class AuthenticatedUser implements UserInterface
+readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticatedUserInterface
 {
-    public function __construct(private User $user) {}
+    public function __construct(private User $user)
+    {
+    }
 
     public function getUserIdentifier(): string
     {
@@ -24,7 +27,9 @@ readonly class AuthenticatedUser implements UserInterface
         return $this->user->getPasswordHash();
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {
+    }
 
     public function getDomainUser(): User
     {

@@ -5,7 +5,7 @@ namespace App\CollectionManagement\Domain\Model;
 use App\Shared\Domain\Collection;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Collection of EnrichedSet which encapsulate an object implementing BaseSet and metadata
  * such as current status if current user has already added the BaseSet to their collection
  * @see EnrichedSet

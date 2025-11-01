@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Model\External;
 
 /**
- * @author W. Zwertvaegher
+ * @author Wilhelm Zwertvaegher
  * Representation of a Part of a BaseSet retrieved from an external source
  */
 final readonly class ExternalSetElement

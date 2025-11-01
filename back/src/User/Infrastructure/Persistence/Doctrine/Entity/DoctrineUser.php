@@ -19,22 +19,34 @@ class DoctrineUser
     #[ORM\Column(type: "string", length: 60, unique: true)]
     private string $username;
 
+    /**
+     * @var list<string>
+     */
     #[ORM\Column(type: "json")]
-    private array $roles = [];
+    private array $roles;
 
     #[ORM\Column(type: "string", nullable: false)]
     private string $passwordHash;
 
     /**
-     * @param User $user
+     * @param string $id
+     * @param string $email
+     * @param string $username
+     * @param string $passwordHash
+     * @param list<string> $roles
      */
-    public function __construct(User $user)
-    {
-        $this->id = $user->getId();
-        $this->email = $user->getEmail();
-        $this->username = $user->getUsername();
-        $this->roles = $user->getRoles();
-        $this->passwordHash = $user->getPasswordHash();
+    public function __construct(
+        string $id,
+        string $email,
+        string $username,
+        string $passwordHash,
+        array $roles
+    ) {
+        $this->id = $id;
+        $this->email = $email;
+        $this->username = $username;
+        $this->passwordHash = $passwordHash;
+        $this->roles = $roles;
     }
 
     public function getId(): string
@@ -47,6 +59,9 @@ class DoctrineUser
         return $this->email;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getRoles(): array
     {
         return $this->roles;
@@ -73,4 +88,3 @@ class DoctrineUser
         );
     }
 }
-

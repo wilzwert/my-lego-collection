@@ -37,4 +37,3 @@ class DoctrineUserSet
         return new UserSet(Uuid::fromString($this->userId), $this->set->toDomain());
     }
 }
-

@@ -3,10 +3,16 @@ FROM dunglas/frankenphp:php8.4
 # user/group
 ARG UID=1000
 ARG GID=1000
+ARG DOCKER_GID=0
 
 # Create a user to avoir working as root
 RUN addgroup --gid $GID symfony \
  && adduser --uid $UID --gid $GID --disabled-password --gecos "" symfony
+
+# Create a docker group and add our user to it
+RUN groupadd -g 0 ${DOCKER_GID} && usermod -aG docker appuser
+# RUN groupadd -for -g ${DOCKER_GID} docker \
+#    && usermod -aG docker symfony
  
 # allows startup even if running as non-root user
 # otherwise caddy will e.g. try to create a certificate in /data/caddy which is not writable as non-root by default
@@ -33,7 +39,7 @@ WORKDIR /app
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Installer dépendances Symfony
+# Install dependencies
 COPY back/composer.json back/composer.lock ./
 RUN composer install --no-scripts --no-interaction --no-progress
 

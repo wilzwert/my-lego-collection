@@ -7,9 +7,9 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 #[Autoconfigure]
-class SymfonyPasswordHasher implements PasswordHasher
+readonly class SymfonyPasswordHasher implements PasswordHasher
 {
-    public function __construct(private readonly UserPasswordHasherInterface $passwordHasher)
+    public function __construct(private UserPasswordHasherInterface $passwordHasher)
     {}
 
     public function hash(string $plainPassword): string

@@ -1,0 +1,12 @@
+gesdinet_jwt_refresh_token:
+    refresh_token_class: App\Auth\RefreshToken
+    ttl: 604800
+    cookie:
+        secure: false
+        http_only: true
+        path: /
+
+when@prod:
+    gesdinet_jwt_refresh_token:
+        cookie:
+            secure: true

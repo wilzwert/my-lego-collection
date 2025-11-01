@@ -3,9 +3,7 @@
 namespace App\CollectionManagement\Infrastructure\Controller;
 
 use App\CollectionManagement\Application\Command\SearchPartQuery;
-use App\CollectionManagement\Application\Command\SearchSetQuery;
 use App\CollectionManagement\Application\Handler\SearchPartHandler;
-use App\CollectionManagement\Application\Handler\SearchSetHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

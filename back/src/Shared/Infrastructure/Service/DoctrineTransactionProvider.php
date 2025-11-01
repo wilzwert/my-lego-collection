@@ -3,10 +3,11 @@
 namespace App\Shared\Infrastructure\Service;
 
 use App\Shared\Domain\TransactionProvider;
-use App\Shared\Domain\TransactionProviderException;
 use Doctrine\ORM\EntityManagerInterface;
+use Override;
+use Throwable;
 
-class DoctrineTransactionProvider implements TransactionProvider
+readonly class DoctrineTransactionProvider implements TransactionProvider
 {
 
     public function __construct(private readonly EntityManagerInterface $entityManager)
@@ -16,7 +17,7 @@ class DoctrineTransactionProvider implements TransactionProvider
     /**
      * @inheritDoc
      */
-    #[\Override]
+    #[Override]
     public function transactional(callable $callback): mixed
     {
         $this->entityManager->beginTransaction();
@@ -26,8 +27,7 @@ class DoctrineTransactionProvider implements TransactionProvider
             $this->entityManager->flush();
             $this->entityManager->commit();
             return $result;
-        }
-        catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->entityManager->rollback();
             // TODO log the transaction error
 

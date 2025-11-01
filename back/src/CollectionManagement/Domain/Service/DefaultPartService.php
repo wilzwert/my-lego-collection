@@ -5,11 +5,12 @@ namespace App\CollectionManagement\Domain\Service;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\Shared\Domain\Uuid;
 
-class DefaultPartService implements PartService
+readonly class DefaultPartService implements PartService
 {
     public function __construct(
-        private readonly LegoDataProvider $legoDataProvider
-    ) {}
+        private LegoDataProvider $legoDataProvider
+    ) {
+    }
 
     /**
      * @inheritDoc

@@ -1,0 +1,26 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Tests\CollectionManagement\Domain\Model\Local;
+
+use App\CollectionManagement\Domain\Model\BasePart;
+use App\CollectionManagement\Domain\Model\BaseSet;
+use App\CollectionManagement\Domain\Model\Local\Set;
+use App\Shared\Domain\Uuid;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * @author Wilhelm Zwertvaegher
+ */
+final class SetTest extends TestCase
+{
+    #[Test]
+    public function getId_shouldReturnExpectedValue(): void
+    {
+        $id = Uuid::fromString('setId');
+        $set = new Set($id, 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
+
+        self::assertEquals($id, $set->getId());
+    }
+}

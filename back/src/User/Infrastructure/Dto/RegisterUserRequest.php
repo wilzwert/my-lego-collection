@@ -2,11 +2,13 @@
 
 namespace App\User\Infrastructure\Dto;
 
+use App\User\Application\Command\RegisterUserCommand;
+use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RegisterUserRequest
+#[Map(target: RegisterUserCommand::class)]
+readonly class RegisterUserRequest
 {
-
     #[Assert\Email(
         message: 'The email {{ value }} is not a valid email.',
     )]
@@ -14,8 +16,8 @@ class RegisterUserRequest
 
     #[Assert\Regex(
         pattern: '/[@ ]/',
-        match: false,
         message: "The username cannot include spaces or '@'.",
+        match: false
     )]
     private readonly string $username;
 
@@ -25,8 +27,7 @@ class RegisterUserRequest
         string $email,
         string $username,
         string $password
-    )
-    {
+    ) {
         $this->email = $email;
         $this->username = $username;
         $this->password = $password;
@@ -45,5 +46,4 @@ class RegisterUserRequest
     {
         return $this->password;
     }
-
 }

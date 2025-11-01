@@ -10,6 +10,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @author Wilhelm Zwertvaegher
+ * @extends ServiceEntityRepository<DoctrineUser>
+ */
 class DoctrineUserRepository extends ServiceEntityRepository implements UserRepository
 {
     public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
@@ -19,8 +23,8 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findByEmail(string $email): ?User
     {
-        $doctrineUser = parent::findOneByEmail($email);
-        if(!$doctrineUser){
+        $doctrineUser = parent::findOneBy(['email' => $email]);
+        if (!$doctrineUser) {
             return null;
         }
         return $doctrineUser->toDomain();
@@ -28,8 +32,8 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findByUsername(string $username): ?User
     {
-        $doctrineUser = parent::findOneByUsername($username);
-        if(!$doctrineUser){
+        $doctrineUser = parent::findOneBy(['username' => $username]);
+        if (!$doctrineUser) {
             return null;
         }
         return $doctrineUser->toDomain();
@@ -50,7 +54,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findByIdentifier(string $identifier): ?User
     {
-        if(false === strpos($identifier, '@')){
+        if (!str_contains($identifier, '@')) {
             return $this->findByUsername($identifier);
         }
         return $this->findByEmail($identifier);
@@ -58,12 +62,20 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findById(Uuid $uuid): ?User
     {
-        $user = parent::findById($uuid->__toString());
-        return $user ? $user->toDomain() : null;
+        $user = parent::findOneBy(['id' => $uuid->__toString()]);
+        return $user?->toDomain();
     }
 
     public function save(User $user): void
     {
-        $this->entityManager->persist(new DoctrineUser($user));
+        $this->entityManager->persist(
+            new DoctrineUser(
+                $user->getId(),
+                $user->getEmail(),
+                $user->getUsername(),
+                $user->getPasswordHash(),
+                $user->getRoles()
+            )
+        );
     }
 }

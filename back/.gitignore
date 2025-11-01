@@ -1,7 +1,9 @@
 
 ###> symfony/framework-bundle ###
+/.env
 /.env.local
-/.env.local.php
+/.env.dev
+/.env.test
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
@@ -12,8 +14,19 @@
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+0.
 
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
+/coverage
 ###< phpunit/phpunit ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
+
+###> friendsofphp/php-cs-fixer ###
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+###< friendsofphp/php-cs-fixer ###

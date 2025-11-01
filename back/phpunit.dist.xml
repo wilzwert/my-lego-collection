@@ -14,14 +14,16 @@
         <ini name="display_errors" value="1" />
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
-        <server name="KERNEL_CLASS" value="App\Kernel"/>
         <env name="KERNEL_CLASS" value="App\Kernel"/>
         <server name="SHELL_VERBOSITY" value="-1" />
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="Unit">
             <directory>tests</directory>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory suffix="IT.php">tests</directory>
         </testsuite>
     </testsuites>
 
@@ -41,6 +43,17 @@
         </deprecationTrigger>
     </source>
 
+    <coverage includeUncoveredFiles="true"
+              pathCoverage="true"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <report>
+            <html outputDirectory="coverage" lowUpperBound="50" highLowerBound="90"/>
+        </report>
+    </coverage>
+
     <extensions>
+        <bootstrap class="App\Tests\IntegrationTestExtension">
+        </bootstrap>
     </extensions>
 </phpunit>

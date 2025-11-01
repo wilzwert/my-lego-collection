@@ -11,6 +11,10 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+/**
+ * @author W.Zwertvaegher
+ * @extends ServiceEntityRepository<Set>
+ */
 #[Autoconfigure]
 class DoctrineUserSetRepository extends ServiceEntityRepository implements UserSetRepository
 {
@@ -23,7 +27,7 @@ class DoctrineUserSetRepository extends ServiceEntityRepository implements UserS
     {
         return new UserSetCollection(
             array_map(
-                fn(DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
+                fn (DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
                 $this->createQueryBuilder('us')
                     ->join('us.set', 's')
                     ->where('us.user = :userId')
