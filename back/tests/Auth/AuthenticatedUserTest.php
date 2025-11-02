@@ -5,8 +5,9 @@ namespace App\Tests\Auth;
 /**
  * @author Wilhelm Zwertvaegher
  */
-use App\Auth\AuthenticatedUser;
-use App\User\Domain\Entity\User;
+
+use App\Auth\Domain\Model\Identity;
+use App\Auth\Infrastructure\Security\AuthenticatedUser;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -15,7 +16,7 @@ final class AuthenticatedUserTest extends TestCase
     #[Test]
     public function getUserIdentifier_shouldReturnUserEmail(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(Identity::class);
         $user->method('getEmail')->willReturn('john.doe@example.com');
 
         $authenticatedUser = new AuthenticatedUser($user);
@@ -27,7 +28,7 @@ final class AuthenticatedUserTest extends TestCase
     public function getRoles_shouldReturnUserRoles(): void
     {
         $roles = ['ROLE_USER', 'ROLE_ADMIN'];
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(Identity::class);
         $user->method('getRoles')->willReturn($roles);
 
         $authenticatedUser = new AuthenticatedUser($user);
@@ -38,7 +39,7 @@ final class AuthenticatedUserTest extends TestCase
     #[Test]
     public function getPassword_shouldReturnPasswordHash(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(Identity::class);
         $user->method('getPasswordHash')->willReturn('$2y$10$hashvalue');
 
         $authenticatedUser = new AuthenticatedUser($user);
@@ -50,7 +51,7 @@ final class AuthenticatedUserTest extends TestCase
     public function eraseCredentials_shouldDoNothing(): void
     {
         $this->expectNotToPerformAssertions();
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(Identity::class);
         $authenticatedUser = new AuthenticatedUser($user);
 
         // Just ensure it doesn't throw
@@ -60,9 +61,9 @@ final class AuthenticatedUserTest extends TestCase
     #[Test]
     public function getDomainUser_shouldReturnOriginalUser(): void
     {
-        $user = $this->createMock(User::class);
+        $user = $this->createMock(Identity::class);
         $authenticatedUser = new AuthenticatedUser($user);
 
-        self::assertSame($user, $authenticatedUser->getDomainUser());
+        self::assertSame($user, $authenticatedUser->getDomainIdentity());
     }
 }

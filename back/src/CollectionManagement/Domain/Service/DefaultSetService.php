@@ -5,7 +5,7 @@ namespace App\CollectionManagement\Domain\Service;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Repository\UserSetRepository;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use Override;
 
 readonly class DefaultSetService implements SetService

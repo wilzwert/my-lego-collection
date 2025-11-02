@@ -21,8 +21,8 @@ doctrine:
             AuthDoctrine:
                 type: attribute
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Auth'
-                prefix: 'App\Auth'
+                dir: '%kernel.project_dir%/src/Auth/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'App\Auth\Infrastructure\Persistence\Doctrine'
                 alias: Auth
             CollectionManagementDoctrine:
                 type: attribute
@@ -35,7 +35,7 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence/Doctrine/Entity'
                 prefix: 'App\User\Infrastructure\Persistence\Doctrine'
-                alias: User
+                alias: Identity
 
         controller_resolver:
             auto_mapping: false

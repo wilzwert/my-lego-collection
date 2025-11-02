@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Domain\Model\External;
 
-use App\Shared\Domain\Collection;
+use App\Shared\Domain\Model\Collection;
 
 /**
  * @author Wilhelm Zwertvaegher

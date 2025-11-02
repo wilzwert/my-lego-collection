@@ -4,7 +4,7 @@ namespace App\CollectionManagement\Domain\Model;
 
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\Local\Set;
-use App\Shared\Domain\Collection;
+use App\Shared\Domain\Model\Collection;
 
 /**
  * @author Wilhelm Zwertvaegher

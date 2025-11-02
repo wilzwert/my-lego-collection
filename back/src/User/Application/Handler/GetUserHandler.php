@@ -2,19 +2,19 @@
 
 namespace App\User\Application\Handler;
 
+use App\Auth\Domain\Model\Identity;
+use App\Auth\Domain\Service\IdentityService;
 use App\User\Application\Command\GetUserQuery;
-use App\User\Domain\Entity\User;
-use App\User\Domain\Service\UserService;
 
 readonly class GetUserHandler
 {
     public function __construct(
-        private UserService $userService
+        private IdentityService $userService
     )
     {}
 
-    public function __invoke(GetUserQuery $query): ?User
+    public function __invoke(GetUserQuery $query): ?Identity
     {
-        return $this->userService->getUserByIdentifier($query->getIdentifier());
+        return $this->userService->getIdentityByIdentifier($query->getIdentifier());
     }
 }

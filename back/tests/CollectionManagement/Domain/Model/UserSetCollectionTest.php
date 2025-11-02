@@ -3,12 +3,10 @@
 namespace App\Tests\CollectionManagement\Domain\Model;
 
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
-use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
-use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Model\UserSetCollection;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

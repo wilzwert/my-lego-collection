@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Model;
 
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
-use App\Shared\Domain\Collection;
+use App\Shared\Domain\Model\Collection;
 
 /**
  * @author Wilhelm Zwertvaegher

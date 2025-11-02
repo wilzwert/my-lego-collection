@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\CollectionManagement\Domain\Model\Local\Set;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

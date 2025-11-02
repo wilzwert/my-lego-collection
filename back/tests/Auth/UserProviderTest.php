@@ -2,10 +2,10 @@
 
 namespace App\Tests\Auth;
 
-use App\Auth\AuthenticatedUser;
-use App\Auth\UserProvider;
-use App\User\Domain\Entity\User;
-use App\User\Domain\Repository\UserRepository;
+use App\Auth\Domain\Model\Identity;
+use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Auth\Infrastructure\Security\UserProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -20,8 +20,8 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function loadUserByIdentifier_shouldReturnAuthenticatedUserWhenFound(): void
     {
-        $domainUser = $this->createMock(User::class);
-        $repository = $this->createMock(UserRepository::class);
+        $domainUser = $this->createMock(Identity::class);
+        $repository = $this->createMock(IdentityRepository::class);
         $repository->method('findByIdentifier')->willReturn($domainUser);
 
         $provider = new UserProvider($repository);
@@ -29,19 +29,19 @@ final class UserProviderTest extends TestCase
         $result = $provider->loadUserByIdentifier('john.doe@example.com');
 
         self::assertInstanceOf(AuthenticatedUser::class, $result);
-        self::assertSame($domainUser, $result->getDomainUser());
+        self::assertSame($domainUser, $result->getDomainIdentity());
     }
 
     #[Test]
     public function loadUserByIdentifier_shouldThrowExceptionWhenUserNotFound(): void
     {
-        $repository = $this->createMock(UserRepository::class);
+        $repository = $this->createMock(IdentityRepository::class);
         $repository->method('findByIdentifier')->willReturn(null);
 
         $provider = new UserProvider($repository);
 
         $this->expectException(UserNotFoundException::class);
-        $this->expectExceptionMessage("User 'unknown@example.com' not found.");
+        $this->expectExceptionMessage("Identity 'unknown@example.com' not found.");
 
         $provider->loadUserByIdentifier('unknown@example.com');
     }
@@ -49,7 +49,7 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function refreshUser_shouldReturnSameInstance(): void
     {
-        $repository = $this->createMock(UserRepository::class);
+        $repository = $this->createMock(IdentityRepository::class);
         $provider = new UserProvider($repository);
 
         $user = $this->createMock(UserInterface::class);
@@ -62,7 +62,7 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function supportsClass_shouldReturnTrueForAuthenticatedUserClass(): void
     {
-        $repository = $this->createMock(UserRepository::class);
+        $repository = $this->createMock(IdentityRepository::class);
         $provider = new UserProvider($repository);
 
         self::assertTrue($provider->supportsClass(AuthenticatedUser::class));
@@ -71,7 +71,7 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function supportsClass_shouldReturnFalseForDifferentClass(): void
     {
-        $repository = $this->createMock(UserRepository::class);
+        $repository = $this->createMock(IdentityRepository::class);
         $provider = new UserProvider($repository);
 
         self::assertFalse($provider->supportsClass(\stdClass::class));

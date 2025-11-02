@@ -13,7 +13,7 @@ use App\CollectionManagement\Domain\Model\UserSetCollection;
 use App\CollectionManagement\Domain\Repository\UserSetRepository;
 use App\CollectionManagement\Domain\Service\DefaultSetService;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

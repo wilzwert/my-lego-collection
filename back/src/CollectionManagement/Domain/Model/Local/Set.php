@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Model\Local;
 
 use App\CollectionManagement\Domain\Model\BaseSet;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 
 /**
  * @author Wilhelm Zwertvaegher
