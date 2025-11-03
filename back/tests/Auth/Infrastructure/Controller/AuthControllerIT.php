@@ -115,7 +115,7 @@ final class AuthControllerIT extends WebTestCase
         $this->assertResponseIsSuccessful();
         $response = json_decode($client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('email', $response);
-        $this->assertSame($authenticatedUser->getDomainIdentity()->getEmail(), $response['email']);
+        $this->assertSame('user1@test.com', $response['email']);
     }
 
     #[Test]

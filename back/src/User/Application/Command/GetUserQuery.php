@@ -5,12 +5,12 @@ namespace App\User\Application\Command;
 final readonly class GetUserQuery
 {
     public function __construct(
-        private string $identifier
-    )
-    {}
+        private string $identityId
+    ) {
+    }
 
-    public function getIdentifier(): string
+    public function getIdentityId(): string
     {
-        return $this->identifier;
+        return $this->identityId;
     }
 }

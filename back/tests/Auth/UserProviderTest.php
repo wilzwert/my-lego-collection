@@ -6,6 +6,7 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Infrastructure\Security\AuthenticatedUser;
 use App\Auth\Infrastructure\Security\UserProvider;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -20,16 +21,17 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function loadUserByIdentifier_shouldReturnAuthenticatedUserWhenFound(): void
     {
-        $domainUser = $this->createMock(Identity::class);
+        $domainIdentity = $this->createMock(Identity::class);
+        $domainIdentity->method('getId')->willReturn(Uuid::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
         $repository = $this->createMock(IdentityRepository::class);
-        $repository->method('findByIdentifier')->willReturn($domainUser);
+        $repository->method('findByIdentifier')->willReturn($domainIdentity);
 
         $provider = new UserProvider($repository);
 
         $result = $provider->loadUserByIdentifier('john.doe@example.com');
 
         self::assertInstanceOf(AuthenticatedUser::class, $result);
-        self::assertSame($domainUser, $result->getDomainIdentity());
+        self::assertSame('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1', $result->getUserIdentifier());
     }
 
     #[Test]

@@ -13,5 +13,5 @@ interface IdentityRepository
 
     public function findById(Uuid $uuid): ?Identity;
 
-    public function save(Identity $user): void;
+    public function save(Identity $identity): void;
 }

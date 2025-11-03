@@ -45,8 +45,8 @@ final class EnrichedSetTest extends TestCase
     public function getUserSet_shouldReturnExpectedValue(): void
     {
         $set = $this->createConcreteSet();
-        $localSet = new Set(Uuid::fromString('localSetId'), 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
-        $userSet = new UserSet(Uuid::fromString('userSetId'), $localSet);
+        $localSet = new Set(Uuid::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd'), 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
+        $userSet = new UserSet(Uuid::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd'), $localSet);
         $enrichedSet = new EnrichedSet($set, $userSet);
 
         self::assertSame($userSet, $enrichedSet->getUserSet());

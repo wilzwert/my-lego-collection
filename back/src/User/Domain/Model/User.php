@@ -12,7 +12,9 @@ readonly class User
      */
     public function __construct(
         private Uuid $id,
-        private Uuid $identityId
+        private Uuid $identityId,
+        private \DateTimeImmutable $createdAt,
+        private \DateTimeImmutable $updatedAt
     ) {
     }
 
@@ -24,6 +26,16 @@ readonly class User
     public function getIdentityId(): Uuid
     {
         return $this->identityId;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
+        return $this->updatedAt;
     }
 }
 

@@ -66,15 +66,15 @@ class DoctrineIdentityRepository extends ServiceEntityRepository implements Iden
         return $user?->toDomain();
     }
 
-    public function save(Identity $user): void
+    public function save(Identity $identity): void
     {
         $this->entityManager->persist(
             new DoctrineIdentity(
-                $user->getId(),
-                $user->getEmail(),
-                $user->getUsername(),
-                $user->getPasswordHash(),
-                $user->getRoles()
+                $identity->getId(),
+                $identity->getEmail(),
+                $identity->getUsername(),
+                $identity->getPasswordHash(),
+                $identity->getRoles()
             )
         );
     }

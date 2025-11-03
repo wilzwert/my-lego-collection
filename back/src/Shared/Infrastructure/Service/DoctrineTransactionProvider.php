@@ -30,7 +30,7 @@ readonly class DoctrineTransactionProvider implements TransactionProvider
         } catch (Throwable $e) {
             $this->entityManager->rollback();
             // TODO log the transaction error
-
+            echo "Rollback done...\n";
             // then rethrow the exception as is, because it may (should ?) be a domain Exception with meaning
             // throw new TransactionProviderException($e);
             throw $e;

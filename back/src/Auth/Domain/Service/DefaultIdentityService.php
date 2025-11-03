@@ -41,6 +41,11 @@ readonly class DefaultIdentityService implements IdentityService
         });
     }
 
+    public function getIdentityById(Uuid $id): ?Identity
+    {
+        return $this->identityRepository->findById($id);
+    }
+
     public function getIdentityByIdentifier(string $identifier): ?Identity
     {
         return $this->identityRepository->findByIdentifier($identifier);

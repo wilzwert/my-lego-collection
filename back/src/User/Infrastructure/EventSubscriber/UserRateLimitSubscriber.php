@@ -12,7 +12,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 
 /**
- * This rate limit applies to the User 'slice' only
+ * This rate limit applies to the DoctrineUser 'slice' only
  * Other slices may have their own subscribers (or not)
  * TODO : maybe we should consider the rate limit a global feature instead or relying on each slice to implement it
  * Although it may seem 'cleaner' to have each slice implement it, it may result in code duplication

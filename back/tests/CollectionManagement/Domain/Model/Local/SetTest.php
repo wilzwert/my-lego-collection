@@ -16,7 +16,7 @@ final class SetTest extends TestCase
     #[Test]
     public function getId_shouldReturnExpectedValue(): void
     {
-        $id = Uuid::fromString('setId');
+        $id = Uuid::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
         $set = new Set($id, 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
 
         self::assertEquals($id, $set->getId());

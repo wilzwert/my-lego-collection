@@ -8,6 +8,7 @@ namespace App\Tests\Auth;
 
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -18,10 +19,11 @@ final class AuthenticatedUserTest extends TestCase
     {
         $user = $this->createMock(Identity::class);
         $user->method('getEmail')->willReturn('john.doe@example.com');
+        $user->method('getId')->willReturn(Uuid::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
 
         $authenticatedUser = new AuthenticatedUser($user);
 
-        self::assertSame('john.doe@example.com', $authenticatedUser->getUserIdentifier());
+        self::assertSame('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1', $authenticatedUser->getUserIdentifier());
     }
 
     #[Test]
@@ -56,14 +58,5 @@ final class AuthenticatedUserTest extends TestCase
 
         // Just ensure it doesn't throw
         $authenticatedUser->eraseCredentials();
-    }
-
-    #[Test]
-    public function getDomainUser_shouldReturnOriginalUser(): void
-    {
-        $user = $this->createMock(Identity::class);
-        $authenticatedUser = new AuthenticatedUser($user);
-
-        self::assertSame($user, $authenticatedUser->getDomainIdentity());
     }
 }

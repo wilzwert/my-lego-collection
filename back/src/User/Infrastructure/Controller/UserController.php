@@ -2,9 +2,11 @@
 
 namespace App\User\Infrastructure\Controller;
 
+use App\Auth\Application\Command\GetIdentityQuery;
 use App\Auth\Infrastructure\Dto\IdentityDto;
 use App\User\Application\Command\GetUserQuery;
 use App\User\Application\Handler\GetUserHandler;
+use App\User\Infrastructure\Dto\UserDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -29,7 +31,16 @@ class UserController extends AbstractController
     public function me(
         #[CurrentUser] ?UserInterface $user
     ) :JsonResponse {
-        // TODO
-        return $this->json('');
+        $user = ($this->getUserHandler)(new GetUserQuery($user->getUserIdentifier()));
+
+        if (!$user) {
+            throw new NotFoundHttpException('User not found');
+        }
+        return $this->json(
+            $this->objectMapper->map(
+                $user,
+                UserDto::class
+            )
+        );
     }
 }

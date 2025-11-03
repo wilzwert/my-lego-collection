@@ -2,16 +2,14 @@
 
 namespace App\User\Domain\Repository;
 
-use App\Auth\Domain\Model\Identity;
 use App\Shared\Domain\Model\Uuid;
+use App\User\Domain\Model\User;
 
 interface UserRepository
 {
-    public function findByEmailOrUsername(string $email, string $username): ?Identity;
+    public function findByIdentityId(Uuid $identityId): ?User;
 
-    public function findByIdentifier(string $identifier): ?Identity;
+    public function findById(Uuid $uuid): ?User;
 
-    public function findById(Uuid $uuid): ?Identity;
-
-    public function save(Identity $user): void;
+    public function save(User $user): void;
 }

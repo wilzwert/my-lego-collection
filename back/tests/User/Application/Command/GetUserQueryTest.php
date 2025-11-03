@@ -17,6 +17,6 @@ final class GetUserQueryTest extends TestCase
     {
         $query = new GetUserQuery('user-123');
 
-        $this->assertSame('user-123', $query->getIdentifier());
+        $this->assertSame('user-123', $query->getIdentityId());
     }
 }

@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 final class RegistrationHandlerTest extends TestCase
 {
     #[Test]
-    public function shouldInvokeUserServiceToCreateUser(): void
+    public function shouldInvokeIdentityServiceToCreateIdentity(): void
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $identityService = $this->createMock(IdentityService::class);
