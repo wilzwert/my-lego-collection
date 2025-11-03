@@ -19,7 +19,7 @@ class UserFixtures extends Fixture
         // create a predictable and usable password
         $password = $this->hasher->hashPassword(new DummyAuthenticatedUser(''), 'Abcd_1234!');
         $id = Uuid::fromString('userId1');
-        $user = new DoctrineIdentity($id, 'user1@test.com', 'user1', $password, ['USER']);
+        $user = new DoctrineIdentity($id, 'user1@test.com', 'user1', $password, ['ROLE_USER']);
         $manager->persist($user);
 
         $manager->flush();
