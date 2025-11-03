@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Application\Command;
 
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 
 final readonly class SearchSetQuery
 {

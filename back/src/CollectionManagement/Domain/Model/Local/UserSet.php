@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Domain\Model\Local;
 
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 
 /**
  * A local user's set which consists of an id and a local set

@@ -6,12 +6,11 @@ namespace App\Tests\Shared\Infrastructure\Security;
  * @author Wilhelm Zwertvaegher
  */
 
-use App\Auth\AuthenticatedUser;
+use App\Auth\Infrastructure\Security\AuthenticatedUser;
 use App\Shared\Infrastructure\Security\JwtTokenGenerator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 final class JwtTokenGeneratorTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Service;
 
-use App\Shared\Domain\TransactionProvider;
+use App\Shared\Domain\Service\TransactionProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Throwable;

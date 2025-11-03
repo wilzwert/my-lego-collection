@@ -3,19 +3,13 @@
 namespace App\Tests\CollectionManagement\Domain\Application\Handler;
 
 use App\CollectionManagement\Application\Command\SearchSetQuery;
-use App\CollectionManagement\Application\Handler\SearchPartHandler;
-use App\CollectionManagement\Application\Command\SearchPartQuery;
 use App\CollectionManagement\Application\Handler\SearchSetHandler;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
-use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\Local\Set;
-use App\CollectionManagement\Domain\Model\PartCollection;
-use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Domain\Service\PartService;
 use App\CollectionManagement\Domain\Service\SetService;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

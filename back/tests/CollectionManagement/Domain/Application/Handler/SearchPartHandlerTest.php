@@ -2,12 +2,12 @@
 
 namespace App\Tests\CollectionManagement\Domain\Application\Handler;
 
-use App\CollectionManagement\Application\Handler\SearchPartHandler;
 use App\CollectionManagement\Application\Command\SearchPartQuery;
+use App\CollectionManagement\Application\Handler\SearchPartHandler;
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Service\PartService;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

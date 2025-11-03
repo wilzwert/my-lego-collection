@@ -2,9 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Shared\Domain\Uuid;
-use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
-use App\User\Infrastructure\Service\DummyAuthenticatedUser;
+use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
+use App\Auth\Infrastructure\Security\DummyAuthenticatedUser;
+use App\Shared\Domain\Model\Uuid;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -19,7 +19,7 @@ class UserFixtures extends Fixture
         // create a predictable and usable password
         $password = $this->hasher->hashPassword(new DummyAuthenticatedUser(''), 'Abcd_1234!');
         $id = Uuid::fromString('userId1');
-        $user = new DoctrineUser($id, 'user1@test.com', 'user1', $password, ['USER']);
+        $user = new DoctrineIdentity($id, 'user1@test.com', 'user1', $password, ['ROLE_USER']);
         $manager->persist($user);
 
         $manager->flush();

@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\PartCollection;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 
 interface PartService
 {

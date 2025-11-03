@@ -3,7 +3,7 @@
 namespace App\Tests\CollectionManagement\Domain\Application\Command;
 
 use App\CollectionManagement\Application\Command\SearchPartQuery;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

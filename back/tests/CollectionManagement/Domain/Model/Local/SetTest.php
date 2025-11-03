@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace App\Tests\CollectionManagement\Domain\Model\Local;
 
-use App\CollectionManagement\Domain\Model\BasePart;
-use App\CollectionManagement\Domain\Model\BaseSet;
 use App\CollectionManagement\Domain\Model\Local\Set;
-use App\Shared\Domain\Uuid;
+use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

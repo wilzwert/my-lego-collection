@@ -2,6 +2,13 @@ api_login:
     path: /api/login
     format: json
 
+auth_controllers:
+    resource:
+        path: ../src/Auth/Infrastructure/Controller
+        namespace: App\Auth\Infrastructure\Controller
+    type: attribute
+    format: json
+
 user_controllers:
     resource:
         path: ../src/User/Infrastructure/Controller

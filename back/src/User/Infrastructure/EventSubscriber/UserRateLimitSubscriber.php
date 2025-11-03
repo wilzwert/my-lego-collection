@@ -9,9 +9,7 @@ use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Symfony\Component\HttpKernel\Exception\TooManyRequestsHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\RateLimiter\LimiterInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * This rate limit applies to the User 'slice' only
@@ -28,7 +26,6 @@ readonly class UserRateLimitSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private Security                    $security,
-        private RateLimiterFactoryInterface $registerByIpLimiter,
         private RateLimiterFactoryInterface $publicApiByIpLimiter,
         private RateLimiterFactoryInterface $apiByUserLimiter
     ) {
@@ -42,8 +39,7 @@ readonly class UserRateLimitSubscriber implements EventSubscriberInterface
     public function routeShouldBeLimited(Request $request): bool
     {
         $routesToLimit = [
-            'api_user_register',
-            'api_sets_search',
+            'api_user_me',
         ];
         $route = $request->attributes->get('_route');
         return $route && in_array($route, $routesToLimit, true);
@@ -61,14 +57,12 @@ readonly class UserRateLimitSubscriber implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
-        $route = $event->getRequest()->attributes->get('_route');
         $user = $this->security->getUser();
 
         $factory = $this->publicApiByIpLimiter;
         $key = $request->getClientIp();
-        if ($route === 'api_user_register') {
-            $factory = $this->registerByIpLimiter;
-        } elseif ($user) {
+
+        if ($user) {
             $factory = $this->apiByUserLimiter;
             $key = $user->getUserIdentifier();
         }

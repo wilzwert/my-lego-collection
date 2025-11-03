@@ -38,7 +38,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory = $this->createMock(RateLimiterFactoryInterface::class);
         $factory->expects($this->never())->method('create');
 
-        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory, $factory);
+        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
         $this->assertFalse($subscriber->isMainRequest($event));
     }
 
@@ -56,15 +56,15 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory = $this->createMock(RateLimiterFactoryInterface::class);
         $factory->expects($this->never())->method('create');
 
-        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory, $factory);
+        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
         $this->assertTrue($subscriber->isMainRequest($event));
     }
 
     public static function routesProvider(): array
     {
         return [
-            ['api_user_register', true],
-            ['api_sets_search', true],
+            ['api_user_register', false],
+            ['api_user_me', true],
             ['public_route', false],
             [null, false],
         ];
@@ -79,7 +79,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory = $this->createMock(RateLimiterFactoryInterface::class);
         $factory->expects($this->never())->method('create');
 
-        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory, $factory);
+        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
         $this->assertSame($expected, $subscriber->routeShouldBeLimited($request));
     }
 
@@ -87,10 +87,10 @@ final class UserRateLimitSubscriberTest extends TestCase
     public static function eventsProvider(): array
     {
         return [
-            [HttpKernelInterface::MAIN_REQUEST, 'api_user_register', true],
+            [HttpKernelInterface::MAIN_REQUEST, 'api_user_register', false],
             [HttpKernelInterface::SUB_REQUEST, 'api_user_register', false],
-            [HttpKernelInterface::MAIN_REQUEST, 'api_sets_search', true],
-            [HttpKernelInterface::SUB_REQUEST, 'api_sets_search', false],
+            [HttpKernelInterface::MAIN_REQUEST, 'api_user_me', true],
+            [HttpKernelInterface::SUB_REQUEST, 'api_user_me', false],
             [HttpKernelInterface::MAIN_REQUEST, 'public_route', false],
             [HttpKernelInterface::SUB_REQUEST, 'public_route', false],
             [HttpKernelInterface::MAIN_REQUEST, null, false],
@@ -112,7 +112,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory = $this->createMock(RateLimiterFactoryInterface::class);
         $factory->expects($this->never())->method('create');
 
-        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory, $factory);
+        $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
         $this->assertSame($expected, $subscriber->limitShouldBeApplied($event));
     }
 
@@ -137,9 +137,6 @@ final class UserRateLimitSubscriberTest extends TestCase
     {
         $security = $this->createMock(Security::class);
 
-        $registerByIpLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
-        $registerByIpLimiterFactory->expects($this->never())->method('create');
-
         $publicApiByIpLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
         $publicApiByIpLimiterFactory->expects($this->never())->method('create');
 
@@ -148,7 +145,6 @@ final class UserRateLimitSubscriberTest extends TestCase
 
         $subscriber = new UserRateLimitSubscriber(
             $security,
-            $registerByIpLimiterFactory,
             $publicApiByIpLimiterFactory,
             $apiByUserLimiterFactory
         );
@@ -184,7 +180,6 @@ final class UserRateLimitSubscriberTest extends TestCase
         $subscriber = new UserRateLimitSubscriber(
             $security,
             $factory,
-            $factory,
             $factory
         );
 
@@ -199,74 +194,6 @@ final class UserRateLimitSubscriberTest extends TestCase
         $this->assertTrue(true);
     }
 
-    /**
-     *
-     * Tests that the specific factory is used on user registration route, and other factories are not used
-     *
-     * @return void
-     * @throws \PHPUnit\Framework\MockObject\Exception
-     */
-    #[Test]
-    public function shouldUseRegisterByIpLimiter_forRegistrationRoute(): void
-    {
-        $limiter = $this->createMock(LimiterInterface::class);
-        $limiter->method('consume')->willReturn(new RateLimit(1, new \DateTimeImmutable(), true, 1));
-
-        $registerByIpLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
-        $registerByIpLimiterFactory->expects($this->once())->method('create')->with('127.0.0.1')->willReturn($limiter);
-
-        $unusedFactory = $this->createMock(RateLimiterFactoryInterface::class);
-        $unusedFactory->expects($this->never())->method('create');
-
-        $security = $this->createMock(Security::class);
-        $security->method('getUser')->willReturn(null);
-
-        $subscriber = new UserRateLimitSubscriber(
-            $security,
-            $registerByIpLimiterFactory,
-            $unusedFactory,
-            $unusedFactory
-        );
-
-        $request = new Request([], [], ['_route' => 'api_user_register'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
-
-        $subscriber->onKernelController($event);
-        $this->assertTrue(true);
-    }
-
-    #[Test]
-    public function shouldThrow_whenRateLimitExceeded_inRegisterByIpLimiter(): void
-    {
-        $limiter = $this->createMock(LimiterInterface::class);
-        $limiter->method('consume')->willReturn(new RateLimit(0, new \DateTimeImmutable(), false, 1));
-
-        $registerByIpLimiter = $this->createMock(RateLimiterFactoryInterface::class);
-        $registerByIpLimiter->expects($this->once())->method('create')->with('127.0.0.1')->willReturn($limiter);
-
-        $unusedFactory = $this->createMock(RateLimiterFactoryInterface::class);
-        $unusedFactory->expects($this->never())->method('create');
-
-        $security = $this->createMock(Security::class);
-        $security->method('getUser')->willReturn(null);
-
-        $subscriber = new UserRateLimitSubscriber(
-            $security,
-            $registerByIpLimiter,
-            $unusedFactory,
-            $unusedFactory
-        );
-
-        $request = new Request([], [], ['_route' => 'api_user_register'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
-        $kernel = $this->createMock(HttpKernelInterface::class);
-        $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
-
-        $this->expectException(TooManyRequestsHttpException::class);
-
-        $subscriber->onKernelController($event);
-    }
-
     #[Test]
     public function shouldUseUserLimiter_whenUserIsAuthenticated(): void
     {
@@ -279,19 +206,19 @@ final class UserRateLimitSubscriberTest extends TestCase
         $security = $this->createMock(Security::class);
         $security->method('getUser')->willReturn($user);
 
-        $factory = $this->createMock(RateLimiterFactoryInterface::class);
-        $factory->expects($this->once())->method('create')->with('user123')->willReturn($limiter);
+        $userByIdentifierLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
+        $userByIdentifierLimiterFactory->expects($this->once())->method('create')->with('user123')->willReturn($limiter);
+
         $unusedFactory = $this->createMock(RateLimiterFactoryInterface::class);
         $unusedFactory->expects($this->never())->method('create');
 
         $subscriber = new UserRateLimitSubscriber(
             $security,
             $unusedFactory,
-            $unusedFactory,
-            $factory
+            $userByIdentifierLimiterFactory
         );
 
-        $request = new Request([], [], ['_route' => 'api_sets_search'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
+        $request = new Request([], [], ['_route' => 'api_user_me'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
         $kernel = $this->createMock(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
@@ -320,11 +247,10 @@ final class UserRateLimitSubscriberTest extends TestCase
         $subscriber = new UserRateLimitSubscriber(
             $security,
             $unusedFactory,
-            $unusedFactory,
             $userByIpLimiterFactory
         );
 
-        $request = new Request([], [], ['_route' => 'api_sets_search'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
+        $request = new Request([], [], ['_route' => 'api_user_me'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
         $kernel = $this->createMock(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
@@ -349,12 +275,11 @@ final class UserRateLimitSubscriberTest extends TestCase
 
         $subscriber = new UserRateLimitSubscriber(
             $security,
-            $unusedFactory,
             $publicApiFactory,
             $unusedFactory
         );
 
-        $request = new Request([], [], ['_route' => 'api_sets_search'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
+        $request = new Request([], [], ['_route' => 'api_user_me'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
         $kernel = $this->createMock(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
@@ -379,12 +304,11 @@ final class UserRateLimitSubscriberTest extends TestCase
 
         $subscriber = new UserRateLimitSubscriber(
             $security,
-            $unusedFactory,
             $publicApiLimiterFactory,
             $unusedFactory
         );
 
-        $request = new Request([], [], ['_route' => 'api_sets_search'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
+        $request = new Request([], [], ['_route' => 'api_user_me'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
         $kernel = $this->createMock(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 

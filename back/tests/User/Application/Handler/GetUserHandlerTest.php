@@ -2,10 +2,10 @@
 
 namespace App\Tests\User\Application\Handler;
 
-use App\User\Application\Handler\GetUserHandler;
+use App\Auth\Domain\Model\Identity;
+use App\Auth\Domain\Service\IdentityService;
 use App\User\Application\Command\GetUserQuery;
-use App\User\Domain\Entity\User;
-use App\User\Domain\Service\UserService;
+use App\User\Application\Handler\GetUserHandler;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -18,12 +18,12 @@ final class GetUserHandlerTest extends TestCase
     public function returnsUserFromService(): void
     {
         $query = new GetUserQuery('user-123');
-        $expectedUser = $this->createMock(User::class);
+        $expectedUser = $this->createMock(Identity::class);
 
-        $userService = $this->createMock(UserService::class);
+        $userService = $this->createMock(IdentityService::class);
         $userService
             ->expects($this->once())
-            ->method('getUserByIdentifier')
+            ->method('getIdentityByIdentifier')
             ->with('user-123')
             ->willReturn($expectedUser);
 
@@ -39,10 +39,10 @@ final class GetUserHandlerTest extends TestCase
     {
         $query = new GetUserQuery('unknown-id');
 
-        $userService = $this->createMock(UserService::class);
+        $userService = $this->createMock(IdentityService::class);
         $userService
             ->expects($this->once())
-            ->method('getUserByIdentifier')
+            ->method('getIdentityByIdentifier')
             ->with('unknown-id')
             ->willReturn(null);
 
