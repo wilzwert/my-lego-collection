@@ -11,6 +11,7 @@ use App\Auth\Infrastructure\Dto\RegistrationRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -43,9 +44,14 @@ class AuthController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function me(#[CurrentUser] ?UserInterface $user) :JsonResponse
     {
+        $identity = ($this->getIdentityHandler)(new GetIdentityQuery($user->getUserIdentifier()));
+
+        if (!$identity) {
+            throw new NotFoundHttpException('User not found');
+        }
         return $this->json(
             $this->objectMapper->map(
-                ($this->getIdentityHandler)(new GetIdentityQuery($user->getUserIdentifier())),
+                $identity,
                 IdentityDto::class
             )
         );

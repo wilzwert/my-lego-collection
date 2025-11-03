@@ -7,6 +7,7 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Domain\Service\DefaultIdentityService;
 use App\Auth\Domain\Service\PasswordHasher;
+use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Auth\Application\Command\RegistrationCommand;
@@ -62,6 +63,11 @@ final class DefaultIdentityServiceTest extends TestCase
             ->expects($this->once())
             ->method('save')
             ->with($this->isInstanceOf(Identity::class));
+
+        $this->eventBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->isInstanceOf(DomainEvent::class));
 
         // simulate TransactionProvider behavior
         $this->transactionProvider
