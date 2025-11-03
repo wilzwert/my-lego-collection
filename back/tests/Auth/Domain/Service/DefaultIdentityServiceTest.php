@@ -2,15 +2,17 @@
 
 namespace App\Tests\Auth\Domain\Service;
 
+use App\Auth\Domain\Exception\IdentityAlreadyExistsException;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Domain\Service\DefaultIdentityService;
 use App\Auth\Domain\Service\PasswordHasher;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Exception\EntityAlreadyExistsException;
+use App\Shared\Domain\Model\Uuid;
 use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Auth\Application\Command\RegistrationCommand;
+use phpDocumentor\Reflection\Types\String_;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -42,7 +44,7 @@ final class DefaultIdentityServiceTest extends TestCase
     }
 
     #[Test]
-    public function shouldCreateUserWithinTransaction(): void
+    public function shouldCreateIdentityWithinTransaction(): void
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $hashedPassword = 'hashed-password';
@@ -64,10 +66,18 @@ final class DefaultIdentityServiceTest extends TestCase
             ->method('save')
             ->with($this->isInstanceOf(Identity::class));
 
+        $eventId = null;
         $this->eventBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->isInstanceOf(DomainEvent::class));
+            ->with(
+                $this->callback(function (DomainEvent $event) use (&$eventId) {
+                    $this->assertSame('auth.identity.created', $event->type());
+                    $this->assertNotEmpty($event->id());
+                    $eventId = $event->id();
+                    return true;
+                })
+            );
 
         // simulate TransactionProvider behavior
         $this->transactionProvider
@@ -83,10 +93,11 @@ final class DefaultIdentityServiceTest extends TestCase
         $this->assertInstanceOf(Identity::class, $result);
         $this->assertSame($command->email, $result->getEmail());
         $this->assertSame($command->username, $result->getUsername());
+        $this->assertSame($eventId, $result->getId()->__toString());
     }
 
     #[Test]
-    public function shouldThrowException_whenUserAlreadyExists(): void
+    public function shouldThrowException_whenIdentityAlreadyExists(): void
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $existingUser = $this->createMock(Identity::class);
@@ -99,13 +110,13 @@ final class DefaultIdentityServiceTest extends TestCase
             ->method('transactional')
             ->willReturnCallback(fn (callable $callback) => $callback());
 
-        $this->expectException(EntityAlreadyExistsException::class);
+        $this->expectException(IdentityAlreadyExistsException::class);
 
         $this->service->createIdentity($command);
     }
 
     #[Test]
-    public function shouldRetrieveUserByIdentifier(): void
+    public function shouldRetrieveIdentityByIdentifier(): void
     {
         $identifier = 'user-123';
         $expectedUser = $this->createMock(Identity::class);

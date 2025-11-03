@@ -2,17 +2,22 @@
 
 namespace App\Shared\Domain\Model;
 
-use App\Shared\Domain\Validation\Validator;
+use App\Shared\Domain\Exception\InvalidUuidException;
 use Random\RandomException;
 
 class Uuid
 {
     private string $value;
 
+    /**
+     * @throws InvalidUuidException
+     */
     private function __construct(string $value)
     {
-        $validator = new Validator();
-        $validator->requireValidUuidV4('value', $value)->validate();
+        // TODO check value format
+        if (!preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $value)) {
+            throw new InvalidUuidException();
+        }
         $this->value = $value;
     }
 
@@ -37,11 +42,6 @@ class Uuid
             substr($hex, 16, 4) . '-' .
             substr($hex, 20, 12);
         return new self($uuid);
-    }
-
-    public function value(): string
-    {
-        return $this->value;
     }
 
     public function __toString(): string

@@ -22,12 +22,12 @@ final class SearchSetHandlerTest extends TestCase
     #[Test]
     public function invokeDelegatesToPartServiceWithExpectedArguments(): void
     {
-        $userId = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
+        $userId = Uuid::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
         $query = new SearchSetQuery('set', $userId);
 
         $expectedResult = new EnrichedSetCollection([
             new EnrichedSet(new ExternalSet('externalId1', 'legoId1', 'Set 1', 100, 'image1', 2000)),
-            new EnrichedSet(new Set(Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8'), 'externalId2', 'legoId2', 'Set 2', 200, 'image2', 2001))
+            new EnrichedSet(new Set(Uuid::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd'), 'externalId2', 'legoId2', 'Set 2', 200, 'image2', 2001))
         ]);
 
         $setService = $this->createMock(SetService::class);
@@ -51,7 +51,7 @@ final class SearchSetHandlerTest extends TestCase
 
         $expectedResult = new EnrichedSetCollection([
             new EnrichedSet(new ExternalSet('externalId1', 'legoId1', 'Set 1', 100, 'image1', 2000)),
-            new EnrichedSet(new Set(Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8'), 'externalId2', 'legoId2', 'Set 2', 200, 'image2', 2001))
+            new EnrichedSet(new Set(Uuid::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd'), 'externalId2', 'legoId2', 'Set 2', 200, 'image2', 2001))
         ]);
 
         $setService = $this->createMock(SetService::class);

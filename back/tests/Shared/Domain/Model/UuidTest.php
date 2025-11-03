@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Tests\Shared\Domain\Model;
+namespace App\Tests\Shared\Domain;
 
-use App\Shared\Domain\Exception\ValidationException;
+use App\Shared\Domain\Exception\InvalidUuidException;
 use App\Shared\Domain\Model\Uuid;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -16,18 +17,28 @@ class UuidTest extends TestCase
     #[Test]
     public function fromString_shouldStoreValue(): void
     {
-        $uuid = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
+        $uuid = Uuid::fromString('e345818a-1043-4d48-a23a-e7cf30e7d76a');
+        $this->assertSame('e345818a-1043-4d48-a23a-e7cf30e7d76a', (string) $uuid);
+    }
 
-        $this->assertSame('dec59684-bdef-4a63-bad4-591c35540fa8', (string) $uuid);
+    public static function invalidUuid(): array
+    {
+        return [
+            ['bad_uuid'],
+            ['a1a1a1a1-a1a1-41a1-8a1a-a1a1a1'],
+            ['a1a1a1a1-a1a1-51a1-8a1a-a1a1a1a1a1a1'], // third group must start with 4
+            ['a1a1a1a1-a1a1-41a1-ca1a-a1a1a1a1a1a1'] // fourth group must start with [89ab]
+        ];
     }
 
     #[Test]
-    public function fromString_shouldThrowValidation_whenUuidInvalid(): void
+    #[DataProvider('invalidUuid')]
+    public function fromString_shouldThrowException($str): void
     {
-        $this->expectException(ValidationException::class);
-        $uuid = Uuid::fromString('123e4567-e89b-12d3-a456-426614174000');
-
+        $this->expectException(InvalidUuidException::class);
+        $uuid = Uuid::fromString($str);
     }
+
 
     #[Test]
     public function generate_shouldProduceValidV4Uuid(): void

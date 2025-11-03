@@ -23,7 +23,7 @@ trait WebTestCaseAuthenticateUserTrait
     private function authenticateAsUnknownUser(KernelBrowser $client) : AuthenticatedUser
     {
         $unknownUser = new Identity(
-            Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8'),
+            Uuid::fromString('00000000-0000-4000-a000-000000000000'),
             'unkown@example.com',
             'unknown',
             'password'
