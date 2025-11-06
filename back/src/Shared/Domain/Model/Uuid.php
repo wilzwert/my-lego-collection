@@ -36,6 +36,11 @@ class Uuid
         return new self($uuid);
     }
 
+    public function value(): string
+    {
+        return $this->value;
+    }
+
     public function __toString(): string
     {
         return $this->value;

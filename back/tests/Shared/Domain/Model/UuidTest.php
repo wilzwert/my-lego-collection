@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Domain;
+namespace App\Tests\Shared\Domain\Model;
 
 use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
