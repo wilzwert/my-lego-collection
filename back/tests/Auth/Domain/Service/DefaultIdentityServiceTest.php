@@ -2,12 +2,12 @@
 
 namespace App\Tests\Auth\Domain\Service;
 
-use App\Auth\Domain\Exception\IdentityAlreadyExistsException;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Domain\Service\DefaultIdentityService;
 use App\Auth\Domain\Service\PasswordHasher;
 use App\Shared\Domain\Event\DomainEvent;
+use App\Shared\Domain\Exception\EntityAlreadyExistsException;
 use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Auth\Application\Command\RegistrationCommand;
@@ -99,7 +99,7 @@ final class DefaultIdentityServiceTest extends TestCase
             ->method('transactional')
             ->willReturnCallback(fn (callable $callback) => $callback());
 
-        $this->expectException(IdentityAlreadyExistsException::class);
+        $this->expectException(EntityAlreadyExistsException::class);
 
         $this->service->createIdentity($command);
     }
