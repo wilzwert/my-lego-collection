@@ -3,9 +3,11 @@
 namespace App\Tests\Auth\Domain\Model;
 
 use App\Auth\Domain\Model\Identity;
+use App\Shared\Domain\Exception\ValidationException;
 use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Random\RandomException;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -14,9 +16,36 @@ use PHPUnit\Framework\TestCase;
 final class IdentityTest extends TestCase
 {
     #[Test]
+    public function whenEmailIsInvalid_thenShouldThrowValidationException(): void
+    {
+        $this->expectException(ValidationException::class);
+        $identity = new Identity(
+            Uuid::generate(),
+            'invalid email',
+            'username',
+            'passwordHash',
+            ['ROLE_USER']
+        );
+    }
+
+    #[Test]
+    public function whenNoRole_thenShouldThrowValidationException(): void
+    {
+        $this->expectException(ValidationException::class);
+        $identity = new Identity(
+            Uuid::generate(),
+            'email@example.com',
+            'username',
+            'passwordHash',
+            []
+
+        );
+    }
+
+    #[Test]
     public function shouldExposeAllGivenProperties(): void
     {
-        $id = Uuid::fromString('123e4567-e89b-42d3-9456-426614174000');
+        $id = Uuid::fromString('8f22d94a-acc3-45f5-b195-518ed858e858');
         $email = 'john@example.com';
         $username = 'john_doe';
         $passwordHash = 'hashed-password';
@@ -34,7 +63,7 @@ final class IdentityTest extends TestCase
     #[Test]
     public function shouldHaveRoleUserByDefault(): void
     {
-        $id = Uuid::fromString('123e4567-e89b-42d3-be45-426614174001');
+        $id = Uuid::fromString('8f22d94a-acc3-45f5-b195-518ed858e858');
 
         $user = new Identity($id, 'jane@example.com', 'jane_doe', 'secret-hash');
 
