@@ -45,7 +45,7 @@ final class AuthControllerIT extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertStringContainsString('not a valid email', $response['violations'][0]['title'] ?? '');
+        $this->assertStringContainsString('not a valid email', $response['errors']['email']['INVALID_FORMAT_ERROR']['invalid_format_error'] ?? '');
     }
 
     #[Test]
@@ -62,7 +62,8 @@ final class AuthControllerIT extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertStringContainsString('cannot include spaces or', $response['violations'][0]['title'] ?? '');
+        var_dump($response);
+        $this->assertStringContainsString('The username can only include alphanumeric characters, underscores, and dashes', $response['errors']['username']['REGEX_FAILED_ERROR']['regex_failed_error'] ?? '');
     }
 
     #[Test]
@@ -79,7 +80,8 @@ final class AuthControllerIT extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertStringContainsString('password strength', $response['violations'][0]['title'] ?? '');
+        var_dump($response);
+        $this->assertStringContainsString('password strength', $response['errors']['password']['PASSWORD_STRENGTH_ERROR']['password_strength_error'] ?? '');
     }
 
     #[Test]

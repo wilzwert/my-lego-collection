@@ -16,9 +16,9 @@ class UuidTest extends TestCase
     #[Test]
     public function fromString_shouldStoreValue(): void
     {
-        $uuid = Uuid::fromString('8f22d94a-acc3-45f5-b195-518ed858e858');
+        $uuid = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
 
-        $this->assertSame('8f22d94a-acc3-45f5-b195-518ed858e858', (string) $uuid);
+        $this->assertSame('dec59684-bdef-4a63-bad4-591c35540fa8', (string) $uuid);
     }
 
     #[Test]
