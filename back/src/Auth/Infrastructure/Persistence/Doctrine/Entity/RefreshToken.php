@@ -1,6 +1,6 @@
 <?php
 // @codeCoverageIgnoreStart
-namespace App\Auth\Infrastructure\Security;
+namespace App\Auth\Infrastructure\Persistence\Doctrine\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gesdinet\JWTRefreshTokenBundle\Entity\RefreshToken as BaseRefreshToken;
