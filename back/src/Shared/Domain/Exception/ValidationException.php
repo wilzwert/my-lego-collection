@@ -7,14 +7,14 @@ use App\Shared\Domain\Validation\ValidationErrors;
 /**
  * @author Wilhelm Zwertvaegher
  */
-class ValidationException extends \Exception
+class ValidationException extends DomainException
 {
     public function __construct(private ValidationErrors $errors)
     {
         parent::__construct('VALIDATION_FAILED');
     }
 
-    public function getErrors(): ValidationErrors
+    public function getValidationErrors(): ValidationErrors
     {
         return $this->errors;
     }
