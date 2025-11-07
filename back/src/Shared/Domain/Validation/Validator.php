@@ -97,7 +97,7 @@ class Validator
     {
         $pattern = "/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$/";
         if ($this->notEmpty($fieldName, $fieldValue) && !preg_match($pattern, $fieldValue)) {
-            $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::INVALID_EMAIL, ['invalid' => 'Invalid email']));
+            $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::INVALID_EMAIL, ['invalid' => sprintf('%s is not a valid email', $fieldValue)]));
         }
         return $this;
     }

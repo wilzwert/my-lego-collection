@@ -3,6 +3,7 @@
 namespace App\Auth\Infrastructure\Dto;
 
 use App\Auth\Application\Command\RegistrationCommand;
+use App\Shared\Domain\Exception\ErrorCode;
 use Symfony\Component\ObjectMapper\Attribute\Map;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -11,12 +12,13 @@ readonly class RegistrationRequest
 {
     #[Assert\Email(
         message: 'The email {{ value }} is not a valid email.',
+        payload: ['code' => ErrorCode::INVALID_EMAIL]
     )]
     private readonly string $email;
 
     #[Assert\Regex(
-        pattern: '/[@ ]/',
-        message: "The username cannot include spaces or '@'.",
+        pattern: '/[^a-zA-Z0-9_\-]/',
+        message: "The username can only include alphanumeric characters, underscores, and dashes.",
         match: false
     )]
     private readonly string $username;
