@@ -58,9 +58,9 @@ final class DefaultSetServiceTest extends TestCase
     #[Test]
     public function findSets_shouldReturnEnrichedSetCollectionWithUserData(): void
     {
-        $userId = Uuid::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
-        $userSetId = Uuid::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd');
-        $localSetId = Uuid::fromString('cbcd1234-abcd-4bcd-abcd-abcd1234abcd');
+        $userId = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
+        $userSetId = Uuid::fromString('cec59684-bdef-4a63-bad4-591c35540fa8');
+        $localSetId = Uuid::fromString('aec59684-bdef-4a63-bad4-591c35540fa8');
 
         // External sets
         $externalSetsCollection = new SetCollection([

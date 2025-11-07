@@ -45,7 +45,7 @@ final class IdentityTest extends TestCase
     #[Test]
     public function shouldExposeAllGivenProperties(): void
     {
-        $id = Uuid::fromString('8f22d94a-acc3-45f5-b195-518ed858e858');
+        $id = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
         $email = 'john@example.com';
         $username = 'john_doe';
         $passwordHash = 'hashed-password';
@@ -63,7 +63,7 @@ final class IdentityTest extends TestCase
     #[Test]
     public function shouldHaveRoleUserByDefault(): void
     {
-        $id = Uuid::fromString('8f22d94a-acc3-45f5-b195-518ed858e858');
+        $id = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
 
         $user = new Identity($id, 'jane@example.com', 'jane_doe', 'secret-hash');
 
