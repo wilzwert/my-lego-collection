@@ -2,7 +2,11 @@
 
 namespace App\Auth\Domain\Model;
 
+use App\Auth\Domain\Exception\AuthErrorCode;
+use App\Shared\Domain\Exception\ErrorCode;
+use App\Shared\Domain\Exception\ValidationException;
 use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Validation\Validator;
 
 readonly class Identity
 {
@@ -12,6 +16,7 @@ readonly class Identity
      * @param string $username
      * @param string $passwordHash
      * @param list<string> $roles
+     * @throws ValidationException
      */
     public function __construct(
         private Uuid $id,
@@ -19,7 +24,17 @@ readonly class Identity
         private string $username,
         private string $passwordHash,
         private array $roles = ['ROLE_USER']
-    ) {}
+    ) {
+        $validator = new Validator();
+        $validator
+            ->requireNotEmpty('id', $this->id)
+            ->requireNotEmpty('email', $this->email)
+            ->requireValidEmail('email', $this->email)
+            ->require('username', fn () => (bool)preg_match('/^[a-zA-Z0-9_-]+$/', $this->username), AuthErrorCode::INVALID_USERNAME)
+            ->requireNotEmpty('passwordHash', $this->passwordHash)
+            ->requireNotEmpty('roles', $this->roles)
+            ->validate();
+    }
 
     public function getId(): Uuid
     {
@@ -46,4 +61,3 @@ readonly class Identity
         return $this->roles;
     }
 }
-

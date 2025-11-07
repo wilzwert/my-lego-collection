@@ -2,6 +2,7 @@
 
 namespace App\Shared\Domain\Model;
 
+use App\Shared\Domain\Validation\Validator;
 use Random\RandomException;
 
 class Uuid
@@ -10,6 +11,8 @@ class Uuid
 
     private function __construct(string $value)
     {
+        $validator = new Validator();
+        $validator->requireValidUuidV4('value', $value)->validate();
         $this->value = $value;
     }
 
