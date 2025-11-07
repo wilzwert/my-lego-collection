@@ -30,12 +30,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/CollectionManagement/Infrastructure/Persistence/Doctrine/Entity'
                 prefix: 'App\CollectionManagement\Infrastructure\Persistence\Doctrine'
                 alias: CollectionManagement
-#            UserDoctrine:
-#                type: attribute
-#                is_bundle: false
-#                dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence/Doctrine/Entity'
-#                prefix: 'App\User\Infrastructure\Persistence\Doctrine'
-#                alias: User
+            UserDoctrine:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'App\User\Infrastructure\Persistence\Doctrine'
+                alias: User
 
         controller_resolver:
             auto_mapping: false
