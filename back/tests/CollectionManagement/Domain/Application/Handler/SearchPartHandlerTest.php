@@ -20,7 +20,7 @@ final class SearchPartHandlerTest extends TestCase
     #[Test]
     public function invokeDelegatesToPartServiceWithExpectedArguments(): void
     {
-        $userId = Uuid::fromString('userId');
+        $userId = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
         $query = new SearchPartQuery('brick', $userId);
 
         $expectedResult = new PartCollection([

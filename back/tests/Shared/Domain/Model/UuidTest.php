@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tests\Shared\Domain;
+namespace App\Tests\Shared\Domain\Model;
 
+use App\Shared\Domain\Exception\ValidationException;
 use App\Shared\Domain\Model\Uuid;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -15,9 +16,17 @@ class UuidTest extends TestCase
     #[Test]
     public function fromString_shouldStoreValue(): void
     {
+        $uuid = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
+
+        $this->assertSame('dec59684-bdef-4a63-bad4-591c35540fa8', (string) $uuid);
+    }
+
+    #[Test]
+    public function fromString_shouldThrowValidation_whenUuidInvalid(): void
+    {
+        $this->expectException(ValidationException::class);
         $uuid = Uuid::fromString('123e4567-e89b-12d3-a456-426614174000');
 
-        $this->assertSame('123e4567-e89b-12d3-a456-426614174000', (string) $uuid);
     }
 
     #[Test]
