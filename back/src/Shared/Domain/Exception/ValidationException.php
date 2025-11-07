@@ -18,9 +18,4 @@ class ValidationException extends \Exception
     {
         return $this->errors;
     }
-
-    public function __serialize(): array
-    {
-        return  ['salut' => 'truc'];
-    }
 }

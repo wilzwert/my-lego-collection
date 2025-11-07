@@ -209,6 +209,23 @@ class ValidatorTest extends TestCase
 
 
     #[Test]
+    public function whenInvalidUuid_thenShouldAddValidationError(): void
+    {
+        $validator = new Validator();
+        $validator->requireValidUuidV4("field", "invalid-uuid");
+        $this->assertCount(1, $validator->getValidationErrors()->getErrors());
+        $this->assertEquals(ErrorCode::INVALID_UUID, $validator->getValidationErrors()->getErrors()["field"]['INVALID_UUID']->code());
+    }
+
+    #[Test]
+    public function whenValidUuid_thenShouldNotAddValidationError(): void
+    {
+        $validator = new Validator();
+        $validator->requireValidUuidV4("field", "8f22d94a-acc3-45f5-b195-518ed858e858");
+        $this->assertCount(0, $validator->getValidationErrors()->getErrors());
+    }
+
+    #[Test]
     public function whenRequireSupplierIsFalse_thenShouldAddValidationErrorWithProvidedErrorCode(): void
     {
         $validator = new Validator();
