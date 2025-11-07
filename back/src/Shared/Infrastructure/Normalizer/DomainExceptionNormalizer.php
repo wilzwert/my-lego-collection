@@ -18,7 +18,7 @@ class DomainExceptionNormalizer extends ExceptionNormalizer
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof ValidationException;
+        return $data instanceof DomainException;
     }
 
     protected function normalizeErrors(\Throwable $throwable): array
