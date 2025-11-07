@@ -45,7 +45,9 @@ class Validator
     {
         if ($fieldValue === null
             || $fieldValue === ''
-            || $fieldValue instanceof Uuid && $fieldValue->value() === null) {
+            || $fieldValue instanceof Uuid && $fieldValue->value() === null
+            || is_array($fieldValue) && count($fieldValue) === 0
+        ) {
             $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::FIELD_CANNOT_BE_EMPTY, ['empty' => 'Field cannot be empty']));
             return false;
         }
@@ -219,6 +221,15 @@ class Validator
         if ($fieldValue > $maxValue) {
             $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::FIELD_VALUE_TOO_BIG, ["max" => $maxValue]));
         }
+        return $this;
+    }
+
+    public function requireValidUuidV4(string $fieldName, string $fieldValue): self
+    {
+        if (!preg_match('/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/', $fieldValue)) {
+            $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::INVALID_UUID));
+        }
+
         return $this;
     }
 

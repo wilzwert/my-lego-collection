@@ -2,6 +2,7 @@
 
 namespace App\Shared\Domain\Validation;
 
+use App\Shared\Domain\Exception\BaseErrorCode;
 use App\Shared\Domain\Exception\ErrorCode;
 
 /**
@@ -15,10 +16,10 @@ class ValidationError
 
     /**
      * @param String $field
-     * @param ErrorCode $code
+     * @param BaseErrorCode $code
      * @param array<string, string> $details as a detailKey => detailMessage array
      */
-    public function __construct(private readonly String $field, private readonly ErrorCode $code, private array $details = [])
+    public function __construct(private readonly String $field, private readonly BaseErrorCode $code, private array $details = [])
     {
     }
 
@@ -35,7 +36,7 @@ class ValidationError
         return $this->field;
     }
 
-    public function code(): ErrorCode
+    public function code(): BaseErrorCode
     {
         return $this->code;
     }
