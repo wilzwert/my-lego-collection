@@ -28,7 +28,7 @@ final class AuthControllerIT extends WebTestCase
             'password' => 'StrongPassword123!',
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
     }
 
     #[Test]
