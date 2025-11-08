@@ -15,6 +15,5 @@ class ErrorCodeTest extends TestCase
     public function doSomething(): void
     {
         $this->expectNotToPerformAssertions();
-        var_dump(ErrorCode::UNKNOWN_ERROR->name);
     }
 }

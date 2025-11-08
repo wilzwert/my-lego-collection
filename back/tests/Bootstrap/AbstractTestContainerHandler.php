@@ -23,17 +23,24 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         return isset($_ENV['DOCKER_HOST_OS_FAMILY']) && $_ENV['DOCKER_HOST_OS_FAMILY'] != 'linux' ? 'host.docker.internal' : $this->container->getHost();
     }
 
+    public function getEnvVars(): array
+    {
+        return [str_replace(
+            ['{{host}}', '{{port}}'],
+            [$this->getHost(), $this->container->getFirstMappedPort()],
+            $this->getEnvVarTemplate()
+        )];
+    }
+
     public function start(): void
     {
         if (!$this->container instanceof StartedGenericContainer) {
             $container = $this->createContainer();
-            $this->container = $container->start();
-            $envVar = str_replace(
-                ['{{host}}', '{{port}}'],
-                [$this->getHost(), $this->container->getFirstMappedPort()],
-                $this->getEnvVarTemplate()
-            );
-            putenv($envVar);
+            $this->container =  $container->start();
+            foreach ($this->getEnvVars() as $envVar) {
+                putenv($envVar);
+            }
+
         }
     }
 

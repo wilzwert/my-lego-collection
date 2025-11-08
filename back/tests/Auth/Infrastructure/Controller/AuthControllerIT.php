@@ -62,7 +62,7 @@ final class AuthControllerIT extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        var_dump($response);
+
         $this->assertStringContainsString('The username can only include alphanumeric characters, underscores, and dashes', $response['errors']['username']['REGEX_FAILED_ERROR']['regex_failed_error'] ?? '');
     }
 
@@ -80,7 +80,7 @@ final class AuthControllerIT extends WebTestCase
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        var_dump($response);
+
         $this->assertStringContainsString('password strength', $response['errors']['password']['PASSWORD_STRENGTH_ERROR']['password_strength_error'] ?? '');
     }
 

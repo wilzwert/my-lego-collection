@@ -53,6 +53,7 @@
     </coverage>
 
     <extensions>
+        <bootstrap class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
         <bootstrap class="App\Tests\IntegrationTestExtension">
         </bootstrap>
     </extensions>

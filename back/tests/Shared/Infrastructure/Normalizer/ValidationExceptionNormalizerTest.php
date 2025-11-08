@@ -56,7 +56,5 @@ class ValidationExceptionNormalizerTest extends TestCase
         $normalized = $normalizer->normalize($exception);
 
         $this->assertEquals($expectedNormalizedException, $normalized);
-
-        var_dump($normalized);
     }
 }

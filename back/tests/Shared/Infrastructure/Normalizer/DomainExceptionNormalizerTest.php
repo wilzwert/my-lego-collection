@@ -33,8 +33,5 @@ class DomainExceptionNormalizerTest extends TestCase
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
 
-        $this->assertEquals($expectedNormalizedException, $normalized);
-
-        var_dump($normalized);
-    }
+        $this->assertEquals($expectedNormalizedException, $normalized);    }
 }
