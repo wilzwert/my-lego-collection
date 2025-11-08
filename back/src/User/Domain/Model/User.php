@@ -2,6 +2,7 @@
 
 namespace App\User\Domain\Model;
 
+use App\Shared\Domain\Model\UploadedFile;
 use App\Shared\Domain\Model\Uuid;
 
 readonly class User
@@ -14,7 +15,8 @@ readonly class User
         private Uuid $id,
         private Uuid $identityId,
         private \DateTimeImmutable $createdAt,
-        private \DateTimeImmutable $updatedAt
+        private \DateTimeImmutable $updatedAt,
+        private ?UploadedFile $avatar = null
     ) {
     }
 
@@ -36,6 +38,11 @@ readonly class User
     public function getUpdatedAt(): \DateTimeImmutable
     {
         return $this->updatedAt;
+    }
+
+    public function getAvatar(): ?UploadedFile
+    {
+        return $this->avatar;
     }
 }
 
