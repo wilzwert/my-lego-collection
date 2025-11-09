@@ -2,13 +2,17 @@
 
 namespace App\User\Infrastructure\Controller;
 
-use App\Auth\Application\Command\GetIdentityQuery;
-use App\Auth\Infrastructure\Dto\IdentityDto;
+use App\Shared\Infrastructure\Service\Base64FileDecoder;
 use App\User\Application\Command\GetUserByIdentityQuery;
+use App\User\Application\Command\UpdateAvatarCommand;
 use App\User\Application\Handler\GetUserHandler;
+use App\User\Application\Handler\UpdateAvatarHandler;
+use App\User\Infrastructure\Dto\UpdateAvatarRequest;
 use App\User\Infrastructure\Dto\UserDto;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,7 +25,9 @@ class UserController extends AbstractController
 {
     public function __construct(
         private readonly GetUserHandler $getUserHandler,
-        private readonly ObjectMapperInterface $objectMapper
+        private readonly UpdateAvatarHandler $updateAvatarHandler,
+        private readonly ObjectMapperInterface $objectMapper,
+        private readonly Base64FileDecoder $base64FileDecoder
     ) {
     }
 
@@ -42,5 +48,16 @@ class UserController extends AbstractController
                 UserDto::class
             )
         );
+    }
+
+    #[Route('/me/avatar', name: 'api_user_me_avatar', methods: ['PUT'])]
+    #[IsGranted('ROLE_USER')]
+    public function avatar(
+        #[MapRequestPayload] UpdateAvatarRequest $updateAvatarRequest,
+        #[CurrentUser] ?UserInterface $user
+    ) :JsonResponse {
+        $tempFilePath = $this->base64FileDecoder->decodeToTempFile($updateAvatarRequest->getContents(), $updateAvatarRequest->getFileName());
+        ($this->updateAvatarHandler)(new UpdateAvatarCommand($user->getUserIdentifier(), $tempFilePath, $updateAvatarRequest->getFileName()));
+        return $this->json([], Response::HTTP_NO_CONTENT);
     }
 }

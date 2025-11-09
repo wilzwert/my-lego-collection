@@ -21,37 +21,29 @@ class DefaultUploadedFileStorageService implements UploadedFileStorageService
     ) {
     }
 
-    public function upload(string $path, string $filename, string $type): UploadedFile
+    private function findProvider(string $type): UploadedFileStorageProvider
     {
         foreach ($this->providers as $provider) {
             if ($provider->supports($type)) {
-                return $provider->upload($path, $filename, $type);
+                return $provider;
             }
         }
 
         throw new FileUploadException('No provider found for type ' . $type);
     }
 
+    public function upload(string $path, string $filename, string $type): UploadedFile
+    {
+        return $this->findProvider($type)->upload($path, $filename, $type);
+    }
+
     public function delete(UploadedFile $uploadedFile): void
     {
-        foreach ($this->providers as $provider) {
-            if($provider->supports($uploadedFile->getType())) {
-                $provider->delete($uploadedFile);
-                return;
-            }
-        }
-
-        throw new FileUploadException('No provider found for type ' . $uploadedFile->getType());
+        $this->findProvider($uploadedFile->getType())->delete($uploadedFile);
     }
 
     public function generateUrl(UploadedFile $uploadedFile): string
     {
-        foreach ($this->providers as $provider) {
-            if($provider->supports($uploadedFile->getType())) {
-                return $provider->generateUrl($uploadedFile);
-            }
-        }
-
-        throw new FileUploadException('Unable to generate url for type' . $uploadedFile->getType());
+        return $this->findProvider($uploadedFile->getType())->generateUrl($uploadedFile);
     }
 }

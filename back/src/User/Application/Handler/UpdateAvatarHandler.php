@@ -3,6 +3,7 @@
 namespace App\User\Application\Handler;
 
 use App\User\Application\Command\UpdateAvatarCommand;
+use App\User\Domain\Model\User;
 use App\User\Domain\Service\UserService;
 
 readonly class UpdateAvatarHandler
@@ -12,8 +13,8 @@ readonly class UpdateAvatarHandler
     ){
     }
 
-    public function __invoke(UpdateAvatarCommand $command): void
+    public function __invoke(UpdateAvatarCommand $command): User
     {
-        $this->userService->updateAvatar($command);
+        return $this->userService->updateAvatar($command);
     }
 }
