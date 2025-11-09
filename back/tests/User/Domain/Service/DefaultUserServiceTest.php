@@ -2,10 +2,11 @@
 
 namespace App\Tests\User\Domain\Service;
 
-use App\Shared\Domain\Model\UploadedFile;
+use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\TempFile;
 use App\Shared\Domain\Service\TransactionProvider;
-use App\Shared\Domain\Service\UploadedFileStorageService;
+use App\Shared\Domain\Service\FileStorageService;
 use App\User\Application\Command\CreateUserCommand;
 use App\User\Application\Command\DeleteAvatarCommand;
 use App\User\Application\Command\UpdateAvatarCommand;
@@ -25,7 +26,7 @@ final class DefaultUserServiceTest extends TestCase
 
     private UserRepository $userRepository;
     private TransactionProvider $transactionProvider;
-    private UploadedFileStorageService $uploadedFileStorage;
+    private FileStorageService $fileStorage;
     private DefaultUserService $service;
 
     protected function setUp(): void
@@ -35,12 +36,12 @@ final class DefaultUserServiceTest extends TestCase
 
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
-        $this->uploadedFileStorage = $this->createMock(UploadedFileStorageService::class);
+        $this->fileStorage = $this->createMock(FileStorageService::class);
 
         $this->service = new DefaultUserService(
             $this->userRepository,
             $this->transactionProvider,
-            $this->uploadedFileStorage
+            $this->fileStorage
         );
     }
 
@@ -134,21 +135,22 @@ final class DefaultUserServiceTest extends TestCase
                 fn (callable $callback) => $callback()
             );
 
-        $this->uploadedFileStorage
+        $this->fileStorage
             ->expects($this->never())
             ->method('delete');
 
         $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
-        $file = new UploadedFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
+        $storedFile = new StoredFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
+        $tempFile = new TempFile('filepath', 'filename', 'mimetype', 'extension');
 
-        $this->uploadedFileStorage
+        $this->fileStorage
             ->expects($this->once())
-            ->method('upload')
-            ->with('filepath', 'filename', 'user.avatar')
-            ->willReturn($file);
+            ->method('store')
+            ->with($tempFile)
+            ->willReturn($storedFile);
 
-        $newUser = $this->service->updateAvatar(new UpdateAvatarCommand($this->identityId, 'filepath', 'filename'));
+        $newUser = $this->service->updateAvatar(new UpdateAvatarCommand($this->identityId, $tempFile));
 
         $this->assertNotNull($newUser->getAvatar());
         $this->assertEquals($this->userId, $newUser->getId());
@@ -172,7 +174,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $oldFileId = EntityId::generate();
         $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
-        $oldFile = new UploadedFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
+        $oldFile = new StoredFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->userId, $this->identityId, $createdAt, $createdAt, $oldFile);
 
@@ -196,22 +198,23 @@ final class DefaultUserServiceTest extends TestCase
                 fn (callable $callback) => $callback()
             );
 
-        $this->uploadedFileStorage
+        $this->fileStorage
             ->expects($this->once())
             ->method('delete')
             ->with($oldFile);
 
         $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
-        $file = new UploadedFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
+        $storedFile = new StoredFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
+        $tempFile = new TempFile('filepath', 'filename', 'mimetype', 'extension');
 
-        $this->uploadedFileStorage
+        $this->fileStorage
             ->expects($this->once())
-            ->method('upload')
-            ->with('filepath', 'filename', 'user.avatar')
-            ->willReturn($file);
+            ->method('store')
+            ->with($tempFile)
+            ->willReturn($storedFile);
 
-        $newUser = $this->service->updateAvatar(new UpdateAvatarCommand($this->identityId, 'filepath', 'filename'));
+        $newUser = $this->service->updateAvatar(new UpdateAvatarCommand($this->identityId, $tempFile));
 
         $this->assertNotNull($newUser->getAvatar());
         $this->assertEquals($this->userId, $newUser->getId());
@@ -231,7 +234,7 @@ final class DefaultUserServiceTest extends TestCase
     {
         $oldFileId = EntityId::generate();
         $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
-        $oldFile = new UploadedFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
+        $oldFile = new StoredFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->userId, $this->identityId, $createdAt, $createdAt, $oldFile);
 
@@ -250,7 +253,7 @@ final class DefaultUserServiceTest extends TestCase
                 fn (callable $callback) => $callback()
             );
 
-        $this->uploadedFileStorage
+        $this->fileStorage
             ->expects($this->once())
             ->method('delete')
             ->with($oldFile);

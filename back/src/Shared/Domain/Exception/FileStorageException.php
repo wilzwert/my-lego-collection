@@ -4,7 +4,7 @@ namespace App\Shared\Domain\Exception;
 
 use Exception;
 
-class FileUploadException extends DomainException
+class FileStorageException extends DomainException
 {
 
 }

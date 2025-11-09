@@ -5,7 +5,7 @@ namespace App\Shared\Domain\Model;
 /**
  * @author Wilhelm Zwertvaegher
  */
-readonly class UploadedFile
+readonly class StoredFile
 {
     public function __construct(
         private EntityId           $id,

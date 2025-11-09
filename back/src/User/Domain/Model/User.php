@@ -2,7 +2,7 @@
 
 namespace App\User\Domain\Model;
 
-use App\Shared\Domain\Model\UploadedFile;
+use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
 
 readonly class User
@@ -16,7 +16,7 @@ readonly class User
         private EntityId           $identityId,
         private \DateTimeImmutable $createdAt,
         private \DateTimeImmutable $updatedAt,
-        private ?UploadedFile      $avatar = null
+        private ?StoredFile $avatar = null
     ) {
     }
 
@@ -40,12 +40,12 @@ readonly class User
         return $this->updatedAt;
     }
 
-    public function getAvatar(): ?UploadedFile
+    public function getAvatar(): ?StoredFile
     {
         return $this->avatar;
     }
 
-    public function setAvatar(?UploadedFile $avatar): self
+    public function setAvatar(?StoredFile $avatar): self
     {
         return new User($this->id, $this->identityId, $this->createdAt, new \DateTimeImmutable(), $avatar);
     }

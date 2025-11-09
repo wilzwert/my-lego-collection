@@ -4,23 +4,25 @@ namespace App\User\Domain\Service;
 
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\TransactionProviderException;
-use App\Shared\Domain\Service\UploadedFileStorageService;
+use App\Shared\Domain\Service\FileStorageService;
 use App\User\Application\Command\CreateUserCommand;
 use App\User\Application\Command\DeleteAvatarCommand;
 use App\User\Application\Command\UpdateAvatarCommand;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
+use Doctrine\ORM\Mapping\Entity;
 
 readonly class DefaultUserService implements UserService
 {
     private const FILE_TYPE = 'user.avatar';
 
     public function __construct(
-        private UserRepository             $userRepository,
-        private TransactionProvider        $transactionProvider,
-        private UploadedFileStorageService $uploadedFileStorage,
+        private UserRepository      $userRepository,
+        private TransactionProvider $transactionProvider,
+        private FileStorageService  $fileStorage,
     ) {
     }
 
@@ -63,11 +65,12 @@ readonly class DefaultUserService implements UserService
             }
 
             if($user->getAvatar()) {
-                $this->uploadedFileStorage->delete($user->getAvatar());
+                $this->fileStorage->delete($user->getAvatar());
                 $user = $user->setAvatar(null);
             }
 
-            $user = $user->setAvatar($this->uploadedFileStorage->upload($command->filepath, $command->filename, self::FILE_TYPE));
+            $tempFile = $this->fileStorage->store($command->tempFile, self::FILE_TYPE);
+            $user = $user->setAvatar(new StoredFile(EntityId::generate(), $tempFile->getPath(), $tempFile->getFilename(), , self::FILE_TYPE));
 
             $this->userRepository->save($user);
 
@@ -88,7 +91,7 @@ readonly class DefaultUserService implements UserService
                return $user;
             }
 
-            $this->uploadedFileStorage->delete($user->getAvatar());
+            $this->fileStorage->delete($user->getAvatar());
             $user = $user->setAvatar(null);
 
             $this->userRepository->save($user);

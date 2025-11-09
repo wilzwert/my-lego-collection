@@ -56,8 +56,8 @@ class UserController extends AbstractController
         #[MapRequestPayload] UpdateAvatarRequest $updateAvatarRequest,
         #[CurrentUser] ?UserInterface $user
     ) :JsonResponse {
-        $tempFilePath = $this->base64FileDecoder->decodeToTempFile($updateAvatarRequest->getContents(), $updateAvatarRequest->getFileName());
-        ($this->updateAvatarHandler)(new UpdateAvatarCommand($user->getUserIdentifier(), $tempFilePath, $updateAvatarRequest->getFileName()));
+        $tempFile = $this->base64FileDecoder->decodeToTempFile($updateAvatarRequest->getContents(), $updateAvatarRequest->getFileName());
+        ($this->updateAvatarHandler)(new UpdateAvatarCommand($user->getUserIdentifier(), $tempFile));
         return $this->json([], Response::HTTP_NO_CONTENT);
     }
 }

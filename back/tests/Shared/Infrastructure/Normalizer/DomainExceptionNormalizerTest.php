@@ -4,7 +4,7 @@ namespace App\Tests\Shared\Infrastructure\Normalizer;
 
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
 use App\Shared\Domain\Exception\EntityNotFoundException;
-use App\Shared\Domain\Exception\FileUploadException;
+use App\Shared\Domain\Exception\FileStorageException;
 use App\Shared\Infrastructure\Normalizer\DomainExceptionNormalizer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -59,18 +59,18 @@ class DomainExceptionNormalizerTest extends TestCase
     }
 
     #[Test]
-    public function shouldNormalizeFileUploadException(): void
+    public function shouldNormalizeFileStorageException(): void
     {
         $clock = static::mockTime(new \DateTimeImmutable('2025-11-07 13:10:00'));
         $expectedNormalizedException = [
             'timestamp' => '2025-11-07T13:10:00.000+01:00',
             'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
-            'error' => 'file-upload',
-            'message' => 'File upload error',
+            'error' => 'file-storage',
+            'message' => 'File storage error',
             'errors' => [],
         ];
 
-        $exception = new FileUploadException('File upload error');
+        $exception = new FileStorageException('File storage error');
         $normalizer = new DomainExceptionNormalizer();
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
