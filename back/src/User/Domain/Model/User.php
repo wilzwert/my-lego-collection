@@ -44,5 +44,10 @@ readonly class User
     {
         return $this->avatar;
     }
+
+    public function setAvatar(?UploadedFile $avatar): self
+    {
+        return new User($this->id, $this->identityId, $this->createdAt, new \DateTimeImmutable(), $avatar);
+    }
 }
 

@@ -7,10 +7,10 @@ use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Throwable;
 
-readonly class DoctrineTransactionProvider implements TransactionProvider
+final readonly class DoctrineTransactionProvider implements TransactionProvider
 {
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(private EntityManagerInterface $entityManager)
     {
     }
 

@@ -4,7 +4,7 @@ namespace App\Tests\User\Application\Handler;
 
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Service\IdentityService;
-use App\User\Application\Command\GetUserQuery;
+use App\User\Application\Command\GetUserByIdentityQuery;
 use App\User\Application\Handler\GetUserHandler;
 use App\User\Domain\Model\User;
 use App\User\Domain\Service\UserService;
@@ -19,7 +19,7 @@ final class GetUserHandlerTest extends TestCase
     #[Test]
     public function returnsUserFromService(): void
     {
-        $query = new GetUserQuery('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1');
+        $query = new GetUserByIdentityQuery('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1');
         $expectedUser = $this->createMock(User::class);
 
         $userService = $this->createMock(UserService::class);
@@ -39,7 +39,7 @@ final class GetUserHandlerTest extends TestCase
     #[Test]
     public function returnsNullIfUserNotFound(): void
     {
-        $query = new GetUserQuery('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1');
+        $query = new GetUserByIdentityQuery('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1');
 
         $userService = $this->createMock(UserService::class);
         $userService

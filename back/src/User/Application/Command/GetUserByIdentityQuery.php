@@ -2,7 +2,7 @@
 
 namespace App\User\Application\Command;
 
-final readonly class CreateUserCommand
+final readonly class GetUserByIdentityQuery
 {
     public function __construct(
         public string $identityId

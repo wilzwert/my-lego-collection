@@ -9,7 +9,7 @@ interface UserRepository
 {
     public function findByIdentityId(Uuid $identityId): ?User;
 
-    public function findById(Uuid $uuid): ?User;
+    public function findById(Uuid $userId): ?User;
 
     public function save(User $user): void;
 }

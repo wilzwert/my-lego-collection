@@ -17,6 +17,6 @@ final class GetIdentityQueryTest extends TestCase
     {
         $query = new GetIdentityQuery('user-123');
 
-        $this->assertSame('user-123', $query->getId());
+        $this->assertSame('user-123', $query->id);
     }
 }
