@@ -8,17 +8,17 @@ namespace App\Shared\Domain\Model;
 readonly class UploadedFile
 {
     public function __construct(
-        private Uuid $id,
-        private string $path,
-        private string $filename,
-        private string $mimeType,
-        private string $extension,
-        private string $type,
+        private EntityId           $id,
+        private string             $path,
+        private string             $filename,
+        private string             $mimeType,
+        private string             $extension,
+        private string             $type,
         private \DateTimeImmutable $createdAt
     ) {
     }
 
-    public function getId(): Uuid
+    public function getId(): EntityId
     {
         return $this->id;
     }

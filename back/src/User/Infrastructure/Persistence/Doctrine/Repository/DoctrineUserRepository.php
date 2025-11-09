@@ -2,10 +2,8 @@
 
 namespace App\User\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
@@ -24,9 +22,9 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         parent::__construct($managerRegistry, DoctrineUser::class);
     }
 
-    public function findById(Uuid $uuid): ?User
+    public function findById(EntityId $userId): ?User
     {
-        $user = parent::findOneBy(['id' => $uuid->__toString()]);
+        $user = parent::findOneBy(['id' => $userId->__toString()]);
         return $user?->toDomain();
     }
 
@@ -42,7 +40,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
         );
     }
 
-    public function findByIdentityId(Uuid $identityId): ?User
+    public function findByIdentityId(EntityId $identityId): ?User
     {
         // TODO: Implement findByIdentityId() method.
         $user = parent::findOneBy(['identityId' => (string)$identityId]);

@@ -8,7 +8,7 @@ namespace App\Tests\Auth;
 
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Infrastructure\Security\AuthenticatedUser;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -19,7 +19,7 @@ final class AuthenticatedUserTest extends TestCase
     {
         $user = $this->createMock(Identity::class);
         $user->method('getEmail')->willReturn('john.doe@example.com');
-        $user->method('getId')->willReturn(Uuid::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
+        $user->method('getId')->willReturn(EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
 
         $authenticatedUser = new AuthenticatedUser($user);
 

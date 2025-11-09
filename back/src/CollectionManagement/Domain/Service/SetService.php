@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 interface SetService
 {
@@ -13,8 +13,8 @@ interface SetService
      * The Service should merge external sets and current user's local sets if available
      *
      * @param string $search the string to search (set id, part of set title)
-     * @param Uuid|null $userId the user's id if available
+     * @param EntityId|null $userId the user's id if available
      * @return EnrichedSetCollection
      */
-    function findSets(string $search, ?Uuid $userId = null) : EnrichedSetCollection;
+    function findSets(string $search, ?EntityId $userId = null) : EnrichedSetCollection;
 }

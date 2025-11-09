@@ -3,7 +3,7 @@
 namespace App\Tests\Auth\Domain\Model;
 
 use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -16,7 +16,7 @@ final class IdentityTest extends TestCase
     #[Test]
     public function shouldExposeAllGivenProperties(): void
     {
-        $id = Uuid::fromString('123e4567-e89b-42d3-9456-426614174000');
+        $id = EntityId::fromString('123e4567-e89b-42d3-9456-426614174000');
         $email = 'john@example.com';
         $username = 'john_doe';
         $passwordHash = 'hashed-password';
@@ -34,7 +34,7 @@ final class IdentityTest extends TestCase
     #[Test]
     public function shouldHaveRoleUserByDefault(): void
     {
-        $id = Uuid::fromString('123e4567-e89b-42d3-be45-426614174001');
+        $id = EntityId::fromString('123e4567-e89b-42d3-be45-426614174001');
 
         $user = new Identity($id, 'jane@example.com', 'jane_doe', 'secret-hash');
 

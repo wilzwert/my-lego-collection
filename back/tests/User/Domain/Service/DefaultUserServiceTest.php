@@ -3,7 +3,7 @@
 namespace App\Tests\User\Domain\Service;
 
 use App\Shared\Domain\Model\UploadedFile;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\UploadedFileStorageService;
 use App\User\Application\Command\CreateUserCommand;
@@ -20,8 +20,8 @@ use PHPUnit\Framework\TestCase;
  */
 final class DefaultUserServiceTest extends TestCase
 {
-    private Uuid $identityId;
-    private Uuid $userId ;
+    private EntityId $identityId;
+    private EntityId $userId ;
 
     private UserRepository $userRepository;
     private TransactionProvider $transactionProvider;
@@ -30,8 +30,8 @@ final class DefaultUserServiceTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->identityId = Uuid::fromString('87654321-e89b-42d3-a456-426614174000');
-        $this->userId = Uuid::fromString('123e4567-e89b-42d3-a456-426614174000');
+        $this->identityId = EntityId::fromString('87654321-e89b-42d3-a456-426614174000');
+        $this->userId = EntityId::fromString('123e4567-e89b-42d3-a456-426614174000');
 
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
@@ -138,7 +138,7 @@ final class DefaultUserServiceTest extends TestCase
             ->expects($this->never())
             ->method('delete');
 
-        $fileId = Uuid::generate();
+        $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
         $file = new UploadedFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
 
@@ -170,7 +170,7 @@ final class DefaultUserServiceTest extends TestCase
     public function shouldDeleteAndUpdateAvatar(): void
     {
 
-        $oldFileId = Uuid::generate();
+        $oldFileId = EntityId::generate();
         $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
         $oldFile = new UploadedFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
@@ -201,7 +201,7 @@ final class DefaultUserServiceTest extends TestCase
             ->method('delete')
             ->with($oldFile);
 
-        $fileId = Uuid::generate();
+        $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
         $file = new UploadedFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
 
@@ -229,7 +229,7 @@ final class DefaultUserServiceTest extends TestCase
     #[Test]
     public function shouldDeleteAvatar(): void
     {
-        $oldFileId = Uuid::generate();
+        $oldFileId = EntityId::generate();
         $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
         $oldFile = new UploadedFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');

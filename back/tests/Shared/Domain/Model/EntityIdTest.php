@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Shared\Domain;
+namespace App\Tests\Shared\Domain\Model;
 
-use App\Shared\Domain\Exception\InvalidUuidException;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Exception\InvalidEntityIdException;
+use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
 /**
  * @author Wilhelm Zwertvaegher
  */
-class UuidTest extends TestCase
+class EntityIdTest extends TestCase
 {
 
     #[Test]
     public function fromString_shouldStoreValue(): void
     {
-        $uuid = Uuid::fromString('e345818a-1043-4d48-a23a-e7cf30e7d76a');
+        $uuid = EntityId::fromString('e345818a-1043-4d48-a23a-e7cf30e7d76a');
         $this->assertSame('e345818a-1043-4d48-a23a-e7cf30e7d76a', (string) $uuid);
     }
 
@@ -35,15 +35,15 @@ class UuidTest extends TestCase
     #[DataProvider('invalidUuid')]
     public function fromString_shouldThrowException($str): void
     {
-        $this->expectException(InvalidUuidException::class);
-        $uuid = Uuid::fromString($str);
+        $this->expectException(InvalidEntityIdException::class);
+        $uuid = EntityId::fromString($str);
     }
 
 
     #[Test]
     public function generate_shouldProduceValidV4Uuid(): void
     {
-        $uuid = (string) Uuid::generate();
+        $uuid = (string) EntityId::generate();
 
         $this->assertMatchesRegularExpression(
             '/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/',
@@ -51,6 +51,6 @@ class UuidTest extends TestCase
             'Should be a valid UUID v4'
         );
 
-        $this->assertNotSame((string) Uuid::generate(), (string) Uuid::generate());
+        $this->assertNotSame((string) EntityId::generate(), (string) EntityId::generate());
     }
 }

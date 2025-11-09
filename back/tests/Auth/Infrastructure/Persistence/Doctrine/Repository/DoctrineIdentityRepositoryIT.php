@@ -7,7 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**
@@ -33,7 +33,7 @@ class DoctrineIdentityRepositoryIT extends KernelTestCase
     #[Test]
     public function shouldSaveAndFindByEmail(): void
     {
-        $id = Uuid::generate();
+        $id = EntityId::generate();
         $identity = new Identity(
             $id,
             'user@example.com',

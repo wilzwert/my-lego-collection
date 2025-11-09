@@ -5,7 +5,7 @@ namespace App\CollectionManagement\Domain\Service;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Repository\UserSetRepository;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Override;
 
 readonly class DefaultSetService implements SetService
@@ -21,7 +21,7 @@ readonly class DefaultSetService implements SetService
      * @inheritDoc
      */
     #[Override]
-    public function findSets(string $search, ?Uuid $userId = null): EnrichedSetCollection
+    public function findSets(string $search, ?EntityId $userId = null): EnrichedSetCollection
     {
         // get sets from external data provider
         $externalSets = $this->legoDataProvider->findSets($search);

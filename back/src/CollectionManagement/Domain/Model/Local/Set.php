@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Model\Local;
 
 use App\CollectionManagement\Domain\Model\BaseSet;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -13,7 +13,7 @@ use App\Shared\Domain\Model\Uuid;
 final readonly class Set extends BaseSet
 {
     /**
-     * @param Uuid $id
+     * @param EntityId $id
      * @param string $externalId
      * @param string $legoId
      * @param string $name
@@ -22,21 +22,21 @@ final readonly class Set extends BaseSet
      * @param int $productionYear
      */
     public function __construct(
-        private Uuid $id,
-        string $externalId,
-        string $legoId,
-        string $name,
-        int $partCount,
-        string $imagePath,
-        int $productionYear,
+        private EntityId $id,
+        string           $externalId,
+        string           $legoId,
+        string           $name,
+        int              $partCount,
+        string           $imagePath,
+        int              $productionYear,
     ) {
         parent::__construct($externalId, $legoId, $name, $partCount, $imagePath, $productionYear);
     }
 
     /**
-     * @return Uuid
+     * @return EntityId
      */
-    public function getId(): Uuid
+    public function getId(): EntityId
     {
         return $this->id;
     }

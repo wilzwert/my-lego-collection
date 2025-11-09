@@ -5,7 +5,7 @@ namespace App\Tests\Shared\Traits;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Service\IdentityService;
 use App\Auth\Infrastructure\Security\AuthenticatedUser;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 
 trait WebTestCaseAuthenticateUserTrait
@@ -23,7 +23,7 @@ trait WebTestCaseAuthenticateUserTrait
     private function authenticateAsUnknownUser(KernelBrowser $client) : AuthenticatedUser
     {
         $unknownUser = new Identity(
-            Uuid::fromString('00000000-0000-4000-a000-000000000000'),
+            EntityId::fromString('00000000-0000-4000-a000-000000000000'),
             'unkown@example.com',
             'unknown',
             'password'

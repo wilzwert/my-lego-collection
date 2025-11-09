@@ -4,7 +4,7 @@ namespace App\Tests\User\Infrastructure\MessageHandler;
 
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Event\DomainEventHandler;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\User\Application\Command\CreateUserCommand;
 use App\User\Application\Handler\CreateUserHandler;
 use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
@@ -36,7 +36,7 @@ class IdentityCreatedEventHandlerIT extends KernelTestCase
     public function shouldCreateUser(): void
     {
 
-        $uuid = Uuid::generate();
+        $uuid = EntityId::generate();
         $domainEvent = new DomainEvent('auth.identity.created', $uuid->value());
         ($this->identityCreatedEventHandler)($domainEvent);
 

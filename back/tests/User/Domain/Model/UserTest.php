@@ -4,7 +4,7 @@ namespace App\Tests\User\Domain\Model;
 
 use App\Auth\Domain\Model\Identity;
 use App\Shared\Domain\Model\UploadedFile;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\User\Domain\Model\User;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -16,13 +16,13 @@ use PHPUnit\Framework\TestCase;
 final class UserTest extends TestCase
 {
 
-    private Uuid $id;
-    private Uuid $identityId;
+    private EntityId $id;
+    private EntityId $identityId;
 
     protected function setUp(): void
     {
-        $this->id = Uuid::fromString('123e4567-e89b-42d3-a456-426614174000');
-        $this->identityId = Uuid::fromString('87654321-e89b-42d3-a456-426614174000');
+        $this->id = EntityId::fromString('123e4567-e89b-42d3-a456-426614174000');
+        $this->identityId = EntityId::fromString('87654321-e89b-42d3-a456-426614174000');
     }
 
     #[Test]
@@ -42,7 +42,7 @@ final class UserTest extends TestCase
     #[Test]
     public function shouldSetAvatarAndUpdatedAt(): void
     {
-        $fileId = Uuid::generate();
+        $fileId = EntityId::generate();
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->id, $this->identityId, $createdAt, $createdAt);
         $file = new UploadedFile($fileId, 'ad123456.png', 'avatar.png', 'image/png', 'png', 'user.avatar', new \DateTimeImmutable('2025-11-07T12:00:00'));

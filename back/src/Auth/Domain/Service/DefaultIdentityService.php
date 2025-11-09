@@ -7,7 +7,7 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\TransactionProviderException;
@@ -33,7 +33,7 @@ readonly class DefaultIdentityService implements IdentityService
             if ($identity) {
                 throw new EntityAlreadyExistsException('Identity already exists');
             }
-            $identity = new Identity(Uuid::generate(), $command->email, $command->username, $this->passwordHasher->hash($command->password));
+            $identity = new Identity(EntityId::generate(), $command->email, $command->username, $this->passwordHasher->hash($command->password));
             $this->identityRepository->save($identity);
 
             $this->eventBus->dispatch(new DomainEvent('auth.identity.created', $identity->getId()));
@@ -41,7 +41,7 @@ readonly class DefaultIdentityService implements IdentityService
         });
     }
 
-    public function getIdentityById(Uuid $id): ?Identity
+    public function getIdentityById(EntityId $id): ?Identity
     {
         return $this->identityRepository->findById($id);
     }

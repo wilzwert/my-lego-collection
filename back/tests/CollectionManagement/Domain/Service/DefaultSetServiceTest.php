@@ -13,7 +13,7 @@ use App\CollectionManagement\Domain\Model\UserSetCollection;
 use App\CollectionManagement\Domain\Repository\UserSetRepository;
 use App\CollectionManagement\Domain\Service\DefaultSetService;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -58,9 +58,9 @@ final class DefaultSetServiceTest extends TestCase
     #[Test]
     public function findSets_shouldReturnEnrichedSetCollectionWithUserData(): void
     {
-        $userId = Uuid::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
-        $userSetId = Uuid::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd');
-        $localSetId = Uuid::fromString('cbcd1234-abcd-4bcd-abcd-abcd1234abcd');
+        $userId = EntityId::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
+        $userSetId = EntityId::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd');
+        $localSetId = EntityId::fromString('cbcd1234-abcd-4bcd-abcd-abcd1234abcd');
 
         // External sets
         $externalSetsCollection = new SetCollection([

@@ -3,7 +3,7 @@
 namespace App\User\Domain\Service;
 
 use App\Shared\Domain\Exception\EntityNotFoundException;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\TransactionProviderException;
 use App\Shared\Domain\Service\UploadedFileStorageService;
@@ -30,23 +30,23 @@ readonly class DefaultUserService implements UserService
     public function createUser(CreateUserCommand $command): ?User
     {
         return $this->transactionProvider->transactional(function () use ($command) {
-            $user = $this->userRepository->findByIdentityId(Uuid::fromString($command->identityId));
+            $user = $this->userRepository->findByIdentityId(EntityId::fromString($command->identityId));
             if ($user) {
                 return $user;
             }
-            $user = new User(Uuid::generate(), Uuid::fromString($command->identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
+            $user = new User(EntityId::generate(), EntityId::fromString($command->identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
             $this->userRepository->save($user);
 
             return $user;
         });
     }
 
-    public function getUserByIdentityId(Uuid $identityId): ?User
+    public function getUserByIdentityId(EntityId $identityId): ?User
     {
         return $this->userRepository->findByIdentityId($identityId);
     }
 
-    public function getUserById(Uuid $userId): ?User
+    public function getUserById(EntityId $userId): ?User
     {
         return $this->userRepository->findById($userId);
     }
@@ -57,7 +57,7 @@ readonly class DefaultUserService implements UserService
     public function updateAvatar(UpdateAvatarCommand $command): User
     {
         return $this->transactionProvider->transactional(function () use ($command) {
-            $user = $this->userRepository->findByIdentityId(Uuid::fromString($command->identityId));
+            $user = $this->userRepository->findByIdentityId(EntityId::fromString($command->identityId));
             if (!$user) {
                 throw new EntityNotFoundException('User not found');
             }
@@ -79,7 +79,7 @@ readonly class DefaultUserService implements UserService
     {
         // TODO: Implement deleteAvatar() method.
         return $this->transactionProvider->transactional(function () use ($command) {
-            $user = $this->userRepository->findByIdentityId(Uuid::fromString($command->identityId));
+            $user = $this->userRepository->findByIdentityId(EntityId::fromString($command->identityId));
             if (!$user) {
                 throw new EntityNotFoundException('User not found');
             }

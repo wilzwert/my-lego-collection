@@ -3,7 +3,7 @@
 namespace App\Shared\Infrastructure\Service;
 
 use App\Shared\Domain\Model\UploadedFile;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\UploadedFileStorageService;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
@@ -13,10 +13,17 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 #[AutoconfigureTag('app.uploaded_file_storage_provider')]
 final readonly class LocalUploadedFileStorageProvider implements UploadedFileStorageProvider
 {
+    private array $supportedTypes;
+
+    public function __construct()
+    {
+        $this->supportedTypes = ['user.avatar'];
+    }
 
     public function upload(string $path, string $filename, string $type): UploadedFile
     {
-        return new UploadedFile(Uuid::generate(), 'uploaded_path', 'uploaded_filename', 'image/png', 'png', $type, new \DateTimeImmutable());
+
+        return new UploadedFile(EntityId::generate(), 'uploaded_path', 'uploaded_filename', 'image/png', 'png', $type, new \DateTimeImmutable());
     }
 
     public function delete(UploadedFile $uploadedFile): void
@@ -32,7 +39,6 @@ final readonly class LocalUploadedFileStorageProvider implements UploadedFileSto
 
     public function supports(string $type): bool
     {
-        // as of now, local storage for all
-        return true;
+        return in_array($type, $this->supportedTypes);
     }
 }

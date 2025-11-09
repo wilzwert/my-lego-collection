@@ -5,7 +5,7 @@ namespace App\Shared\Domain\Validation;
 use App\Shared\Domain\Exception\BaseErrorCode;
 use App\Shared\Domain\Exception\ErrorCode;
 use App\Shared\Domain\Exception\ValidationException;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -45,7 +45,7 @@ class Validator
     {
         if ($fieldValue === null
             || $fieldValue === ''
-            || $fieldValue instanceof Uuid && $fieldValue->value() === null
+            || $fieldValue instanceof EntityId && $fieldValue->value() === null
             || is_array($fieldValue) && count($fieldValue) === 0
         ) {
             $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::FIELD_CANNOT_BE_EMPTY, ['empty' => 'Field cannot be empty']));

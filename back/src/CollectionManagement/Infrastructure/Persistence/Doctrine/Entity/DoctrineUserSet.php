@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\CollectionManagement\Domain\Model\Local\UserSet;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -34,6 +34,6 @@ class DoctrineUserSet
 
     public function toDomain(): UserSet
     {
-        return new UserSet(Uuid::fromString($this->userId), $this->set->toDomain());
+        return new UserSet(EntityId::fromString($this->userId), $this->set->toDomain());
     }
 }

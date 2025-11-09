@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\PartCollection;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 readonly class DefaultPartService implements PartService
 {
@@ -15,7 +15,7 @@ readonly class DefaultPartService implements PartService
     /**
      * @inheritDoc
      */
-    public function findParts(string $search, ?Uuid $userId = null): PartCollection
+    public function findParts(string $search, ?EntityId $userId = null): PartCollection
     {
         // get parts from data provider
         return $this->legoDataProvider->findParts($search);

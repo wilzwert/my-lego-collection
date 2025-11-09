@@ -5,7 +5,7 @@ namespace App\Shared\Domain\Exception;
 /**
  * @author Wilhelm Zwertvaegher
  */
-class InvalidUuidException extends \Exception
+class InvalidEntityIdException extends \Exception
 {
 
 }

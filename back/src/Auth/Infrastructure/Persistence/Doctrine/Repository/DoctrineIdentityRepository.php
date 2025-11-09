@@ -5,7 +5,7 @@ namespace App\Auth\Infrastructure\Persistence\Doctrine\Repository;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -60,9 +60,9 @@ class DoctrineIdentityRepository extends ServiceEntityRepository implements Iden
         return $this->findByEmail($identifier);
     }
 
-    public function findById(Uuid $uuid): ?Identity
+    public function findById(EntityId $id): ?Identity
     {
-        $user = parent::findOneBy(['id' => $uuid->__toString()]);
+        $user = parent::findOneBy(['id' => $id->__toString()]);
         return $user?->toDomain();
     }
 

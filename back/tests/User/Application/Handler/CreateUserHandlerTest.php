@@ -5,7 +5,7 @@ namespace App\Tests\User\Application\Handler;
 use App\Auth\Application\Command\RegistrationCommand;
 use App\Auth\Application\Handler\RegistrationHandler;
 use App\Auth\Domain\Service\IdentityService;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\User\Application\Command\CreateUserCommand;
 use App\User\Application\Handler\CreateUserHandler;
 use App\User\Domain\Service\UserService;
@@ -20,7 +20,7 @@ final class CreateUserHandlerTest extends TestCase
     #[Test]
     public function shouldInvokeUserServiceToCreateUser(): void
     {
-        $identityId = Uuid::generate();
+        $identityId = EntityId::generate();
         $command = new CreateUserCommand($identityId->__toString());
         $userService = $this->createMock(UserService::class);
 
