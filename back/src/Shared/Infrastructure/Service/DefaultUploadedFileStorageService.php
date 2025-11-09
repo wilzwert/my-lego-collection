@@ -3,7 +3,7 @@
 namespace App\Shared\Infrastructure\Service;
 
 use App\Shared\Domain\Exception\FileUploadException;
-use App\Shared\Domain\Model\UploadedFile;
+use App\Shared\Domain\Model\File;
 use App\Shared\Domain\Service\UploadedFileStorageService;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
@@ -32,17 +32,17 @@ class DefaultUploadedFileStorageService implements UploadedFileStorageService
         throw new FileUploadException('No provider found for type ' . $type);
     }
 
-    public function upload(string $path, string $filename, string $type): UploadedFile
+    public function upload(string $path, string $filename, string $type): File
     {
         return $this->findProvider($type)->upload($path, $filename, $type);
     }
 
-    public function delete(UploadedFile $uploadedFile): void
+    public function delete(File $uploadedFile): void
     {
         $this->findProvider($uploadedFile->getType())->delete($uploadedFile);
     }
 
-    public function generateUrl(UploadedFile $uploadedFile): string
+    public function generateUrl(File $uploadedFile): string
     {
         return $this->findProvider($uploadedFile->getType())->generateUrl($uploadedFile);
     }

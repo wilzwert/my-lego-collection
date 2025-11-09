@@ -3,7 +3,7 @@
 namespace App\Tests\User\Domain\Model;
 
 use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Model\UploadedFile;
+use App\Shared\Domain\Model\File;
 use App\Shared\Domain\Model\EntityId;
 use App\User\Domain\Model\User;
 use PHPUnit\Framework\Attributes\Test;
@@ -45,7 +45,7 @@ final class UserTest extends TestCase
         $fileId = EntityId::generate();
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->id, $this->identityId, $createdAt, $createdAt);
-        $file = new UploadedFile($fileId, 'ad123456.png', 'avatar.png', 'image/png', 'png', 'user.avatar', new \DateTimeImmutable('2025-11-07T12:00:00'));
+        $file = new File($fileId, 'ad123456.png', 'avatar.png', 'image/png', 'png', 'user.avatar', new \DateTimeImmutable('2025-11-07T12:00:00'));
         $newUser = $user->setAvatar($file);
 
         $this->assertNotSame($user, $newUser);

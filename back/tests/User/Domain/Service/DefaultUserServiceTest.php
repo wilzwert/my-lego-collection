@@ -2,7 +2,7 @@
 
 namespace App\Tests\User\Domain\Service;
 
-use App\Shared\Domain\Model\UploadedFile;
+use App\Shared\Domain\Model\File;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\UploadedFileStorageService;
@@ -140,7 +140,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
-        $file = new UploadedFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
+        $file = new File($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
 
         $this->uploadedFileStorage
             ->expects($this->once())
@@ -172,7 +172,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $oldFileId = EntityId::generate();
         $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
-        $oldFile = new UploadedFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
+        $oldFile = new File($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->userId, $this->identityId, $createdAt, $createdAt, $oldFile);
 
@@ -203,7 +203,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
-        $file = new UploadedFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
+        $file = new File($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
 
         $this->uploadedFileStorage
             ->expects($this->once())
@@ -231,7 +231,7 @@ final class DefaultUserServiceTest extends TestCase
     {
         $oldFileId = EntityId::generate();
         $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
-        $oldFile = new UploadedFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
+        $oldFile = new File($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->userId, $this->identityId, $createdAt, $createdAt, $oldFile);
 

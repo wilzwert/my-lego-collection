@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Service;
 
-use App\Shared\Domain\Model\UploadedFile;
+use App\Shared\Domain\Model\File;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\UploadedFileStorageService;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
@@ -20,18 +20,18 @@ final readonly class LocalUploadedFileStorageProvider implements UploadedFileSto
         $this->supportedTypes = ['user.avatar'];
     }
 
-    public function upload(string $path, string $filename, string $type): UploadedFile
+    public function upload(string $path, string $filename, string $type): File
     {
 
-        return new UploadedFile(EntityId::generate(), 'uploaded_path', 'uploaded_filename', 'image/png', 'png', $type, new \DateTimeImmutable());
+        return new File(EntityId::generate(), 'uploaded_path', 'uploaded_filename', 'image/png', 'png', $type, new \DateTimeImmutable());
     }
 
-    public function delete(UploadedFile $uploadedFile): void
+    public function delete(File $uploadedFile): void
     {
         // TODO: Implement delete() method.
     }
 
-    public function generateUrl(UploadedFile $uploadedFile): string
+    public function generateUrl(File $uploadedFile): string
     {
         // TODO: Implement generateUrl() method.
         return 'TODO';
