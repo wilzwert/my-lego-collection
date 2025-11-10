@@ -70,8 +70,15 @@ readonly class DefaultUserService implements UserService
             }
 
             $tempFile = $this->fileStorage->store($command->tempFile, self::FILE_TYPE);
-            $user = $user->setAvatar(new StoredFile(EntityId::generate(), $tempFile->getPath(), $tempFile->getFilename(), , self::FILE_TYPE));
-
+            $user = $user->setAvatar(new StoredFile(
+                EntityId::generate(),
+                $tempFile->getPath(),
+                $tempFile->getOriginalFilename(),
+                $tempFile->getMime(),
+                $tempFile->getExtension(),
+                self::FILE_TYPE,
+                new \DateTimeImmutable())
+            );
             $this->userRepository->save($user);
 
             return $user;
