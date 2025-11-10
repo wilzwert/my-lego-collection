@@ -47,9 +47,9 @@ class DoctrineIdentityRepositoryIT extends KernelTestCase
 
         $found = $this->repository->findByEmail('user@example.com');
 
-        $this->assertNotNull($found);
-        $this->assertSame('user@example.com', $found->getEmail());
-        $this->assertSame('user123', $found->getUsername());
+        self::assertNotNull($found);
+        self::assertSame('user@example.com', $found->getEmail());
+        self::assertSame('user123', $found->getUsername());
     }
 
     #[Test]
@@ -57,8 +57,8 @@ class DoctrineIdentityRepositoryIT extends KernelTestCase
     {
         $found = $this->repository->findByUsername('user1');
 
-        $this->assertNotNull($found);
-        $this->assertSame('user1', $found->getUsername());
+        self::assertNotNull($found);
+        self::assertSame('user1', $found->getUsername());
     }
 
     #[Test]
@@ -66,8 +66,8 @@ class DoctrineIdentityRepositoryIT extends KernelTestCase
     {
         $found = $this->repository->findByUsername('user1');
 
-        $this->assertNotNull($found);
-        $this->assertSame('user1', $found->getUsername());
+        self::assertNotNull($found);
+        self::assertSame('user1', $found->getUsername());
     }
 
     #[Test]
@@ -77,13 +77,13 @@ class DoctrineIdentityRepositoryIT extends KernelTestCase
         $found2 = $this->repository->findByEmailOrUsername('unknown', 'user1');
         $found3 = $this->repository->findByEmailOrUsername('user1@test.com', 'user1');
 
-        $this->assertNotNull($found);
-        $this->assertNotNull($found2);
-        $this->assertNotNull($found3);
-        $this->assertSame('user1', $found->getUsername());
-        $this->assertSame('user1@test.com', $found->getEmail());
-        $this->assertEquals($found, $found2);
-        $this->assertEquals($found, $found3);
+        self::assertNotNull($found);
+        self::assertNotNull($found2);
+        self::assertNotNull($found3);
+        self::assertSame('user1', $found->getUsername());
+        self::assertSame('user1@test.com', $found->getEmail());
+        self::assertEquals($found, $found2);
+        self::assertEquals($found, $found3);
     }
 
     #[Test]
@@ -91,7 +91,7 @@ class DoctrineIdentityRepositoryIT extends KernelTestCase
     {
         $foundByEmail = $this->repository->findByEmailOrUsername('unknown@example.com', 'unknown');
 
-        $this->assertNull($foundByEmail);
+        self::assertNull($foundByEmail);
     }
 
     protected function tearDown(): void

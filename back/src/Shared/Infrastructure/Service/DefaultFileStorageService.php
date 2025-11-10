@@ -11,7 +11,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 /**
  * @author Wilhelm Zwertvaegher
  */
-class DefaultFileStorageService implements FileStorageService
+readonly class DefaultFileStorageService implements FileStorageService
 {
     /**
      * @param iterable<FileStorageProvider> $providers
@@ -24,7 +24,7 @@ class DefaultFileStorageService implements FileStorageService
 
     private function findProvider(string $type): FileStorageProvider
     {
-        return array_find($this->providers, fn(FileStorageProvider $provider) => $provider->supports($type)) ??
+        return array_find($this->providers, fn (FileStorageProvider $provider) => $provider->supports($type)) ??
             throw new FileStorageException("No provider found for {$type}");
     }
 

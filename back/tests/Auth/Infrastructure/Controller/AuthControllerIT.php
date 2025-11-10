@@ -4,7 +4,7 @@ namespace App\Tests\Auth\Infrastructure\Controller;
 
 use App\Auth\Domain\Service\IdentityService;
 use App\Auth\Infrastructure\Security\AuthenticatedUser;
-use App\Tests\Shared\Traits\WebTestCaseAuthenticateUserTrait;
+use App\Tests\Traits\WebTestCaseAuthenticateUserTrait;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ final class AuthControllerIT extends WebTestCase
             'password' => 'StrongPassword123!',
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
+        self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
     }
 
     #[Test]
@@ -42,10 +42,10 @@ final class AuthControllerIT extends WebTestCase
             'password' => 'StrongPassword123!',
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertStringContainsString('not a valid email', $response['errors']['email']['INVALID_FORMAT_ERROR']['invalid_format_error'] ?? '');
+        self::assertStringContainsString('not a valid email', $response['errors']['email']['INVALID_FORMAT_ERROR']['invalid_format_error'] ?? '');
     }
 
     #[Test]
@@ -59,11 +59,11 @@ final class AuthControllerIT extends WebTestCase
             'password' => 'StrongPassword123!',
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertStringContainsString('The username can only include alphanumeric characters, underscores, and dashes', $response['errors']['username']['REGEX_FAILED_ERROR']['regex_failed_error'] ?? '');
+        self::assertStringContainsString('The username can only include alphanumeric characters, underscores, and dashes', $response['errors']['username']['REGEX_FAILED_ERROR']['regex_failed_error'] ?? '');
     }
 
     #[Test]
@@ -77,11 +77,11 @@ final class AuthControllerIT extends WebTestCase
             'password' => '123',
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
 
         $response = json_decode($client->getResponse()->getContent(), true);
 
-        $this->assertStringContainsString('password strength', $response['errors']['password']['PASSWORD_STRENGTH_ERROR']['password_strength_error'] ?? '');
+        self::assertStringContainsString('password strength', $response['errors']['password']['PASSWORD_STRENGTH_ERROR']['password_strength_error'] ?? '');
     }
 
     #[Test]
@@ -102,8 +102,8 @@ final class AuthControllerIT extends WebTestCase
             'password' => 'StrongPassword123!',
         ]);
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK);
-        $this->assertSame('""', $client->getResponse()->getContent()); // empty
+        self::assertResponseStatusCodeSame(Response::HTTP_OK);
+        self::assertSame('""', $client->getResponse()->getContent()); // empty
     }
 
     #[Test]
@@ -114,10 +114,10 @@ final class AuthControllerIT extends WebTestCase
 
         $client->request('GET', '/api/auth/me');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('email', $response);
-        $this->assertSame('user1@test.com', $response['email']);
+        self::assertArrayHasKey('email', $response);
+        self::assertSame('user1@test.com', $response['email']);
     }
 
     #[Test]
@@ -127,7 +127,7 @@ final class AuthControllerIT extends WebTestCase
 
         $client->request('GET', '/api/auth/me');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
     #[Test]
@@ -138,7 +138,7 @@ final class AuthControllerIT extends WebTestCase
 
         $client->request('GET', '/api/auth/me');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 }
 

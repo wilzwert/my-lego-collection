@@ -55,6 +55,6 @@ class ValidationExceptionNormalizerTest extends TestCase
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
 
-        $this->assertEquals($expectedNormalizedException, $normalized);
+        self::assertEquals($expectedNormalizedException, $normalized);
     }
 }

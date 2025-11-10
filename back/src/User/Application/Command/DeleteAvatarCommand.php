@@ -9,5 +9,6 @@ final readonly class DeleteAvatarCommand
 {
     public function __construct(public string $identityId)
     {
+
     }
 }

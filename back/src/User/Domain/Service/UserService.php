@@ -3,6 +3,7 @@
 namespace App\User\Domain\Service;
 
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\StoredFile;
 use App\User\Application\Command\CreateUserCommand;
 use App\User\Application\Command\DeleteAvatarCommand;
 use App\User\Application\Command\UpdateAvatarCommand;
@@ -12,9 +13,7 @@ interface UserService
 {
     public function createUser(CreateUserCommand $command): ?User;
 
-    public function updateAvatar(UpdateAvatarCommand $command): User;
-
-    public function deleteAvatar(DeleteAvatarCommand $command): User;
+    public function updateAvatar(User $user, ?StoredFile $storedFile = null): User;
 
     public function getUserByIdentityId(EntityId $identityId): ?User;
 

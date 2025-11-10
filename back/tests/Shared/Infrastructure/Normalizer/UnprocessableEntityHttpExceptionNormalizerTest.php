@@ -34,19 +34,19 @@ class UnprocessableEntityHttpExceptionNormalizerTest extends TestCase
     public function shouldSupportNormalization(): void
     {
         $exception = new UnprocessableEntityHttpException('Invalid');
-        $this->assertTrue($this->normalizer->supportsNormalization($exception));
+        self::assertTrue($this->normalizer->supportsNormalization($exception));
     }
 
     #[Test]
     public function shouldNotSupportNormalization(): void
     {
         $exception = new \InvalidArgumentException('Invalid');
-        $this->assertFalse($this->normalizer->supportsNormalization($exception));
+        self::assertFalse($this->normalizer->supportsNormalization($exception));
     }
     #[Test]
     public function shouldFetSupportedTypes(): void
     {
-        $this->assertSame(
+        self::assertSame(
             [UnprocessableEntityHttpException::class => true],
             $this->normalizer->getSupportedTypes(null)
         );
@@ -98,6 +98,6 @@ class UnprocessableEntityHttpExceptionNormalizerTest extends TestCase
         $httpException = new UnprocessableEntityHttpException('Validation failed', $validationFailed);
 
 
-        $this->assertEquals($expectedNormalizedException, $this->normalizer->normalize($httpException));
+        self::assertEquals($expectedNormalizedException, $this->normalizer->normalize($httpException));
     }
 }

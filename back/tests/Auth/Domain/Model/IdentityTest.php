@@ -24,11 +24,11 @@ final class IdentityTest extends TestCase
 
         $user = new Identity($id, $email, $username, $passwordHash, $roles);
 
-        $this->assertSame($id, $user->getId());
-        $this->assertSame($email, $user->getEmail());
-        $this->assertSame($username, $user->getUsername());
-        $this->assertSame($passwordHash, $user->getPasswordHash());
-        $this->assertSame($roles, $user->getRoles());
+        self::assertSame($id, $user->getId());
+        self::assertSame($email, $user->getEmail());
+        self::assertSame($username, $user->getUsername());
+        self::assertSame($passwordHash, $user->getPasswordHash());
+        self::assertSame($roles, $user->getRoles());
     }
 
     #[Test]
@@ -38,6 +38,6 @@ final class IdentityTest extends TestCase
 
         $user = new Identity($id, 'jane@example.com', 'jane_doe', 'secret-hash');
 
-        $this->assertSame(['ROLE_USER'], $user->getRoles());
+        self::assertSame(['ROLE_USER'], $user->getRoles());
     }
 }

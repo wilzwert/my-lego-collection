@@ -17,8 +17,8 @@ final class RegistrationCommandTest extends TestCase
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'secret');
 
-        $this->assertSame('john@example.com', $command->email);
-        $this->assertSame('john_doe', $command->username);
-        $this->assertSame('secret', $command->password);
+        self::assertSame('john@example.com', $command->email);
+        self::assertSame('john_doe', $command->username);
+        self::assertSame('secret', $command->password);
     }
 }

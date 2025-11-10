@@ -41,7 +41,7 @@ class IdentityCreatedEventHandlerIT extends KernelTestCase
         ($this->identityCreatedEventHandler)($domainEvent);
 
         $createdUser = $this->doctrineUserRepository->findByIdentityId($uuid);
-        $this->assertNotNull($createdUser);
-        $this->assertEquals($createdUser->getIdentityId(), $uuid);
+        self::assertNotNull($createdUser);
+        self::assertEquals($createdUser->getIdentityId(), $uuid);
     }
 }

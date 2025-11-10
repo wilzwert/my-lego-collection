@@ -2,9 +2,7 @@
 
 namespace App\Tests\User\Infrastructure\Controller;
 
-use App\Auth\Domain\Service\IdentityService;
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
-use App\Tests\Shared\Traits\WebTestCaseAuthenticateUserTrait;
+use App\Tests\Traits\WebTestCaseAuthenticateUserTrait;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,9 +23,9 @@ final class UserControllerIT extends WebTestCase
 
         $client->request('GET', '/api/user/me');
 
-        $this->assertResponseIsSuccessful();
+        self::assertResponseIsSuccessful();
         $response = json_decode($client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('id', $response);
+        self::assertArrayHasKey('id', $response);
     }
 
     #[Test]
@@ -37,7 +35,7 @@ final class UserControllerIT extends WebTestCase
 
         $client->request('GET', '/api/user/me');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
+        self::assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED);
     }
 
     #[Test]
@@ -48,7 +46,7 @@ final class UserControllerIT extends WebTestCase
 
         $client->request('GET', '/api/user/me');
 
-        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        self::assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
     }
 }
 

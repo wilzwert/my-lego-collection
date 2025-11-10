@@ -11,9 +11,11 @@ use App\Shared\Domain\Model\TempFile;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Mime\MimeTypesInterface;
 
-final class Base64FileDecoder
+final readonly class Base64FileDecoder
 {
-    public function __construct(private Filesystem $filesystem, private MimeTypesInterface $mimeTypes) {}
+    public function __construct(private Filesystem $filesystem, private MimeTypesInterface $mimeTypes)
+    {
+    }
 
     public function decodeToTempFile(string $base64, string $originalFilename): TempFile
     {
@@ -34,7 +36,7 @@ final class Base64FileDecoder
 
         if (!in_array($mime, $expectedMimes, true)) {
             throw new \RuntimeException(sprintf(
-                'StoredFile contents does not match its extension (%s vs %s)',
+                'File contents does not match its extension (%s vs %s)',
                 $mime,
                 $expectedExtension
             ));
@@ -43,4 +45,3 @@ final class Base64FileDecoder
         return new TempFile($tempPath, $originalFilename, $mime, $expectedExtension);
     }
 }
-

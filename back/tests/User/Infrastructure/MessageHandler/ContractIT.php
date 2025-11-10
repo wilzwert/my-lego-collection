@@ -2,7 +2,7 @@
 
 namespace App\Tests\User\Infrastructure\MessageHandler;
 
-use App\Tests\Shared\Traits\SliceInfraHandlersTrait;
+use App\Tests\Traits\SliceInfraHandlersTrait;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -18,6 +18,6 @@ class ContractIT extends KernelTestCase
     #[Test]
     public function shouldHaveDomainEventHandlers(): void
     {
-        $this->assertHasDomainEventHandlers('User', ['auth.identity.created']);
+        self::assertHasDomainEventHandlers('User', ['auth.identity.created']);
     }
 }

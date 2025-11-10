@@ -77,7 +77,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
             HttpKernelInterface::SUB_REQUEST
         );
 
-        $this->assertFalse($this->subscriber->isMainRequest($event));
+        self::assertFalse($this->subscriber->isMainRequest($event));
     }
 
     #[Test]
@@ -91,7 +91,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
             HttpKernelInterface::MAIN_REQUEST
         );
 
-        $this->assertTrue($this->subscriber->isMainRequest($event));
+        self::assertTrue($this->subscriber->isMainRequest($event));
     }
 
     public static function routesProvider(): array
@@ -111,7 +111,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
     {
         $request = new Request([], [], ['_route' => $route], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
 
-        $this->assertSame($expected, $this->subscriber->routeShouldBeLimited($request));
+        self::assertSame($expected, $this->subscriber->routeShouldBeLimited($request));
     }
 
 
@@ -141,7 +141,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
             $requestMainOrNot
         );
 
-        $this->assertSame($expected, $this->subscriber->limitShouldBeApplied($event));
+        self::assertSame($expected, $this->subscriber->limitShouldBeApplied($event));
     }
 
     #[Test]
@@ -149,8 +149,8 @@ final class AuthRateLimitSubscriberTest extends TestCase
     {
         $events = AuthRateLimitSubscriber::getSubscribedEvents();
 
-        $this->assertArrayHasKey(KernelEvents::CONTROLLER, $events);
-        $this->assertSame('onKernelController', $events[KernelEvents::CONTROLLER]);
+        self::assertArrayHasKey(KernelEvents::CONTROLLER, $events);
+        self::assertSame('onKernelController', $events[KernelEvents::CONTROLLER]);
     }
 
     /**
@@ -173,7 +173,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
 
         $this->subscriber->onKernelController($event);
 
-        $this->assertTrue(true); // no exception = success
+        self::assertTrue(true); // no exception = success
     }
 
     /**
@@ -194,7 +194,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
 
         $this->subscriber->onKernelController($event);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     /**
@@ -219,7 +219,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->subscriber->onKernelController($event);
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     #[Test]
@@ -264,7 +264,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->subscriber->onKernelController($event);
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     #[Test]

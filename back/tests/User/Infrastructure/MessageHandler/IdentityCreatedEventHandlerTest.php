@@ -18,7 +18,7 @@ class IdentityCreatedEventHandlerTest extends TestCase
     #[Test]
     public function shouldHandleAuthIdentityCreatedEvent(): void
     {
-        $this->assertSame('auth.identity.created', IdentityCreatedEventHandler::getEventHandled());
+        self::assertSame('auth.identity.created', IdentityCreatedEventHandler::getEventHandled());
     }
 
     #[Test]
@@ -27,7 +27,7 @@ class IdentityCreatedEventHandlerTest extends TestCase
         $handler = $this->createMock(CreateUserHandler::class);
         $handler->expects($this->once())->method('__invoke')->with(
             $this->callback(function (CreateUserCommand $command) {
-                $this->assertSame('identityId', $command->identityId);
+                self::assertSame('identityId', $command->identityId);
                 return true;
             })
         );

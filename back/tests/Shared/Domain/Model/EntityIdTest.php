@@ -18,7 +18,7 @@ class EntityIdTest extends TestCase
     public function fromString_shouldStoreValue(): void
     {
         $uuid = EntityId::fromString('e345818a-1043-4d48-a23a-e7cf30e7d76a');
-        $this->assertSame('e345818a-1043-4d48-a23a-e7cf30e7d76a', (string) $uuid);
+        self::assertSame('e345818a-1043-4d48-a23a-e7cf30e7d76a', (string) $uuid);
     }
 
     public static function invalidUuid(): array
@@ -45,12 +45,12 @@ class EntityIdTest extends TestCase
     {
         $uuid = (string) EntityId::generate();
 
-        $this->assertMatchesRegularExpression(
+        self::assertMatchesRegularExpression(
             '/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/',
             $uuid,
             'Should be a valid UUID v4'
         );
 
-        $this->assertNotSame((string) EntityId::generate(), (string) EntityId::generate());
+        self::assertNotSame((string) EntityId::generate(), (string) EntityId::generate());
     }
 }

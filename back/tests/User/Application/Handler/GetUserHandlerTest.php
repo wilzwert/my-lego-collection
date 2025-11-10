@@ -33,7 +33,7 @@ final class GetUserHandlerTest extends TestCase
 
         $result = $handler($query);
 
-        $this->assertSame($expectedUser, $result);
+        self::assertSame($expectedUser, $result);
     }
 
     #[Test]
@@ -52,6 +52,6 @@ final class GetUserHandlerTest extends TestCase
 
         $result = $handler($query);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 }

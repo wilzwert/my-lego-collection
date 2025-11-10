@@ -5,6 +5,7 @@ namespace App\Shared\Domain\Model;
 /**
  * @author Wilhelm Zwertvaegher
  */
+
 readonly class StoredFile
 {
     public function __construct(

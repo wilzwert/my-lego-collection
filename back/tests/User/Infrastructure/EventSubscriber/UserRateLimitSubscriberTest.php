@@ -39,7 +39,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory->expects($this->never())->method('create');
 
         $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
-        $this->assertFalse($subscriber->isMainRequest($event));
+        self::assertFalse($subscriber->isMainRequest($event));
     }
 
     #[Test]
@@ -57,7 +57,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory->expects($this->never())->method('create');
 
         $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
-        $this->assertTrue($subscriber->isMainRequest($event));
+        self::assertTrue($subscriber->isMainRequest($event));
     }
 
     public static function routesProvider(): array
@@ -80,7 +80,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory->expects($this->never())->method('create');
 
         $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
-        $this->assertSame($expected, $subscriber->routeShouldBeLimited($request));
+        self::assertSame($expected, $subscriber->routeShouldBeLimited($request));
     }
 
 
@@ -113,7 +113,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $factory->expects($this->never())->method('create');
 
         $subscriber = new UserRateLimitSubscriber($security, $factory, $factory);
-        $this->assertSame($expected, $subscriber->limitShouldBeApplied($event));
+        self::assertSame($expected, $subscriber->limitShouldBeApplied($event));
     }
 
     #[Test]
@@ -121,8 +121,8 @@ final class UserRateLimitSubscriberTest extends TestCase
     {
         $events = UserRateLimitSubscriber::getSubscribedEvents();
 
-        $this->assertArrayHasKey(KernelEvents::CONTROLLER, $events);
-        $this->assertSame('onKernelController', $events[KernelEvents::CONTROLLER]);
+        self::assertArrayHasKey(KernelEvents::CONTROLLER, $events);
+        self::assertSame('onKernelController', $events[KernelEvents::CONTROLLER]);
     }
 
     /**
@@ -159,7 +159,7 @@ final class UserRateLimitSubscriberTest extends TestCase
 
         $subscriber->onKernelController($event);
 
-        $this->assertTrue(true); // no exception = success
+        self::assertTrue(true); // no exception = success
     }
 
     /**
@@ -191,7 +191,7 @@ final class UserRateLimitSubscriberTest extends TestCase
 
         $subscriber->onKernelController($event);
 
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     #[Test]
@@ -223,7 +223,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelController($event);
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     #[Test]
@@ -284,7 +284,7 @@ final class UserRateLimitSubscriberTest extends TestCase
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $subscriber->onKernelController($event);
-        $this->assertTrue(true);
+        self::assertTrue(true);
     }
 
     #[Test]

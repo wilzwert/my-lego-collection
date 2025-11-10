@@ -70,8 +70,8 @@ final class DefaultIdentityServiceTest extends TestCase
             ->method('dispatch')
             ->with(
                 $this->callback(function (DomainEvent $event) use (&$eventId) {
-                    $this->assertSame('auth.identity.created', $event->type());
-                    $this->assertNotEmpty($event->id());
+                    self::assertSame('auth.identity.created', $event->type());
+                    self::assertNotEmpty($event->id());
                     $eventId = $event->id();
                     return true;
                 })
@@ -88,10 +88,10 @@ final class DefaultIdentityServiceTest extends TestCase
 
         $result = $this->service->createIdentity($command);
 
-        $this->assertInstanceOf(Identity::class, $result);
-        $this->assertSame($command->email, $result->getEmail());
-        $this->assertSame($command->username, $result->getUsername());
-        $this->assertSame($eventId, $result->getId()->__toString());
+        self::assertInstanceOf(Identity::class, $result);
+        self::assertSame($command->email, $result->getEmail());
+        self::assertSame($command->username, $result->getUsername());
+        self::assertSame($eventId, $result->getId()->__toString());
     }
 
     #[Test]
@@ -127,6 +127,6 @@ final class DefaultIdentityServiceTest extends TestCase
 
         $result = $this->service->getIdentityByIdentifier($identifier);
 
-        $this->assertSame($expectedUser, $result);
+        self::assertSame($expectedUser, $result);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Traits;
+namespace App\Tests\Traits;
 
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Service\IdentityService;

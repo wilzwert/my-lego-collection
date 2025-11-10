@@ -5,6 +5,7 @@ namespace App\Tests\User\Domain\Service;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\TempFile;
+use App\Shared\Domain\Repository\StoredFileRepository;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\FileStorageService;
 use App\User\Application\Command\CreateUserCommand;
@@ -23,10 +24,8 @@ final class DefaultUserServiceTest extends TestCase
 {
     private EntityId $identityId;
     private EntityId $userId ;
-
     private UserRepository $userRepository;
     private TransactionProvider $transactionProvider;
-    private FileStorageService $fileStorage;
     private DefaultUserService $service;
 
     protected function setUp(): void
@@ -36,12 +35,10 @@ final class DefaultUserServiceTest extends TestCase
 
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
-        $this->fileStorage = $this->createMock(FileStorageService::class);
 
         $this->service = new DefaultUserService(
             $this->userRepository,
-            $this->transactionProvider,
-            $this->fileStorage
+            $this->transactionProvider
         );
     }
 
@@ -71,9 +68,9 @@ final class DefaultUserServiceTest extends TestCase
 
         $result = $this->service->createUser($command);
 
-        $this->assertInstanceOf(User::class, $result);
-        $this->assertEquals($this->identityId, $result->getIdentityId());
-        $this->assertNull($result->getAvatar());
+        self::assertInstanceOf(User::class, $result);
+        self::assertEquals($this->identityId, $result->getIdentityId());
+        self::assertNull($result->getAvatar());
     }
 
     #[Test]
@@ -89,7 +86,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $result = $this->service->getUserByIdentityId($this->identityId);
 
-        $this->assertSame($expectedUser, $result);
+        self::assertSame($expectedUser, $result);
     }
 
     #[Test]
@@ -105,7 +102,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $result = $this->service->getUserById($this->userId);
 
-        $this->assertSame($expectedUser, $result);
+        self::assertSame($expectedUser, $result);
     }
 
     #[Test]
@@ -117,116 +114,25 @@ final class DefaultUserServiceTest extends TestCase
 
         $this->userRepository
             ->expects($this->once())
-            ->method('findByIdentityId')
-            ->with($this->identityId)
-            ->willReturn($user);
-
-        $this->userRepository
-            ->expects($this->once())
             ->method('save')
             ->with($this->isInstanceOf(User::class));
 
-        // simulate TransactionProvider behavior
-        $this->transactionProvider
-            ->expects($this->once())
-            ->method('transactional')
-            ->willReturnCallback(
-            // simulate transaction -> just execute callback
-                fn (callable $callback) => $callback()
-            );
-
-        $this->fileStorage
-            ->expects($this->never())
-            ->method('delete');
-
-        $fileId = EntityId::generate();
         $now = new \DateTimeImmutable();
-        $storedFile = new StoredFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
-        $tempFile = new TempFile('filepath', 'filename', 'mimetype', 'extension');
+        $storedFile = new StoredFile(EntityId::generate(), 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
 
-        $this->fileStorage
-            ->expects($this->once())
-            ->method('store')
-            ->with($tempFile)
-            ->willReturn($storedFile);
+        $newUser = $this->service->updateAvatar($user, $storedFile);
 
-        $newUser = $this->service->updateAvatar(new UpdateAvatarCommand($this->identityId, $tempFile));
-
-        $this->assertNotNull($newUser->getAvatar());
-        $this->assertEquals($this->userId, $newUser->getId());
-        $this->assertEquals($this->identityId, $newUser->getIdentityId());
-        $this->assertEquals($createdAt, $newUser->getCreatedAt());
-        $this->assertNotEquals($createdAt, $newUser->getUpdatedAt());
-        $this->assertEquals('stored_filepath', $newUser->getAvatar()->getPath());
-        $this->assertEquals('stored_filename', $newUser->getAvatar()->getFilename());
-        $this->assertEquals('stored_mimetype', $newUser->getAvatar()->getMimeType());
-        $this->assertEquals('stored_extension', $newUser->getAvatar()->getExtension());
-        $this->assertEquals('user.avatar', $newUser->getAvatar()->getType());
-        $this->assertEquals($now, $newUser->getAvatar()->getCreatedAt());
-
-
-
-    }
-
-    #[Test]
-    public function shouldDeleteAndUpdateAvatar(): void
-    {
-
-        $oldFileId = EntityId::generate();
-        $fileCreatedAt = new \DateTimeImmutable('2025-11-06T12:00:00');
-        $oldFile = new StoredFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
-        $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
-        $user = new User($this->userId, $this->identityId, $createdAt, $createdAt, $oldFile);
-
-        $this->userRepository
-            ->expects($this->once())
-            ->method('findByIdentityId')
-            ->with($this->identityId)
-            ->willReturn($user);
-
-        $this->userRepository
-            ->expects($this->once())
-            ->method('save')
-            ->with($this->isInstanceOf(User::class));
-
-        // simulate TransactionProvider behavior
-        $this->transactionProvider
-            ->expects($this->once())
-            ->method('transactional')
-            ->willReturnCallback(
-            // simulate transaction -> just execute callback
-                fn (callable $callback) => $callback()
-            );
-
-        $this->fileStorage
-            ->expects($this->once())
-            ->method('delete')
-            ->with($oldFile);
-
-        $fileId = EntityId::generate();
-        $now = new \DateTimeImmutable();
-        $storedFile = new StoredFile($fileId, 'stored_filepath', 'stored_filename', 'stored_mimetype', 'stored_extension', 'user.avatar', $now);
-        $tempFile = new TempFile('filepath', 'filename', 'mimetype', 'extension');
-
-        $this->fileStorage
-            ->expects($this->once())
-            ->method('store')
-            ->with($tempFile)
-            ->willReturn($storedFile);
-
-        $newUser = $this->service->updateAvatar(new UpdateAvatarCommand($this->identityId, $tempFile));
-
-        $this->assertNotNull($newUser->getAvatar());
-        $this->assertEquals($this->userId, $newUser->getId());
-        $this->assertEquals($this->identityId, $newUser->getIdentityId());
-        $this->assertEquals($createdAt, $newUser->getCreatedAt());
-        $this->assertNotEquals($createdAt, $newUser->getUpdatedAt());
-        $this->assertEquals('stored_filepath', $newUser->getAvatar()->getPath());
-        $this->assertEquals('stored_filename', $newUser->getAvatar()->getFilename());
-        $this->assertEquals('stored_mimetype', $newUser->getAvatar()->getMimeType());
-        $this->assertEquals('stored_extension', $newUser->getAvatar()->getExtension());
-        $this->assertEquals('user.avatar', $newUser->getAvatar()->getType());
-        $this->assertEquals($now, $newUser->getAvatar()->getCreatedAt());
+        self::assertNotNull($newUser->getAvatar());
+        self::assertEquals($this->userId, $newUser->getId());
+        self::assertEquals($this->identityId, $newUser->getIdentityId());
+        self::assertEquals($createdAt, $newUser->getCreatedAt());
+        self::assertNotEquals($createdAt, $newUser->getUpdatedAt());
+        self::assertEquals('stored_filepath', $newUser->getAvatar()->getPath());
+        self::assertEquals('stored_filename', $newUser->getAvatar()->getFilename());
+        self::assertEquals('stored_mimetype', $newUser->getAvatar()->getMimeType());
+        self::assertEquals('stored_extension', $newUser->getAvatar()->getExtension());
+        self::assertEquals('user.avatar', $newUser->getAvatar()->getType());
+        self::assertEquals($now, $newUser->getAvatar()->getCreatedAt());
     }
 
     #[Test]
@@ -237,38 +143,19 @@ final class DefaultUserServiceTest extends TestCase
         $oldFile = new StoredFile($oldFileId, 'old_stored_filepath', 'old_stored_filename', 'old_stored_mimetype', 'old_stored_extension', 'user.avatar', $fileCreatedAt);
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
         $user = new User($this->userId, $this->identityId, $createdAt, $createdAt, $oldFile);
-
-        $this->userRepository
-            ->expects($this->once())
-            ->method('findByIdentityId')
-            ->with($this->identityId)
-            ->willReturn($user);
-
-        // simulate TransactionProvider behavior
-        $this->transactionProvider
-            ->expects($this->once())
-            ->method('transactional')
-            ->willReturnCallback(
-            // simulate transaction -> just execute callback
-                fn (callable $callback) => $callback()
-            );
-
-        $this->fileStorage
-            ->expects($this->once())
-            ->method('delete')
-            ->with($oldFile);
+        $user->setAvatar($oldFile);
 
         $this->userRepository
             ->expects($this->once())
             ->method('save')
             ->with($this->isInstanceOf(User::class));
 
-        $newUser = $this->service->deleteAvatar(new DeleteAvatarCommand($this->identityId));
+        $newUser = $this->service->updateAvatar($user, null);
 
-        $this->assertNull($newUser->getAvatar());
-        $this->assertEquals($this->userId, $newUser->getId());
-        $this->assertEquals($this->identityId, $newUser->getIdentityId());
-        $this->assertEquals($createdAt, $newUser->getCreatedAt());
-        $this->assertNotEquals($createdAt, $newUser->getUpdatedAt());
+        self::assertNull($newUser->getAvatar());
+        self::assertEquals($this->userId, $newUser->getId());
+        self::assertEquals($this->identityId, $newUser->getIdentityId());
+        self::assertEquals($createdAt, $newUser->getCreatedAt());
+        self::assertNotEquals($createdAt, $newUser->getUpdatedAt());
     }
 }

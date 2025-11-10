@@ -19,11 +19,11 @@ class ValidationErrorTest extends TestCase
         $details = ['detailLabel' => 'detailDescription'];
         $error = new ValidationError("fieldName", ErrorCode::FIELD_CANNOT_BE_EMPTY, $details);
 
-        $this->assertNotNull($error);
-        $this->assertEquals("fieldName", $error->field());
-        $this->assertEquals(ErrorCode::FIELD_CANNOT_BE_EMPTY, $error->code());
-        $this->assertEquals($details, $error->details());
-        $this->assertEquals(
+        self::assertNotNull($error);
+        self::assertEquals("fieldName", $error->field());
+        self::assertEquals(ErrorCode::FIELD_CANNOT_BE_EMPTY, $error->code());
+        self::assertEquals($details, $error->details());
+        self::assertEquals(
             'ValidationError[code = FIELD_CANNOT_BE_EMPTY, message = The field cannot be empty {field = fieldName, details = {"detailLabel":"detailDescription"}]',
             $error.''
         );

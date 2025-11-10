@@ -20,6 +20,6 @@ final class CreateUserCommandTest extends TestCase
         $identityId = EntityId::generate();
         $command = new CreateUserCommand($identityId->__toString());
 
-        $this->assertSame($identityId->__toString(), $command->identityId);
+        self::assertSame($identityId->__toString(), $command->identityId);
     }
 }

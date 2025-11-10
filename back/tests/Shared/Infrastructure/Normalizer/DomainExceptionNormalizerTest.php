@@ -35,7 +35,7 @@ class DomainExceptionNormalizerTest extends TestCase
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
 
-        $this->assertEquals($expectedNormalizedException, $normalized);
+        self::assertEquals($expectedNormalizedException, $normalized);
     }
 
     #[Test]
@@ -55,7 +55,7 @@ class DomainExceptionNormalizerTest extends TestCase
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
 
-        $this->assertEquals($expectedNormalizedException, $normalized);
+        self::assertEquals($expectedNormalizedException, $normalized);
     }
 
     #[Test]
@@ -75,6 +75,6 @@ class DomainExceptionNormalizerTest extends TestCase
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
 
-        $this->assertEquals($expectedNormalizedException, $normalized);
+        self::assertEquals($expectedNormalizedException, $normalized);
     }
 }
