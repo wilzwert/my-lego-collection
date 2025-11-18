@@ -18,7 +18,7 @@ final class AuthControllerIT extends WebTestCase
     use WebTestCaseAuthenticateUserTrait;
 
     #[Test]
-    public function shouldReturn200_whenRequestIsValid(): void
+    public function shouldReturn204_whenRequestIsValid(): void
     {
         $client = self::createClient();
 
@@ -88,13 +88,8 @@ final class AuthControllerIT extends WebTestCase
     public function shouldReturnEmpty200_whenUserAlreadyAuthenticated(): void
     {
         // Simulate authenticated user
-        // TODO : this should be done outside to make it reusable by others IT
         $client = self::createClient();
-        $identityService = self::getContainer()->get(IdentityService::class);
-        $testIdentity = $identityService->getIdentityByIdentifier('user1@test.com');
-        $authenticatedUser = new AuthenticatedUser($testIdentity);
-        $client->loginUser($authenticatedUser);
-
+        $this->authenticateUser($client);
 
         $client->jsonRequest('POST', '/api/auth/registration', [
             'email' => 'new@example.com',
