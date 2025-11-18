@@ -16,7 +16,7 @@ class TestContainersStopSubscriber implements ExecutionFinishedSubscriber
         private readonly TestSuiteService $suiteService,
         private readonly TestContainerHandler $dbTestContainerHandler,
         private readonly TestContainerHandler $redisTestContainerHandler,
-        private Filesystem $fs = new Filesystem()
+        private Filesystem $fs
     ) {
     }
 
