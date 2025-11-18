@@ -13,13 +13,20 @@ use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
  */
 readonly class DefaultFileStorageService implements FileStorageService
 {
+
+    /**
+     * @var array<FileStorageProvider>
+     */
+    private array $providers;
+
     /**
      * @param iterable<FileStorageProvider> $providers
      */
     public function __construct(
         #[AutowireIterator('app.file_storage_provider')]
-        private iterable $providers
+        iterable $providers
     ) {
+        $this->providers = iterator_to_array($providers);
     }
 
     private function findProvider(string $type): FileStorageProvider
