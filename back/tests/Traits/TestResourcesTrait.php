@@ -8,11 +8,13 @@ trait TestResourcesTrait
 {
     protected function getTestResourcePath(string $relativePath): string
     {
-        if (method_exists($this, 'bootKernel')) {
+        if (isset(static::$kernel) && static::$kernel instanceof KernelInterface) {
+            $baseDir = static::$kernel->getProjectDir();
+        } elseif (property_exists($this, 'kernel') && !empty($this->kernel) && $this->kernel instanceof KernelInterface) {
+            $baseDir = $this->kernel->getProjectDir();
+        } elseif (method_exists($this, 'bootKernel')) {
             $kernel = self::bootKernel();
             $baseDir = $kernel->getProjectDir();
-        } elseif (property_exists($this, 'kernel') && $this->kernel instanceof KernelInterface) {
-            $baseDir = $this->kernel->getProjectDir();
         } else {
             // fallback for pure unit tests
             $baseDir = dirname(__DIR__, 1);
@@ -21,4 +23,3 @@ trait TestResourcesTrait
         return sprintf('%s/tests/Resources/%s', $baseDir, ltrim($relativePath, '/'));
     }
 }
-
