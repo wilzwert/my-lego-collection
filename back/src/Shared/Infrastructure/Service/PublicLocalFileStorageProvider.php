@@ -22,7 +22,7 @@ final readonly class PublicLocalFileStorageProvider implements FileStorageProvid
     public function __construct(
         private readonly Filesystem $filesystem,
         private readonly SluggerInterface $slugger,
-        #[Autowire('%kernel.project_dir%/public/uploads')] private string $uploadsDirectory
+        #[Autowire('%public_upload_dir')] private string $uploadsDirectory
     ) {
         $this->supportedTypes = ['user.avatar' => 'user-avatar'];
     }
