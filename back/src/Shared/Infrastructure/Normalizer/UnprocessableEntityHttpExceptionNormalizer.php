@@ -2,14 +2,12 @@
 
 namespace App\Shared\Infrastructure\Normalizer;
 
-use App\Shared\Domain\Exception\ValidationException;
+use App\Shared\Domain\Exception\ErrorCode;
 use InvalidArgumentException;
 use Symfony\Component\Clock\ClockAwareTrait;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 #[AutoconfigureTag('app.exception_normalizer')]
@@ -37,8 +35,8 @@ class UnprocessableEntityHttpExceptionNormalizer extends ExceptionNormalizer
         $errorsAsArray = [];
         foreach ($validationFailedException->getViolations() as $violation) {
             $propertyPath = $violation->getPropertyPath();
-            $constraintClass = $violation->getConstraint()::class;
-            $detailCode = $constraintClass::getErrorName($violation->getCode());
+            $constraintClass = $violation->getConstraint() ? $violation->getConstraint()::class : null;
+            $detailCode = $constraintClass ? $constraintClass::getErrorName($violation->getCode()) : ErrorCode::UNKNOWN_ERROR->getCode();
             if (!isset($errorsAsArray[$propertyPath])) {
                 $errorsAsArray[$propertyPath] = [];
             }
