@@ -64,4 +64,14 @@ class DoctrineUser
         );
     }
 
+    public static function fromDomain(User $user): self
+    {
+        return new self(
+            $user->getId(),
+            $user->getIdentityId(),
+            $user->getCreatedAt(),
+            $user->getUpdatedAt()
+        );
+    }
+
 }

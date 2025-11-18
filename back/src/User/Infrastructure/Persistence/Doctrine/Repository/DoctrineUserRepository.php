@@ -30,14 +30,8 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function save(User $user): void
     {
-        $this->entityManager->persist(
-            new DoctrineUser(
-                $user->getId(),
-                $user->getIdentityId(),
-                $user->getCreatedAt(),
-                $user->getUpdatedAt()
-            )
-        );
+        $doctrineUser = $this->find($user->getId()) ?? DoctrineUser::fromDomain($user);
+        $this->entityManager->persist($doctrineUser);
     }
 
     public function findByIdentityId(EntityId $identityId): ?User
