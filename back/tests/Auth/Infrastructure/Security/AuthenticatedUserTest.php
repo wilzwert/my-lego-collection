@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Auth;
+namespace App\Tests\Auth\Infrastructure\Security;
 
 /**
  * @author Wilhelm Zwertvaegher

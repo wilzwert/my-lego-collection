@@ -86,7 +86,7 @@ final class DefaultIdentityServiceTest extends TestCase
                 fn (callable $callback) => $callback()
             );
 
-        $result = $this->service->createIdentity($command);
+        $result = $this->service->createIdentity('john@example.com', 'john_doe', 'password');
 
         self::assertInstanceOf(Identity::class, $result);
         self::assertSame($command->email, $result->getEmail());
@@ -110,7 +110,7 @@ final class DefaultIdentityServiceTest extends TestCase
 
         $this->expectException(EntityAlreadyExistsException::class);
 
-        $this->service->createIdentity($command);
+        $this->service->createIdentity('john@example.com', 'john_doe', 'password');
     }
 
     #[Test]
