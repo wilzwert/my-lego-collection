@@ -23,10 +23,10 @@ class TestContainersStopSubscriber implements ExecutionFinishedSubscriber
     public function notify(ExecutionFinished $event): void
     {
         if ($this->suiteService->isIntegrationTest()) {
-            echo "STOPPING REDIS CONTAINER....\n";
+            fwrite(STDOUT, "STOPPING REDIS CONTAINER....\n");
             $this->redisTestContainerHandler->stop();
 
-            echo "STOPPING DB CONTAINER....\n";
+            fwrite(STDOUT, "STOPPING DB CONTAINER....\n");
             $this->dbTestContainerHandler->stop();
 
             $this->fs->remove('.env.test.local');

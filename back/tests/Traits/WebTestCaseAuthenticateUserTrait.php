@@ -6,21 +6,54 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Service\IdentityService;
 use App\Auth\Infrastructure\Security\AuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
+use App\User\Application\Command\CreateUserCommand;
+use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\BrowserKit\Cookie;
+use Symfony\Component\DomCrawler\Crawler;
 
 trait WebTestCaseAuthenticateUserTrait
 {
 
-    private function authenticateUser(KernelBrowser $client) : AuthenticatedUser
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // reset client
+        $this->configureClient(self::UNAUTHENTICATED);
+    }
+
+
+    private const int AUTHENTICATED = 1;
+    private const int UNKNOWN_AUTHENTICATED = 2;
+    private const int UNAUTHENTICATED = 3;
+
+
+    private function configureClient(int $status): void
+    {
+        if (!isset($this->client)) {
+            throw new \LogicException('Client should be set before calling configureClient()');
+        }
+        if ($status == self::UNAUTHENTICATED) {
+            $this->client->getCookieJar()->clear();
+        } else {
+            [$token, $refreshToken] = $status === self::AUTHENTICATED ? $this->getAuthenticatedUserTokens() : $this->getUnknownAuthenticatedUserTokens();
+            $this->client->getCookieJar()->set(new Cookie('token', $token));
+        }
+    }
+
+
+    private function getAuthenticatedUserTokens() : array
     {
         $identityService = self::getContainer()->get(IdentityService::class);
         $testIdentity = $identityService->getIdentityByIdentifier('user1@test.com');
         $authenticatedUser = new AuthenticatedUser($testIdentity);
-        $client->loginUser($authenticatedUser);
-        return $authenticatedUser;
+        $jwtManager = self::getContainer()->get(JWTTokenManagerInterface::class);
+        return [$jwtManager->create($authenticatedUser), 'TODO'];
     }
 
-    private function authenticateAsUnknownUser(KernelBrowser $client) : AuthenticatedUser
+
+    private function getUnknownAuthenticatedUserTokens() : array
     {
         $unknownUser = new Identity(
             EntityId::fromString('00000000-0000-4000-a000-000000000000'),
@@ -29,7 +62,7 @@ trait WebTestCaseAuthenticateUserTrait
             'password'
         );
         $unknownAuthenticatedUser = new AuthenticatedUser($unknownUser);
-        $client->loginUser($unknownAuthenticatedUser);
-        return $unknownAuthenticatedUser;
+        $jwtManager = self::getContainer()->get(JWTTokenManagerInterface::class);
+        return [$jwtManager->create($unknownAuthenticatedUser), 'TODO'];
     }
 }

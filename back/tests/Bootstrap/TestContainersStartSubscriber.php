@@ -24,11 +24,11 @@ class TestContainersStartSubscriber implements ExecutionStartedSubscriber
     public function notify(ExecutionStarted $event): void
     {
         if ($this->suiteService->isIntegrationTest($event->testSuite())) {
-            echo "STARTING DB CONTAINER....\n";
+            fwrite(STDOUT, "STARTING DB CONTAINER....\n");
             $this->dbTestContainerHandler->start();
             $envVars = $this->dbTestContainerHandler->getEnvVars();
 
-            echo "STARTING REDIS CONTAINER....\n";
+            fwrite(STDOUT, "STARTING REDIS CONTAINER....\n");
             $this->redisTestContainerHandler->start();
 
             $envVars = array_merge($envVars, $this->redisTestContainerHandler->getEnvVars());

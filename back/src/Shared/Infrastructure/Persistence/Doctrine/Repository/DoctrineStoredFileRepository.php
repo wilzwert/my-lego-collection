@@ -9,6 +9,7 @@ use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Repository\StoredFileRepository;
 use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
+use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -32,17 +33,9 @@ class DoctrineStoredFileRepository extends ServiceEntityRepository implements St
 
     public function save(StoredFile $storedFile): void
     {
-        $this->entityManager->persist(
-            new DoctrineStoredFile(
-                $storedFile->getId(),
-                $storedFile->getPath(),
-                $storedFile->getFilename(),
-                $storedFile->getMimeType(),
-                $storedFile->getExtension(),
-                $storedFile->getType(),
-                $storedFile->getCreatedAt()
-            )
-        );
+        $doctrineStoredFile = $this->find($storedFile->getId()) ?? new DoctrineStoredFile();
+        $doctrineStoredFile->fromDomain($storedFile);
+        $this->entityManager->persist($doctrineStoredFile);
     }
 
     public function delete(StoredFile $storedFile): void

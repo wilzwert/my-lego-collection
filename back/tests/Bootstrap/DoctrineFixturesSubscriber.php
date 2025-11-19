@@ -31,7 +31,7 @@ readonly class DoctrineFixturesSubscriber implements ExecutionStartedSubscriber
         if (!$this->dbContainerHandler->isStarted()) {
             throw new Exception('Db container MUST be started before loading test fixtures.');
         }
-        echo "LOADING FIXTURES....\n";
+        fwrite(STDOUT, "LOADING FIXTURES....\n");
         $env = [
             'DATABASE_URL' => getenv('DATABASE_URL')
         ];

@@ -3,6 +3,7 @@
 namespace App\Auth\Infrastructure\Security;
 
 use App\Auth\Domain\Repository\IdentityRepository;
+use App\Shared\Domain\Model\EntityId;
 use Override;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,7 +22,7 @@ readonly class UserProvider implements UserProviderInterface
     #[Override]
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $identity = $this->repository->findByIdentifier($identifier);
+        $identity = $this->repository->findById(EntityId::fromString($identifier));
 
         if (!$identity) {
             throw new UserNotFoundException("Identity '$identifier' not found.");

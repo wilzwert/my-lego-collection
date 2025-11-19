@@ -22,7 +22,8 @@ final readonly class PublicLocalFileStorageProvider implements FileStorageProvid
     public function __construct(
         private readonly Filesystem $filesystem,
         private readonly SluggerInterface $slugger,
-        #[Autowire('%public_upload_dir')] private string $uploadsDirectory
+        #[Autowire('%public_upload_dir%')] private string $uploadsDirectory,
+        #[Autowire('%public_upload_base_url%')] private string $uploadsBaseUrl
     ) {
         $this->supportedTypes = ['user.avatar' => 'user-avatar'];
     }
@@ -56,8 +57,7 @@ final readonly class PublicLocalFileStorageProvider implements FileStorageProvid
 
     public function generateUrl(StoredFile $storedFile): string
     {
-        // TODO: Implement generateUrl() method.
-        return 'TODO';
+        return $this->uploadsBaseUrl.'/'.$this->supportedTypes[$storedFile->getType()].'/'.$storedFile->getPath();
     }
 
     public function supports(string $type): bool

@@ -53,4 +53,14 @@ class EntityId
     {
         return $this->value;
     }
+
+    public function equals(EntityId $entityId): bool
+    {
+        return $this->value() === $entityId->value();
+    }
+
+    public function valueEquals(string $value): bool
+    {
+        return $this->value() === $value;
+    }
 }

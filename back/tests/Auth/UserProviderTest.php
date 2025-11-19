@@ -24,11 +24,11 @@ final class UserProviderTest extends TestCase
         $domainIdentity = $this->createMock(Identity::class);
         $domainIdentity->method('getId')->willReturn(EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
         $repository = $this->createMock(IdentityRepository::class);
-        $repository->method('findByIdentifier')->willReturn($domainIdentity);
+        $repository->method('findById')->willReturn($domainIdentity);
 
         $provider = new UserProvider($repository);
 
-        $result = $provider->loadUserByIdentifier('john.doe@example.com');
+        $result = $provider->loadUserByIdentifier('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1');
 
         self::assertInstanceOf(AuthenticatedUser::class, $result);
         self::assertSame('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1', $result->getUserIdentifier());
@@ -38,14 +38,14 @@ final class UserProviderTest extends TestCase
     public function loadUserByIdentifier_shouldThrowExceptionWhenUserNotFound(): void
     {
         $repository = $this->createMock(IdentityRepository::class);
-        $repository->method('findByIdentifier')->willReturn(null);
+        $repository->method('findById')->willReturn(null);
 
         $provider = new UserProvider($repository);
 
         $this->expectException(UserNotFoundException::class);
-        $this->expectExceptionMessage("Identity 'unknown@example.com' not found.");
+        $this->expectExceptionMessage("Identity 'a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1' not found.");
 
-        $provider->loadUserByIdentifier('unknown@example.com');
+        $provider->loadUserByIdentifier('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1');
     }
 
     #[Test]

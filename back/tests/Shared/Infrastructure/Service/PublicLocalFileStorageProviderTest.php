@@ -26,6 +26,7 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     private SluggerInterface&MockObject $slugger;
     private PublicLocalFileStorageProvider $provider;
     private string $uploadsDir;
+    private string $uploadsBaseUrl;
 
     private StoredFile $testStoredFile;
 
@@ -34,10 +35,12 @@ final class PublicLocalFileStorageProviderTest extends TestCase
         $this->filesystem = $this->createMock(Filesystem::class);
         $this->slugger = $this->createMock(SluggerInterface::class);
         $this->uploadsDir = '/tmp/uploads';
+        $this->uploadsBaseUrl = 'http://localhost/uploads';
         $this->provider = new PublicLocalFileStorageProvider(
             $this->filesystem,
             $this->slugger,
-            $this->uploadsDir
+            $this->uploadsDir,
+            $this->uploadsBaseUrl
         );
 
         $entityId = EntityId::generate();
@@ -135,11 +138,11 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     }
 
     #[Test]
-    public function shouldGenerateUrlPlaceholder(): void
+    public function shouldGenerateUrl(): void
     {
 
         $result = $this->provider->generateUrl($this->testStoredFile);
 
-        self::assertSame('TODO', $result);
+        self::assertSame($this->uploadsBaseUrl.'/user-avatar/avatar.png', $result);
     }
 }

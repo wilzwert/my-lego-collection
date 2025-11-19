@@ -62,7 +62,7 @@ class DoctrineIdentityRepository extends ServiceEntityRepository implements Iden
 
     public function findById(EntityId $id): ?Identity
     {
-        $identity = parent::findOneBy(['id' => $id->__toString()]);
+        $identity = parent::find($id->__toString());
         return $identity?->toDomain();
     }
 

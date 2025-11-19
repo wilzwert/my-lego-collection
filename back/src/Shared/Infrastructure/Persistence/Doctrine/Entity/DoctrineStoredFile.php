@@ -17,42 +17,26 @@ class DoctrineStoredFile
     #[ORM\Id, ORM\Column(type: "string", length: 36)]
     private string $id;
 
-    #[ORM\Id, ORM\Column(type: "string")]
+    #[ORM\Column(type: "string", unique: true)]
     private string $path;
 
-    #[ORM\Id, ORM\Column(type: "string")]
+    #[ORM\Column(type: "string")]
     private string $filename;
 
-    #[ORM\Id, ORM\Column(type: "string", length: 127)]
+    #[ORM\Column(type: "string", length: 127)]
     private string $mimeType;
 
-    #[ORM\Id, ORM\Column(type: "string")]
+    #[ORM\Column(type: "string")]
     private string $extension;
 
-    #[ORM\Id, ORM\Column(type: "string", length: 40)]
+    #[ORM\Column(type: "string", length: 40)]
     private string $type;
 
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
-    /**
-     * @param string $id
-     * @param string $path
-     * @param string $filename
-     * @param string $mimeType
-     * @param string $extension
-     * @param string $type
-     * @param \DateTimeImmutable $createdAt
-     */
-    public function __construct(string $id, string $path, string $filename, string $mimeType, string $extension, string $type, \DateTimeImmutable $createdAt)
+    public function __construct()
     {
-        $this->id = $id;
-        $this->path = $path;
-        $this->filename = $filename;
-        $this->mimeType = $mimeType;
-        $this->extension = $extension;
-        $this->type = $type;
-        $this->createdAt = $createdAt;
     }
 
     public function getId(): string
@@ -101,5 +85,22 @@ class DoctrineStoredFile
             $this->type,
             $this->createdAt
         );
+    }
+
+    public function fromDomain(StoredFile $storedFile): self
+    {
+        if (isset($this->id) && !$storedFile->getId()->valueEquals($this->id)) {
+            throw new \InvalidArgumentException('Mapping a StoredFile should not change its id');
+        }
+
+        $this->id = $storedFile->getId();
+        $this->path = $storedFile->getPath();
+        $this->filename = $storedFile->getFilename();
+        $this->mimeType = $storedFile->getMimeType();
+        $this->extension = $storedFile->getExtension();
+        $this->type = $storedFile->getType();
+        $this->createdAt = $storedFile->getCreatedAt();
+
+        return $this;
     }
 }

@@ -34,9 +34,8 @@ class UserController extends AbstractController
 
     #[Route('/me', name: 'api_user_me', methods: ['GET'])]
     #[IsGranted('ROLE_USER')]
-    public function me(
-        #[CurrentUser] ?UserInterface $user
-    ) :JsonResponse {
+    public function me(#[CurrentUser] ?UserInterface $user) :JsonResponse
+    {
         $user = ($this->getUserHandler)(new GetUserByIdentityQuery($user->getUserIdentifier()));
 
         if (!$user) {
@@ -57,7 +56,7 @@ class UserController extends AbstractController
         #[CurrentUser] ?UserInterface $user
     ) :JsonResponse {
         $tempFile = $this->base64FileDecoder->decodeToTempFile($updateAvatarRequest->getContents(), $updateAvatarRequest->getFileName());
-        ($this->updateAvatarHandler)(new UpdateAvatarCommand($user->getUserIdentifier(), $tempFile));
+        $u = ($this->updateAvatarHandler)(new UpdateAvatarCommand($user->getUserIdentifier(), $tempFile));
         return $this->json([], Response::HTTP_NO_CONTENT);
     }
 }
