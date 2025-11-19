@@ -21,6 +21,9 @@ class EntityId
         $this->value = $value;
     }
 
+    /**
+     * @throws InvalidEntityIdException
+     */
     public static function fromString(string $value): self
     {
         return new self($value);
