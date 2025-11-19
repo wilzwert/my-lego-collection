@@ -26,4 +26,9 @@ readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticated
     {
         return $this->identity->getPasswordHash();
     }
+
+    #[\Deprecated]
+    public function eraseCredentials(): void
+    {
+    }
 }
