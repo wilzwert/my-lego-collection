@@ -2,7 +2,7 @@
 
 namespace App\CollectionManagement\Domain\Model\Local;
 
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 /**
  * A local user's set which consists of an id and a local set
@@ -12,7 +12,7 @@ use App\Shared\Domain\Model\Uuid;
  */
 readonly class UserSet
 {
-    public function __construct(private Uuid $id, private Set $localSet)
+    public function __construct(private EntityId $id, private Set $localSet)
     {
     }
 
@@ -21,7 +21,7 @@ readonly class UserSet
         return $this->localSet;
     }
 
-    public function getId(): Uuid
+    public function getId(): EntityId
     {
         return $this->id;
     }

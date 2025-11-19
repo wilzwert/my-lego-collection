@@ -3,14 +3,14 @@ FROM dunglas/frankenphp:php8.4
 # user/group
 ARG UID=1000
 ARG GID=1000
-ARG DOCKER_GID=0
+ARG DOCKER_GID=999
 
 # Create a user to avoir working as root
 RUN addgroup --gid $GID symfony \
  && adduser --uid $UID --gid $GID --disabled-password --gecos "" symfony
 
 # Create a docker group and add our user to it
-RUN groupadd -g 0 ${DOCKER_GID} && usermod -aG docker appuser
+RUN groupadd -g ${DOCKER_GID} docker && usermod -aG docker symfony
 # RUN groupadd -for -g ${DOCKER_GID} docker \
 #    && usermod -aG docker symfony
  

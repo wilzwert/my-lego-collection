@@ -3,7 +3,9 @@
 namespace App\Tests\User\Domain\Model;
 
 use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\StoredFile;
+use App\Shared\Domain\Model\EntityId;
+use App\User\Domain\Model\User;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -13,31 +15,43 @@ use PHPUnit\Framework\TestCase;
 
 final class UserTest extends TestCase
 {
-    #[Test]
-    public function shouldExposeAllGivenProperties(): void
+
+    private EntityId $id;
+    private EntityId $identityId;
+
+    protected function setUp(): void
     {
-        $id = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
-        $email = 'john@example.com';
-        $username = 'john_doe';
-        $passwordHash = 'hashed-password';
-        $roles = ['ROLE_ADMIN', 'ROLE_USER'];
-
-        $user = new Identity($id, $email, $username, $passwordHash, $roles);
-
-        $this->assertSame($id, $user->getId());
-        $this->assertSame($email, $user->getEmail());
-        $this->assertSame($username, $user->getUsername());
-        $this->assertSame($passwordHash, $user->getPasswordHash());
-        $this->assertSame($roles, $user->getRoles());
+        $this->id = EntityId::fromString('123e4567-e89b-42d3-a456-426614174000');
+        $this->identityId = EntityId::fromString('87654321-e89b-42d3-a456-426614174000');
     }
 
     #[Test]
-    public function shouldHaveRoleUserByDefault(): void
+    public function shouldExposeAllGivenProperties(): void
     {
-        $id = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
+        $now = new \DateTimeImmutable();
+        $user = new User($this->id, $this->identityId, $now, $now);
 
-        $user = new Identity($id, 'jane@example.com', 'jane_doe', 'secret-hash');
+        self::assertSame($this->id, $user->getId());
+        self::assertSame($this->identityId, $user->getIdentityId());
+        self::assertSame($now, $user->getCreatedAt());
+        self::assertSame($now, $user->getUpdatedAt());
+        self::assertNull($user->getAvatar());
+    }
 
-        $this->assertSame(['ROLE_USER'], $user->getRoles());
+
+    #[Test]
+    public function shouldSetAvatarAndUpdatedAt(): void
+    {
+        $fileId = EntityId::generate();
+        $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
+        $user = new User($this->id, $this->identityId, $createdAt, $createdAt);
+        $file = new StoredFile($fileId, 'ad123456.png', 'avatar.png', 'image/png', 'png', 'user.avatar', new \DateTimeImmutable('2025-11-07T12:00:00'));
+        $newUser = $user->setAvatar($file);
+
+        self::assertNotSame($user, $newUser);
+        self::assertEquals($user->getId(), $newUser->getId());
+        self::assertEquals($user->getCreatedAt(), $newUser->getCreatedAt());
+        self::assertNotEquals($user->getUpdatedAt(), $newUser->getUpdatedAt());
+        self::assertEquals($file, $newUser->getAvatar());
     }
 }

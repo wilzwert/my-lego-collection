@@ -14,7 +14,7 @@ readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticated
 
     public function getUserIdentifier(): string
     {
-        return $this->identity->getEmail();
+        return $this->identity->getId();
     }
 
     public function getRoles(): array
@@ -27,12 +27,8 @@ readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticated
         return $this->identity->getPasswordHash();
     }
 
+    #[\Deprecated]
     public function eraseCredentials(): void
     {
-    }
-
-    public function getDomainIdentity(): Identity
-    {
-        return $this->identity;
     }
 }

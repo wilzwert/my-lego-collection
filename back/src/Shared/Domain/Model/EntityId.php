@@ -2,20 +2,28 @@
 
 namespace App\Shared\Domain\Model;
 
-use App\Shared\Domain\Validation\Validator;
+use App\Shared\Domain\Exception\InvalidEntityIdException;
 use Random\RandomException;
 
-class Uuid
+class EntityId
 {
     private string $value;
 
+    /**
+     * @throws InvalidEntityIdException
+     */
     private function __construct(string $value)
     {
-        $validator = new Validator();
-        $validator->requireValidUuidV4('value', $value)->validate();
+        // TODO check value format
+        if (!preg_match('/^[0-9A-F]{8}-[0-9A-F]{4}-4[0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i', $value)) {
+            throw new InvalidEntityIdException();
+        }
         $this->value = $value;
     }
 
+    /**
+     * @throws InvalidEntityIdException
+     */
     public static function fromString(string $value): self
     {
         return new self($value);
@@ -47,5 +55,15 @@ class Uuid
     public function __toString(): string
     {
         return $this->value;
+    }
+
+    public function equals(EntityId $entityId): bool
+    {
+        return $this->value() === $entityId->value();
+    }
+
+    public function valueEquals(string $value): bool
+    {
+        return $this->value() === $value;
     }
 }

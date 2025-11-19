@@ -5,13 +5,13 @@ namespace App\Auth\Domain\Model;
 use App\Auth\Domain\Exception\AuthErrorCode;
 use App\Shared\Domain\Exception\ErrorCode;
 use App\Shared\Domain\Exception\ValidationException;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Validation\Validator;
 
 readonly class Identity
 {
     /**
-     * @param Uuid $id
+     * @param EntityId $id
      * @param string $email
      * @param string $username
      * @param string $passwordHash
@@ -19,11 +19,11 @@ readonly class Identity
      * @throws ValidationException
      */
     public function __construct(
-        private Uuid $id,
-        public string $email,
-        private string $username,
-        private string $passwordHash,
-        private array $roles = ['ROLE_USER']
+        private EntityId $id,
+        public string    $email,
+        private string   $username,
+        private string   $passwordHash,
+        private array    $roles = ['ROLE_USER']
     ) {
         $validator = new Validator();
         $validator
@@ -36,7 +36,7 @@ readonly class Identity
             ->validate();
     }
 
-    public function getId(): Uuid
+    public function getId(): EntityId
     {
         return $this->id;
     }

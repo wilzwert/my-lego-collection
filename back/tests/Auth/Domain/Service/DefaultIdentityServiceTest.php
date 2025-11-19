@@ -42,7 +42,7 @@ final class DefaultIdentityServiceTest extends TestCase
     }
 
     #[Test]
-    public function shouldCreateUserWithinTransaction(): void
+    public function shouldCreateIdentityWithinTransaction(): void
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $hashedPassword = 'hashed-password';
@@ -64,10 +64,18 @@ final class DefaultIdentityServiceTest extends TestCase
             ->method('save')
             ->with($this->isInstanceOf(Identity::class));
 
+        $eventId = null;
         $this->eventBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->isInstanceOf(DomainEvent::class));
+            ->with(
+                $this->callback(function (DomainEvent $event) use (&$eventId) {
+                    self::assertSame('auth.identity.created', $event->type());
+                    self::assertNotEmpty($event->id());
+                    $eventId = $event->id();
+                    return true;
+                })
+            );
 
         // simulate TransactionProvider behavior
         $this->transactionProvider
@@ -80,13 +88,14 @@ final class DefaultIdentityServiceTest extends TestCase
 
         $result = $this->service->createIdentity($command);
 
-        $this->assertInstanceOf(Identity::class, $result);
-        $this->assertSame($command->email, $result->getEmail());
-        $this->assertSame($command->username, $result->getUsername());
+        self::assertInstanceOf(Identity::class, $result);
+        self::assertSame($command->email, $result->getEmail());
+        self::assertSame($command->username, $result->getUsername());
+        self::assertSame($eventId, $result->getId()->__toString());
     }
 
     #[Test]
-    public function shouldThrowException_whenUserAlreadyExists(): void
+    public function shouldThrowException_whenIdentityAlreadyExists(): void
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $existingUser = $this->createMock(Identity::class);
@@ -105,7 +114,7 @@ final class DefaultIdentityServiceTest extends TestCase
     }
 
     #[Test]
-    public function shouldRetrieveUserByIdentifier(): void
+    public function shouldRetrieveIdentityByIdentifier(): void
     {
         $identifier = 'user-123';
         $expectedUser = $this->createMock(Identity::class);
@@ -118,6 +127,6 @@ final class DefaultIdentityServiceTest extends TestCase
 
         $result = $this->service->getIdentityByIdentifier($identifier);
 
-        $this->assertSame($expectedUser, $result);
+        self::assertSame($expectedUser, $result);
     }
 }

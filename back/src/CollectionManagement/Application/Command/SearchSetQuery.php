@@ -2,13 +2,13 @@
 
 namespace App\CollectionManagement\Application\Command;
 
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 final readonly class SearchSetQuery
 {
     public function __construct(
         private string $search,
-        private ?Uuid $userId = null
+        private ?EntityId $userId = null
     )
     {}
 
@@ -17,7 +17,7 @@ final readonly class SearchSetQuery
         return $this->search;
     }
 
-    public function getUserId() :?Uuid
+    public function getUserId() :?EntityId
     {
         return $this->userId;
     }

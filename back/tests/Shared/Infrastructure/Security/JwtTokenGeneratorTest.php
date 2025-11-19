@@ -37,7 +37,7 @@ final class JwtTokenGeneratorTest extends TestCase
 
         $token = $this->generator->createToken($user);
 
-        $this->assertSame($expectedToken, $token);
+        self::assertSame($expectedToken, $token);
     }
 
     #[Test]

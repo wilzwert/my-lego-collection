@@ -7,7 +7,7 @@ use App\CollectionManagement\Application\Handler\SearchPartHandler;
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Service\PartService;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -20,7 +20,7 @@ final class SearchPartHandlerTest extends TestCase
     #[Test]
     public function invokeDelegatesToPartServiceWithExpectedArguments(): void
     {
-        $userId = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
+        $userId = EntityId::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
         $query = new SearchPartQuery('brick', $userId);
 
         $expectedResult = new PartCollection([

@@ -38,7 +38,6 @@ readonly class ExceptionSubscriber implements EventSubscriberInterface
         if ($request->getRequestFormat() !== 'json') {
             return;
         }
-
         $throwable = $event->getThrowable();
         foreach ($this->normalizers as $normalizer) {
             if ($normalizer->supportsNormalization($throwable)) {

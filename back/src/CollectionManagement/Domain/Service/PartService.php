@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\PartCollection;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 interface PartService
 {
@@ -13,8 +13,8 @@ interface PartService
      * The Service should merge external parts and current user's local parts if available
      *
      * @param string $search the string to search (set id, part of part title)
-     * @param Uuid|null $userId the user's id if available
+     * @param EntityId|null $userId the user's id if available
      * @return PartCollection
      */
-    function findParts(string $search, ?Uuid $userId = null) : PartCollection;
+    function findParts(string $search, ?EntityId $userId = null) : PartCollection;
 }

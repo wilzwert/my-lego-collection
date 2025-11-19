@@ -36,7 +36,7 @@ final class DoctrineTransactionProviderTest extends TestCase
 
         $result = $this->provider->transactional($callback);
 
-        $this->assertSame('ok', $result);
+        self::assertSame('ok', $result);
     }
 
     #[Test]
@@ -68,6 +68,6 @@ final class DoctrineTransactionProviderTest extends TestCase
 
         $result = $this->provider->transactional($callback);
 
-        $this->assertSame($data, $result);
+        self::assertSame($data, $result);
     }
 }

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Tests\Shared\Traits;
+namespace App\Tests\Traits;
 
 use App\Shared\Domain\Event\DomainEventHandler;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
  * @author Wilhelm Zwertvaegher

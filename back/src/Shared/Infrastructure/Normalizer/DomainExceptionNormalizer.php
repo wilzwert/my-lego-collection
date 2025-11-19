@@ -4,6 +4,8 @@ namespace App\Shared\Infrastructure\Normalizer;
 
 use App\Shared\Domain\Exception\DomainException;
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
+use App\Shared\Domain\Exception\EntityNotFoundException;
+use App\Shared\Domain\Exception\FileStorageException;
 use App\Shared\Domain\Exception\ValidationException;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
@@ -13,12 +15,14 @@ use Symfony\Component\HttpFoundation\Response;
 class DomainExceptionNormalizer extends ExceptionNormalizer
 {
     private static array $status_codes = [
-        EntityAlreadyExistsException::class => Response::HTTP_CONFLICT
+        EntityNotFoundException::class => Response::HTTP_NOT_FOUND,
+        EntityAlreadyExistsException::class => Response::HTTP_CONFLICT,
+        FileStorageException::class => Response::HTTP_INTERNAL_SERVER_ERROR
     ];
 
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof ValidationException;
+        return $data instanceof DomainException;
     }
 
     protected function normalizeErrors(\Throwable $throwable): array
@@ -35,11 +39,12 @@ class DomainExceptionNormalizer extends ExceptionNormalizer
      */
     protected function getErrorCode(\Throwable $throwable): string
     {
-        if ($throwable instanceof EntityAlreadyExistsException) {
-            return 'entity-exists';
-        }
-
-        return 'internal-error';
+        return match ($throwable::class) {
+            EntityNotFoundException::class => 'entity-not-found',
+            EntityAlreadyExistsException::class => 'entity-exists',
+            FileStorageException::class => 'file-storage',
+            default => 'internal-error'
+        };
     }
 
     public function getSupportedTypes(?string $format): array

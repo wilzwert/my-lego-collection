@@ -7,7 +7,7 @@ use App\CollectionManagement\Domain\Model\BaseSet;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -45,8 +45,8 @@ final class EnrichedSetTest extends TestCase
     public function getUserSet_shouldReturnExpectedValue(): void
     {
         $set = $this->createConcreteSet();
-        $localSet = new Set(Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8'), 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
-        $userSet = new UserSet(Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8'), $localSet);
+        $localSet = new Set(EntityId::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd'), 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
+        $userSet = new UserSet(EntityId::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd'), $localSet);
         $enrichedSet = new EnrichedSet($set, $userSet);
 
         self::assertSame($userSet, $enrichedSet->getUserSet());

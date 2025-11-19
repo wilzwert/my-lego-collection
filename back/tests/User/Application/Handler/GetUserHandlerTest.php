@@ -4,8 +4,10 @@ namespace App\Tests\User\Application\Handler;
 
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Service\IdentityService;
-use App\User\Application\Command\GetUserQuery;
+use App\User\Application\Command\GetUserByIdentityQuery;
 use App\User\Application\Handler\GetUserHandler;
+use App\User\Domain\Model\User;
+use App\User\Domain\Service\UserService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -17,39 +19,39 @@ final class GetUserHandlerTest extends TestCase
     #[Test]
     public function returnsUserFromService(): void
     {
-        $query = new GetUserQuery('user-123');
-        $expectedUser = $this->createMock(Identity::class);
+        $query = new GetUserByIdentityQuery('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1');
+        $expectedUser = $this->createMock(User::class);
 
-        $userService = $this->createMock(IdentityService::class);
+        $userService = $this->createMock(UserService::class);
         $userService
             ->expects($this->once())
-            ->method('getIdentityByIdentifier')
-            ->with('user-123')
+            ->method('getUserByIdentityId')
+            ->with('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1')
             ->willReturn($expectedUser);
 
         $handler = new GetUserHandler($userService);
 
         $result = $handler($query);
 
-        $this->assertSame($expectedUser, $result);
+        self::assertSame($expectedUser, $result);
     }
 
     #[Test]
     public function returnsNullIfUserNotFound(): void
     {
-        $query = new GetUserQuery('unknown-id');
+        $query = new GetUserByIdentityQuery('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1');
 
-        $userService = $this->createMock(IdentityService::class);
+        $userService = $this->createMock(UserService::class);
         $userService
             ->expects($this->once())
-            ->method('getIdentityByIdentifier')
-            ->with('unknown-id')
+            ->method('getUserByIdentityId')
+            ->with('a1a1a1a1-a1a1-41a1-a1a1-a1a1a1a1a1a1')
             ->willReturn(null);
 
         $handler = new GetUserHandler($userService);
 
         $result = $handler($query);
 
-        $this->assertNull($result);
+        self::assertNull($result);
     }
 }

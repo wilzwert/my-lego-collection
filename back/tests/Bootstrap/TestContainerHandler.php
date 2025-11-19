@@ -15,4 +15,6 @@ interface TestContainerHandler
     public function isStarted(): bool;
 
     public function getHost(): string;
+
+    public function getEnvVars(): array;
 }

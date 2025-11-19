@@ -3,7 +3,7 @@
 namespace App\Auth\Domain\Repository;
 
 use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 
 interface IdentityRepository
 {
@@ -11,7 +11,7 @@ interface IdentityRepository
 
     public function findByIdentifier(string $identifier): ?Identity;
 
-    public function findById(Uuid $uuid): ?Identity;
+    public function findById(EntityId $id): ?Identity;
 
-    public function save(Identity $user): void;
+    public function save(Identity $identity): void;
 }

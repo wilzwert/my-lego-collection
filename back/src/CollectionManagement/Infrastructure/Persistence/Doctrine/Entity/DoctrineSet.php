@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\CollectionManagement\Domain\Model\Local\Set;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -90,7 +90,7 @@ class DoctrineSet
     public function toDomain(): Set
     {
         return new Set(
-            Uuid::fromString($this->id),
+            EntityId::fromString($this->id),
             $this->externalId,
             $this->legoId,
             $this->name,

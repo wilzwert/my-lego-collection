@@ -20,8 +20,8 @@ final class RegistrationRequestTest extends TestCase
 
         $request = new RegistrationRequest($email, $username, $password);
 
-        $this->assertSame($email, $request->getEmail());
-        $this->assertSame($username, $request->getUsername());
-        $this->assertSame($password, $request->getPassword());
+        self::assertSame($email, $request->getEmail());
+        self::assertSame($username, $request->getUsername());
+        self::assertSame($password, $request->getPassword());
     }
 }

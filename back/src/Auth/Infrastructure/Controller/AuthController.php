@@ -10,6 +10,7 @@ use App\Auth\Infrastructure\Dto\IdentityDto;
 use App\Auth\Infrastructure\Dto\RegistrationRequest;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
@@ -37,7 +38,7 @@ class AuthController extends AbstractController
             return $this->json('');
         }
         ($this->registrationHandler)($this->objectMapper->map($registerUserRequest, RegistrationCommand::class));
-        return $this->json('');
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 
     #[Route('/me', name: 'api_auth_me', methods: ['GET'])]

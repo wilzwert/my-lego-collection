@@ -3,6 +3,8 @@
 namespace App\Tests\Shared\Infrastructure\Normalizer;
 
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
+use App\Shared\Domain\Exception\EntityNotFoundException;
+use App\Shared\Domain\Exception\FileStorageException;
 use App\Shared\Infrastructure\Normalizer\DomainExceptionNormalizer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -33,8 +35,46 @@ class DomainExceptionNormalizerTest extends TestCase
         $normalizer->setClock($clock);
         $normalized = $normalizer->normalize($exception);
 
-        $this->assertEquals($expectedNormalizedException, $normalized);
+        self::assertEquals($expectedNormalizedException, $normalized);
+    }
 
-        var_dump($normalized);
+    #[Test]
+    public function shouldNormalizeEntityNotFoundException(): void
+    {
+        $clock = static::mockTime(new \DateTimeImmutable('2025-11-07 13:10:00'));
+        $expectedNormalizedException = [
+            'timestamp' => '2025-11-07T13:10:00.000+01:00',
+            'status' => Response::HTTP_NOT_FOUND,
+            'error' => 'entity-not-found',
+            'message' => 'Entity not found',
+            'errors' => [],
+        ];
+
+        $exception = new EntityNotFoundException('Entity not found');
+        $normalizer = new DomainExceptionNormalizer();
+        $normalizer->setClock($clock);
+        $normalized = $normalizer->normalize($exception);
+
+        self::assertEquals($expectedNormalizedException, $normalized);
+    }
+
+    #[Test]
+    public function shouldNormalizeFileStorageException(): void
+    {
+        $clock = static::mockTime(new \DateTimeImmutable('2025-11-07 13:10:00'));
+        $expectedNormalizedException = [
+            'timestamp' => '2025-11-07T13:10:00.000+01:00',
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'error' => 'file-storage',
+            'message' => 'File storage error',
+            'errors' => [],
+        ];
+
+        $exception = new FileStorageException('File storage error');
+        $normalizer = new DomainExceptionNormalizer();
+        $normalizer->setClock($clock);
+        $normalized = $normalizer->normalize($exception);
+
+        self::assertEquals($expectedNormalizedException, $normalized);
     }
 }

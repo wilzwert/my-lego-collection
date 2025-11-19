@@ -2,26 +2,29 @@
 
 namespace App\DataFixtures;
 
-use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
-use App\Auth\Infrastructure\Security\DummyAuthenticatedUser;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
+use App\User\Domain\Model\User;
+use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFixtures extends Fixture
 {
-    public function __construct(private UserPasswordHasherInterface $hasher)
-    {}
 
     public function load(ObjectManager $manager): void
     {
-        // create a predictable and usable password
-        $password = $this->hasher->hashPassword(new DummyAuthenticatedUser(''), 'Abcd_1234!');
-        $id = Uuid::fromString('dec59684-bdef-4a63-bad4-591c35540fa8');
-        $user = new DoctrineIdentity($id, 'user1@test.com', 'user1', $password, ['ROLE_USER']);
+        $id = EntityId::fromString('a2a2a2a2-a2a2-42a2-8a2a-a2a2a2a2a2a2');
+        $entityId = EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1');
+        $user = new DoctrineUser()->fromDomain(
+            new User(
+                $id,
+                $entityId,
+                \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2025-11-01 12:30:00'),
+                \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', '2025-11-01 14:45:00'),
+                null
+            )
+        );
         $manager->persist($user);
-
         $manager->flush();
     }
 }

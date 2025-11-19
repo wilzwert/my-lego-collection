@@ -16,5 +16,5 @@ interface DomainEventHandler
      */
     public static function getEventHandled(): string;
 
-    public function handle(DomainEvent $event): void;
+    public function __invoke(DomainEvent $event): void;
 }

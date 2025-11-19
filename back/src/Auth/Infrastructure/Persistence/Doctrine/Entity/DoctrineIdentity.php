@@ -3,7 +3,7 @@
 namespace App\Auth\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Model\Uuid;
+use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
@@ -80,7 +80,7 @@ class DoctrineIdentity
     public function toDomain(): Identity
     {
         return new Identity(
-            Uuid::fromString($this->id),
+            EntityId::fromString($this->id),
             $this->email,
             $this->username,
             $this->passwordHash,
