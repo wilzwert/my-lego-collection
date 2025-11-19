@@ -27,7 +27,7 @@ final class CreateUserHandlerTest extends TestCase
         $userService
             ->expects($this->once())
             ->method('createUser')
-            ->with($command);
+            ->with($identityId->__toString());
 
         $handler = new CreateUserHandler($userService);
 

@@ -14,6 +14,6 @@ readonly class RegistrationHandler
 
     public function __invoke(RegistrationCommand $command): void
     {
-        $this->identityService->createIdentity($command);
+        $this->identityService->createIdentity($command->email, $command->username, $command->password);
     }
 }

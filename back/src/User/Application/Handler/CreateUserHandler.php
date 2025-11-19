@@ -4,6 +4,7 @@ namespace App\User\Application\Handler;
 
 use App\Auth\Application\Command\RegistrationCommand;
 use App\Auth\Domain\Service\IdentityService;
+use App\Shared\Domain\Model\EntityId;
 use App\User\Application\Command\CreateUserCommand;
 use App\User\Domain\Service\UserService;
 
@@ -16,6 +17,6 @@ readonly class CreateUserHandler
 
     public function __invoke(CreateUserCommand $command): void
     {
-        $this->userService->createUser($command);
+        $this->userService->createUser(EntityId::fromString($command->identityId));
     }
 }

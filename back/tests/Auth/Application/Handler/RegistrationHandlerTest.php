@@ -22,7 +22,7 @@ final class RegistrationHandlerTest extends TestCase
         $identityService
             ->expects($this->once())
             ->method('createIdentity')
-            ->with($command);
+            ->with('john@example.com', 'john_doe', 'password');
 
         $handler = new RegistrationHandler($identityService);
 

@@ -8,7 +8,7 @@ use App\Shared\Domain\Model\EntityId;
 
 interface IdentityService
 {
-    public function createIdentity(RegistrationCommand $command): ?Identity;
+    public function createIdentity(string $email, string $username, string $password): ?Identity;
 
     public function getIdentityById(EntityId $id): ?Identity;
 
