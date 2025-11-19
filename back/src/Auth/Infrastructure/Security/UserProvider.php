@@ -3,8 +3,10 @@
 namespace App\Auth\Infrastructure\Security;
 
 use App\Auth\Domain\Repository\IdentityRepository;
+use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;
 use Override;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
@@ -15,19 +17,24 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 readonly class UserProvider implements UserProviderInterface
 {
-    public function __construct(private IdentityRepository $repository)
+    public function __construct(private IdentityRepository $repository, private readonly LoggerInterface $logger)
     {
     }
 
     #[Override]
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        $identity = $this->repository->findById(EntityId::fromString($identifier));
-
-        if (!$identity) {
-            throw new UserNotFoundException("Identity '$identifier' not found.");
+        try {
+            $identity = $this->repository->findById(EntityId::fromString($identifier));
+        } catch (InvalidEntityIdException $e) {
+            $identity = $this->repository->findByIdentifier($identifier);
         }
 
+        if (!$identity) {
+            $this->logger->info("Identity '$identifier' not found.");
+            throw new UserNotFoundException("Identity '$identifier' not found.");
+        }
+        $this->logger->info("Identity for '$identifier' found.");
         return new AuthenticatedUser($identity);
     }
 
