@@ -26,14 +26,14 @@ readonly class DefaultIdentityService implements IdentityService
      * @throws EntityAlreadyExistsException
      * @throws TransactionProviderException
      */
-    public function createIdentity(RegistrationCommand $command): ?Identity
+    public function createIdentity(string $email, string $username, string $password): ?Identity
     {
-        return $this->transactionProvider->transactional(function () use ($command) {
-            $identity = $this->identityRepository->findByEmailOrUsername($command->email, $command->username);
+        return $this->transactionProvider->transactional(function () use ($email, $username, $password) {
+            $identity = $this->identityRepository->findByEmailOrUsername($email, $username);
             if ($identity) {
                 throw new EntityAlreadyExistsException('Identity already exists');
             }
-            $identity = new Identity(EntityId::generate(), $command->email, $command->username, $this->passwordHasher->hash($command->password));
+            $identity = new Identity(EntityId::generate(), $email, $username, $this->passwordHasher->hash($password));
             $this->identityRepository->save($identity);
 
             $this->eventBus->dispatch(new DomainEvent('auth.identity.created', $identity->getId()));

@@ -11,7 +11,7 @@ use App\User\Domain\Model\User;
 
 interface UserService
 {
-    public function createUser(CreateUserCommand $command): ?User;
+    public function createUser(EntityId $identityId): ?User;
 
     public function updateAvatar(User $user, ?StoredFile $storedFile = null): User;
 

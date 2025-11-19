@@ -21,14 +21,14 @@ readonly class DefaultUserService implements UserService
     /**
      * @throws TransactionProviderException
      */
-    public function createUser(CreateUserCommand $command): ?User
+    public function createUser(EntityId $identityId): ?User
     {
-        return $this->transactionProvider->transactional(function () use ($command) {
-            $user = $this->userRepository->findByIdentityId(EntityId::fromString($command->identityId));
+        return $this->transactionProvider->transactional(function () use ($identityId) {
+            $user = $this->userRepository->findByIdentityId(EntityId::fromString($identityId));
             if ($user) {
                 return $user;
             }
-            $user = new User(EntityId::generate(), EntityId::fromString($command->identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
+            $user = new User(EntityId::generate(), EntityId::fromString($identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
             $this->userRepository->save($user);
 
             return $user;
