@@ -80,7 +80,7 @@
         "post-update-cmd": [
             "@auto-scripts"
         ],
-        "php-cs-fixer": "php-cs-fixer --rules=@PSR2"
+        "php-cs-fixer": "php-cs-fixer --rules=@symfony"
     },
     "conflict": {
         "symfony/symfony": "*"
