@@ -1,0 +1,10 @@
+{
+  "name": "my-lego-collection/shared-events",
+  "autoload": {
+    "psr-4": {
+      "MyLegoCollection\\SharedEvent\\": "src/"
+    }
+  },
+  "type": "library",
+  "require": {}
+}
