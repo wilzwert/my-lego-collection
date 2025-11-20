@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Security;
 
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 
 readonly class JwtTokenGenerator

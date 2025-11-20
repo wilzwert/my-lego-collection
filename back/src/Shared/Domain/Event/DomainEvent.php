@@ -5,24 +5,26 @@ namespace App\Shared\Domain\Event;
 /**
  * @author Wilhelm Zwertvaegher
  */
-final readonly class DomainEvent
+abstract class DomainEvent
 {
+    private readonly array $metadata;
+
     public function __construct(
-        private string $type,
-        private string $id,
-        private ?array $payload = null,
-        private ?array $metadata = null
+        private readonly string $type,
+        private readonly ?array $payload = null,
+        ?array $metadata = null
     ) {
+        $this->metadata = array_merge(
+            array('occurred_at' => new \DateTimeImmutable()->format(DATE_ATOM)),
+            $metadata ?? []
+        );
     }
 
     public function type(): string
     {
         return $this->type;
     }
-    public function id(): string
-    {
-        return $this->id;
-    }
+
     public function payload(): array
     {
         return $this->payload;

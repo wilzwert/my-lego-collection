@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Shared\Domain\Event;
+namespace App\Shared\Infrastructure\EventHandler;
+
 
 /**
- * Interface that must be implemented by all domain event handlers in infrastructures
+ * Interface that must be implemented by all event handlers in infrastructures
  * This will allow writing tests that check a specific mandatory event handler exists in a slice/module,
  * which can also be seen as self documentation / integrity check
  *
@@ -16,5 +17,4 @@ interface DomainEventHandler
      */
     public static function getEventHandled(): string;
 
-    public function __invoke(DomainEvent $event): void;
 }

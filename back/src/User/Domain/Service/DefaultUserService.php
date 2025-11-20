@@ -6,7 +6,6 @@ use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\TransactionProviderException;
-use App\User\Application\Command\CreateUserCommand;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 

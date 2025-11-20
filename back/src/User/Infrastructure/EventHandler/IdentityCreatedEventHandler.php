@@ -2,19 +2,18 @@
 
 namespace App\User\Infrastructure\EventHandler;
 
-use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventHandler;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Handler\CreateUserHandler;
+use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
+use App\User\Application\Handler\IdentityCreatedHandler;
+use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
 #[AsMessageHandler]
-readonly class IdentityCreatedEventHandler implements DomainEventHandler
+readonly class IdentityCreatedEventHandler implements IntegrationEventHandler
 {
-    public function __construct(private CreateUserHandler $createUserHandler)
+    public function __construct(private IdentityCreatedHandler $createUserHandler)
     {
     }
 
@@ -24,12 +23,8 @@ readonly class IdentityCreatedEventHandler implements DomainEventHandler
         return 'auth.identity.created';
     }
 
-    public function __invoke(DomainEvent $event): void
+    public function __invoke(IdentityCreatedIntegrationEvent $event): void
     {
-        if ($event->type() != self::getEventHandled()) {
-            return;
-        }
-
-        ($this->createUserHandler)(new CreateUserCommand($event->id()));
+        ($this->createUserHandler)($event);
     }
 }

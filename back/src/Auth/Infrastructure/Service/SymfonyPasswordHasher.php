@@ -3,7 +3,7 @@
 namespace App\Auth\Infrastructure\Service;
 
 use App\Auth\Domain\Service\PasswordHasher;
-use App\Auth\Infrastructure\Security\DummyAuthenticatedUser;
+use App\Auth\Infrastructure\Security\User\DummyAuthenticatedUser;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
