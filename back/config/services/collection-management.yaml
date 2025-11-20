@@ -1,0 +1,53 @@
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+
+    App\CollectionManagement\Domain\:
+        resource: '../../src/CollectionManagement/Domain/'
+        exclude:
+            - '../../src/CollectionManagement/Domain/Event'
+            - '../../src/CollectionManagement/Domain/Exception'
+            - '../../src/CollectionManagement/Domain/Model'
+
+    App\CollectionManagement\Application\:
+        resource: '../../src/CollectionManagement/Application/'
+        exclude:
+            - '../../src/CollectionManagement/Application/Command'
+
+    App\CollectionManagement\Infrastructure\:
+        resource: '../../src/CollectionManagement/Infrastructure/'
+        exclude:
+            - '../../src/CollectionManagement/Infrastructure/Dto'
+            - '../../src/CollectionManagement/Infrastructure/Persistence/Doctrine/Entity'
+
+    # each slice may provide, if needed, a middleware to convert DomainEvent to IntegrationEvent
+    # and then dispatch to the integration bus
+    # if not middleware is provided then a DomainEvent shouldn't be handled by an external handler
+    collection_management.integration_event_middleware:
+        class: App\CollectionManagement\Infrastructure\Messenger\IntegrationEventMiddleware
+        tags:
+            - { name: messenger.middleware, bus: collection_management.bus }
+
+    _instanceof:
+        # All services implementing the IntegrationEventHandler interface
+        # in the User slice must use only the user.bus
+        App\Shared\Infrastructure\EventHandler\DomainEventHandler:
+            tags:
+                - { name: messenger.message_handler, bus: collection_management.bus }
+
+
+    App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager:
+        arguments:
+            $cache: '@cache.rebrickable_search'
+
+    App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader:
+        arguments:
+            $cacheManager: '@App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager'
+            $apiKey: '%env(REBRICKABLE_API_KEY)%'
+
+    App\CollectionManagement\Domain\Service\LegoDataProvider:
+        arguments:
+            $legoDataLoaders:
+                - '@App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader'

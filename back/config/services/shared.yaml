@@ -1,0 +1,22 @@
+services:
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\Shared\:
+        resource: '../../src/Shared'
+        exclude:
+            - '../../src/Shared/Domain/Event'
+            - '../../src/Shared/Domain/Exception'
+            - '../../src/Shared/Domain/Model'
+            - '../../src/Shared/Domain/Validation'
+            - '../../src/Shared/Infrastructure/Dto'
+            - '../../src/Shared/Infrastructure/Persistence/Doctrine/Entity'
+
+
+    _instanceof:
+        # All services implementing the IntegrationEventHandler interface
+        # must use only the integration.bus
+        App\Shared\Infrastructure\EventHandler\IntegrationEventHandler:
+            tags:
+                - { name: messenger.message_handler, bus: integration.bus }
