@@ -1,5 +1,7 @@
 # See .env to set useful environment vars
 
+
+
 services:
   db:
     image: postgres:16
@@ -36,6 +38,22 @@ services:
     networks:
       - default
 
+  ampq:
+    image: rabbitmq:4-management
+    container_name: "${APP_NAME}-ampq"
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${APP_NAME}
+      RABBITMQ_DEFAULT_PASS: ${AMPQ_PASSWORD}
+    # uncomment if you want to directly access your redis container for data visualization...
+    # Change port if necessary, e.g. if you host already exposes another redis container on the same port
+    ports:
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - default
+
   app:
     # allow linux hosts to resolve host.docker.internal
     extra_hosts:
@@ -43,6 +61,7 @@ services:
     build:
       context: ../..
       dockerfile: docker/dev/frankenphp/Dockerfile
+      target: frankenphp_dev
       args:
         UID: ${UID:-1000}
         GID: ${GID:-1000}
@@ -50,35 +69,11 @@ services:
         APP_USER: ${APP_USER:-symfony}
     container_name: "${APP_NAME}-web"
     restart: unless-stopped
+    user: ${APP_USER:-symfony}
 
-    # For Windows (WSl) or if you are unable to pass the actual docker group id DOCKER_GID arg
-    # Running as root allows changing /var/run/docker.sock ownership so that TestContainers can work
-    # the app will then run as ${APP_USER}
-    user: root
     volumes:
       # Mounting files / directories separately for performance on windows hosts
-      - ../../back/src:/app/src
-      - ../../back/tests:/app/tests
-      - ../../back/config:/app/config
-      - ../../back/coverage:/app/coverage
-      - ../../back/migrations:/app/migrations
-      - ../../back/templates:/app/templates
-      - ../../back/public:/app/public
-      - ../../back/composer.json:/app/composer.json
-      - ../../back/composer.lock:/app/composer.lock
-      - ../../back/.env:/app/.env
-      - ../../back/.env.dev:/app/.env.dev
-      - ../../back/.env.test:/app/.env.test
-      - ../../back/phpunit.xml:/app/phpunit.xml
-      - ../../back/phpstan.dist.neon:/app/phpstan.dist.neon
-      - ../../back/packages:/app/packages
-
-      # Mounting the vendor directory as a volume on a Windows host results in major performance issues
-      # You can uncomment this line if you host runs on linux or macOS
-      # If your host runs under windows, not mounting vendor implies that all composer update/install/require commands
-      # must be run both in the container and in the host if you want your IDE to be able to browse the vendor dir (for autocomplete...)
-      # - ../../back/vendor:/app/vendor
-
+      - ../../back:/app:delegated
       # Windows (WSL) / Linux
       # Mounting docker socket is necessary to enable TestContainers to create containers
       # On windows hosts, you may be able to comment this line, expose the docker API via TCP in Docker Desktop
@@ -89,6 +84,10 @@ services:
       - XDEBUG_START_WITH_REQUEST=yes
       - XDEBUG_CONFIG=client_host=host.docker.internal
 
+    # comment the following line in production, it allows to have nice human-readable logs in dev
+    tty: true
+
+
       # macOS (UNTESTED): it seems that to allow Testcontainers to create containers, the docker API should be exposed through TCP
       # in Docker Desktop
       # Then the DOCKER_HOST var below should be set (change port if necessary)
@@ -97,13 +96,28 @@ services:
     ports:
       - "8080:80"   # FrankenPHP
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+          condition: service_started
     networks:
       - default
 
+  consumer-async:
+    container_name: "${APP_NAME}-async-consumer"
+    extends:
+      service: app
+    restart: unless-stopped
+    ports: !override []
+    healthcheck:
+      test: ''
+      disable: true
+
+    command: ['php', 'bin/console', 'messenger:consume', 'async']
+
 volumes:
-  db_data:
+  postgresql_data:
+  rabbitmq_data:
 
 networks:
   default:

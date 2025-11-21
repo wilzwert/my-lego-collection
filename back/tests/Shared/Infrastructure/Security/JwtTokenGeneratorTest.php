@@ -6,7 +6,7 @@ namespace App\Tests\Shared\Infrastructure\Security;
  * @author Wilhelm Zwertvaegher
  */
 
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Shared\Infrastructure\Security\JwtTokenGenerator;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use PHPUnit\Framework\Attributes\Test;

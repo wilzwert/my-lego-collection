@@ -12,10 +12,10 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class DoctrineUserSet
 {
-    #[ORM\Id, ORM\Column(type: "string")]
+    #[ORM\Id, ORM\Column(type: "string", length: 36)]
     private string $id;
 
-    #[ORM\Column(type: "string")]
+    #[ORM\Column(type: "string", length: 36)]
     private string $userId;
 
     private DoctrineSet $set;
@@ -34,6 +34,6 @@ class DoctrineUserSet
 
     public function toDomain(): UserSet
     {
-        return new UserSet(EntityId::fromString($this->userId), $this->set->toDomain());
+        return new UserSet(EntityId::fromString($this->id), EntityId::fromString($this->userId), $this->set->toDomain());
     }
 }

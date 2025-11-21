@@ -71,8 +71,8 @@ final class DefaultIdentityServiceTest extends TestCase
             ->with(
                 $this->callback(function (DomainEvent $event) use (&$eventId) {
                     self::assertSame('auth.identity.created', $event->type());
-                    self::assertNotEmpty($event->id());
-                    $eventId = $event->id();
+                    self::assertNotEmpty($event->getIdentity()->getId());
+                    $eventId = $event->getIdentity()->getId()->value();
                     return true;
                 })
             );

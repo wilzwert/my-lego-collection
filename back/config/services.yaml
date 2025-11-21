@@ -20,6 +20,8 @@ services:
 
     # add more Service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    App\DataFixtures\:
+        resource: '../src/DataFixtures/'
 
 
 when@test:

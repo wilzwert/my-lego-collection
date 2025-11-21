@@ -4,10 +4,10 @@ namespace App\Tests\Bootstrap;
 
 use Testcontainers\Container\GenericContainer;
 use Testcontainers\Container\StartedGenericContainer;
-use Testcontainers\Modules\PostgresContainer;
-use Testcontainers\Wait\WaitForLog;
 
 /**
+ * TestContainer handler for starting, stopping a container, and generating env vars if necessary.
+ *
  * @author Wilhelm Zwertvaegher
  */
 abstract class AbstractTestContainerHandler implements TestContainerHandler
@@ -20,27 +20,37 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         if (!$this->container) {
             throw new \Exception('Host cannot be determined before the container is started.');
         }
-        return isset($_ENV['DOCKER_HOST_OS_FAMILY']) && $_ENV['DOCKER_HOST_OS_FAMILY'] != 'linux' ? 'host.docker.internal' : $this->container->getHost();
+
+        return getenv('TESTCONTAINERS_HOST') ?: 'host.docker.internal';
     }
 
+    /**
+     * @return list<string>
+     *
+     * @throws \Exception
+     */
     public function getEnvVars(): array
     {
         return [str_replace(
             ['{{host}}', '{{port}}'],
-            [$this->getHost(), $this->container->getFirstMappedPort()],
+            [$this->getHost(), (string) $this->container->getFirstMappedPort()],
             $this->getEnvVarTemplate()
         )];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function start(): void
     {
         if (!$this->container instanceof StartedGenericContainer) {
+            fwrite(STDOUT, 'Starting '.get_class($this).PHP_EOL);
+
             $container = $this->createContainer();
-            $this->container =  $container->start();
+            $this->container = $container->start();
             foreach ($this->getEnvVars() as $envVar) {
                 putenv($envVar);
             }
-
         }
     }
 
@@ -56,7 +66,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         return $this->container instanceof StartedGenericContainer;
     }
 
-    abstract protected function getEnvVarTemplate() :string;
+    abstract protected function getEnvVarTemplate(): string;
 
     abstract protected function createContainer(): GenericContainer;
 }

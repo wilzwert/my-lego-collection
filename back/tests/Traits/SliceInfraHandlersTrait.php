@@ -2,7 +2,7 @@
 
 namespace App\Tests\Traits;
 
-use App\Shared\Domain\Event\DomainEventHandler;
+use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -83,7 +83,7 @@ trait SliceInfraHandlersTrait
                 $class = $this->classFromFile($file->getRealPath());
                 if ($class && class_exists($class)) {
                     $ref = new ReflectionClass($class);
-                    if ($ref->implementsInterface(DomainEventHandler::class)) {
+                    if ($ref->implementsInterface(IntegrationEventHandler::class)) {
                         $classes[] = $class;
                     }
                 }

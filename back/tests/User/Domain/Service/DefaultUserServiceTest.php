@@ -2,15 +2,10 @@
 
 namespace App\Tests\User\Domain\Service;
 
+use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Model\TempFile;
-use App\Shared\Domain\Repository\StoredFileRepository;
 use App\Shared\Domain\Service\TransactionProvider;
-use App\Shared\Domain\Service\FileStorageService;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Command\DeleteAvatarCommand;
-use App\User\Application\Command\UpdateAvatarCommand;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Domain\Service\DefaultUserService;
@@ -45,11 +40,11 @@ final class DefaultUserServiceTest extends TestCase
     #[Test]
     public function shouldCreateUserWithinTransaction(): void
     {
-        $command = new CreateUserCommand($this->identityId->__toString());
+        $event = new DomainEvent('auth.identity.created', $this->identityId->__toString());
         $this->userRepository
             ->expects($this->once())
             ->method('findByIdentityId')
-            ->with($command->identityId)
+            ->with($event->id())
             ->willReturn(null);
 
         $this->userRepository
@@ -66,7 +61,7 @@ final class DefaultUserServiceTest extends TestCase
                 fn (callable $callback) => $callback()
             );
 
-        $result = $this->service->createUser($command);
+        $result = $this->service->createUser($this->identityId);
 
         self::assertInstanceOf(User::class, $result);
         self::assertEquals($this->identityId, $result->getIdentityId());

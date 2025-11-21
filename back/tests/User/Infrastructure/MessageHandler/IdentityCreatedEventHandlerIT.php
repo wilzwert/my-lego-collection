@@ -3,14 +3,10 @@
 namespace App\Tests\User\Infrastructure\MessageHandler;
 
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventHandler;
 use App\Shared\Domain\Model\EntityId;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Handler\CreateUserHandler;
 use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
 use App\User\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**

@@ -7,7 +7,7 @@ namespace App\Tests\Auth\Infrastructure\Security;
  */
 
 use App\Auth\Domain\Model\Identity;
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

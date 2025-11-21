@@ -3,9 +3,7 @@
 namespace App\Tests\User\Infrastructure\MessageHandler;
 
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventHandler;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Handler\CreateUserHandler;
+use App\User\Application\Handler\IdentityCreatedHandler;
 use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -24,10 +22,10 @@ class IdentityCreatedEventHandlerTest extends TestCase
     #[Test]
     public function shouldCreateUser(): void
     {
-        $handler = $this->createMock(CreateUserHandler::class);
+        $handler = $this->createMock(IdentityCreatedHandler::class);
         $handler->expects($this->once())->method('__invoke')->with(
-            $this->callback(function (CreateUserCommand $command) {
-                self::assertSame('identityId', $command->identityId);
+            $this->callback(function (DomainEvent $event) {
+                self::assertSame('identityId', $event->id());
                 return true;
             })
         );
@@ -39,7 +37,7 @@ class IdentityCreatedEventHandlerTest extends TestCase
     #[Test]
     public function shouldDoNothing_whenUnhandledEvent(): void
     {
-        $handler = $this->createMock(CreateUserHandler::class);
+        $handler = $this->createMock(IdentityCreatedHandler::class);
         $handler->expects($this->never())->method('__invoke');
 
         $eventHandler = new IdentityCreatedEventHandler($handler);

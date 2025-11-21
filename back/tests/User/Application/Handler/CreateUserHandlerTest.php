@@ -5,9 +5,10 @@ namespace App\Tests\User\Application\Handler;
 use App\Auth\Application\Command\RegistrationCommand;
 use App\Auth\Application\Handler\RegistrationHandler;
 use App\Auth\Domain\Service\IdentityService;
+use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
 use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Handler\CreateUserHandler;
+use App\User\Application\Handler\IdentityCreatedHandler;
 use App\User\Domain\Service\UserService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -21,7 +22,7 @@ final class CreateUserHandlerTest extends TestCase
     public function shouldInvokeUserServiceToCreateUser(): void
     {
         $identityId = EntityId::generate();
-        $command = new CreateUserCommand($identityId->__toString());
+        $event = new DomainEvent('auth.identity.created', $identityId->__toString());
         $userService = $this->createMock(UserService::class);
 
         $userService
@@ -29,8 +30,8 @@ final class CreateUserHandlerTest extends TestCase
             ->method('createUser')
             ->with($identityId->__toString());
 
-        $handler = new CreateUserHandler($userService);
+        $handler = new IdentityCreatedHandler($userService);
 
-        $handler($command);
+        $handler($event);
     }
 }

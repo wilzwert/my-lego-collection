@@ -8,35 +8,33 @@ use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
+ * Start TestContainers if needed.
+ *
  * @author Wilhelm Zwertvaegher
  */
-class TestContainersStartSubscriber implements ExecutionStartedSubscriber
+readonly class TestContainersStartSubscriber implements ExecutionStartedSubscriber
 {
-
     public function __construct(
-        private readonly TestSuiteService $suiteService,
-        private readonly TestContainerHandler $dbTestContainerHandler,
-        private readonly TestContainerHandler $redisTestContainerHandler,
-        private Filesystem $fs
+        private TestSuiteService $suiteService,
+        private TestContainerHandler $dbTestContainerHandler,
+        private TestContainerHandler $redisTestContainerHandler,
+        private Filesystem $fs = new Filesystem(),
     ) {
     }
 
     public function notify(ExecutionStarted $event): void
     {
         if ($this->suiteService->isIntegrationTest($event->testSuite())) {
-            fwrite(STDOUT, "STARTING DB CONTAINER....\n");
             $this->dbTestContainerHandler->start();
             $envVars = $this->dbTestContainerHandler->getEnvVars();
 
-            fwrite(STDOUT, "STARTING REDIS CONTAINER....\n");
             $this->redisTestContainerHandler->start();
 
             $envVars = array_merge($envVars, $this->redisTestContainerHandler->getEnvVars());
 
+            // generate a temporary env file and force symfony reload env and use our generated env vars
             $envFile = '.env.test.local';
             $this->fs->dumpFile($envFile, implode("\n", $envVars));
-
-            // reload env to force Symfony to use our new env vars
             $dotenv = new Dotenv();
             $dotenv->overload($envFile);
         }

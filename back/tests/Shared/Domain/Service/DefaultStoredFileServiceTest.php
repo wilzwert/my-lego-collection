@@ -7,14 +7,7 @@ use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\TempFile;
 use App\Shared\Domain\Repository\StoredFileRepository;
 use App\Shared\Domain\Service\DefaultStoredFileService;
-use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\FileStorageService;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Command\DeleteAvatarCommand;
-use App\User\Application\Command\UpdateAvatarCommand;
-use App\User\Domain\Model\User;
-use App\User\Domain\Repository\UserRepository;
-use App\User\Domain\Service\DefaultUserService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
