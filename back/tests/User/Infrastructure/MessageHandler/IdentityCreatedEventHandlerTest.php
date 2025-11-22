@@ -7,7 +7,7 @@ use App\Auth\Domain\Model\Identity;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
 use App\User\Application\Handler\IdentityCreatedHandler;
-use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
+use App\User\Infrastructure\EventHandler\IdentityCreatedIntegrationEventHandler;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +20,7 @@ class IdentityCreatedEventHandlerTest extends TestCase
     #[Test]
     public function shouldHandleAuthIdentityCreatedEvent(): void
     {
-        self::assertSame('auth.identity.created', IdentityCreatedEventHandler::getEventHandled());
+        self::assertSame(IdentityCreatedIntegrationEvent::class, IdentityCreatedIntegrationEventHandler::getEventHandled());
     }
 
     #[Test]
@@ -33,7 +33,7 @@ class IdentityCreatedEventHandlerTest extends TestCase
                 return true;
             })
         );
-        $eventHandler = new IdentityCreatedEventHandler($handler);
+        $eventHandler = new IdentityCreatedIntegrationEventHandler($handler);
         $integrationEvent = new IdentityCreatedIntegrationEvent('identityId');
         $eventHandler($integrationEvent);
     }

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Traits;
 
+use App\Shared\Infrastructure\EventHandler\DomainEventHandler;
 use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -23,7 +24,7 @@ trait SliceInfraHandlersTrait
      * @param list<class-string> $eventClasses
      * @return void
      */
-    protected function assertHasDomainEventHandlers(string $slice, array $eventClasses): void
+    protected function assertHasEventHandlers(string $slice, array $eventClasses): void
     {
         $handledEventClasses = $this->getSliceHandledEvents($slice);
         $missing = [];
@@ -63,7 +64,7 @@ trait SliceInfraHandlersTrait
     }
 
     /**
-     * Returns all classes implementing DomainEventHandler in the given slice
+     * Returns all classes implementing DomainEventHandler or IntegrationEventHandler in the given slice
      */
     protected function getSliceInfraHandlers(string $slice): array
     {
@@ -83,7 +84,7 @@ trait SliceInfraHandlersTrait
                 $class = $this->classFromFile($file->getRealPath());
                 if ($class && class_exists($class)) {
                     $ref = new ReflectionClass($class);
-                    if ($ref->implementsInterface(IntegrationEventHandler::class)) {
+                    if ($ref->implementsInterface(DomainEventHandler::class) || $ref->implementsInterface(IntegrationEventHandler::class)) {
                         $classes[] = $class;
                     }
                 }

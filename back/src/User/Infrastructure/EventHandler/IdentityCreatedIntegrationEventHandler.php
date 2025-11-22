@@ -2,6 +2,7 @@
 
 namespace App\User\Infrastructure\EventHandler;
 
+use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
 use App\User\Application\Handler\IdentityCreatedHandler;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
@@ -11,7 +12,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * @author Wilhelm Zwertvaegher
  */
 #[AsMessageHandler(fromTransport: 'sync', priority: 10)]
-readonly class IdentityCreatedEventHandler implements IntegrationEventHandler
+readonly class IdentityCreatedIntegrationEventHandler implements IntegrationEventHandler
 {
     public function __construct(private readonly IdentityCreatedHandler $createUserHandler)
     {
@@ -20,7 +21,7 @@ readonly class IdentityCreatedEventHandler implements IntegrationEventHandler
 
     public static function getEventHandled(): string
     {
-        return 'auth.identity.created';
+        return IdentityCreatedIntegrationEvent::class;
     }
 
     public function __invoke(IdentityCreatedIntegrationEvent $event): void

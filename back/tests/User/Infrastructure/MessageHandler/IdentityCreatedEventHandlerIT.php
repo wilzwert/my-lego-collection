@@ -4,7 +4,7 @@ namespace App\Tests\User\Infrastructure\MessageHandler;
 
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
-use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
+use App\User\Infrastructure\EventHandler\IdentityCreatedIntegrationEventHandler;
 use App\User\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class IdentityCreatedEventHandlerIT extends KernelTestCase
 {
 
-    protected IdentityCreatedEventHandler $identityCreatedEventHandler;
+    protected IdentityCreatedIntegrationEventHandler $identityCreatedEventHandler;
 
     protected DoctrineUserRepository $doctrineUserRepository;
 
@@ -25,7 +25,7 @@ class IdentityCreatedEventHandlerIT extends KernelTestCase
         parent::setUp();
         self::bootKernel();
 
-        $this->identityCreatedEventHandler = self::getContainer()->get(IdentityCreatedEventHandler::class);
+        $this->identityCreatedEventHandler = self::getContainer()->get(IdentityCreatedIntegrationEventHandler::class);
         $this->doctrineUserRepository = self::getContainer()->get(DoctrineUserRepository::class);
     }
 
