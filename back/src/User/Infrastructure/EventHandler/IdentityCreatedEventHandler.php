@@ -10,10 +10,10 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 /**
  * @author Wilhelm Zwertvaegher
  */
-#[AsMessageHandler]
+#[AsMessageHandler(fromTransport: 'sync', priority: 10)]
 readonly class IdentityCreatedEventHandler implements IntegrationEventHandler
 {
-    public function __construct(private IdentityCreatedHandler $createUserHandler)
+    public function __construct(private readonly IdentityCreatedHandler $createUserHandler)
     {
     }
 

@@ -36,7 +36,7 @@ framework:
             'MyLegoCollection\SharedEvent\IntegrationEvent': async
             # it's important the IdentityCreatedIntegrationEvent can also be handled immediately by some slices
             'MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent': sync
-            'App\Shared\Domain\Event\DomainEvent': sync
+
 
 
 # when@test:

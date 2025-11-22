@@ -10,7 +10,7 @@ namespace App\Auth\Infrastructure\Messenging;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 
-class IntegrationEventFactory
+class AuthIntegrationEventFactory
 {
     public function fromDomainEvent(object $event): object
     {
@@ -18,7 +18,6 @@ class IntegrationEventFactory
 
             IdentityCreatedEvent::class =>
             new IdentityCreatedIntegrationEvent(
-                $event->type(),
                 $event->getIdentity()->getId()->value()
             ),
 
@@ -29,7 +28,7 @@ class IntegrationEventFactory
     public function supports(object $event): bool
     {
         return match ($event::class) {
-            IdentityCreatedDomainEvent::class => true,
+            IdentityCreatedEvent::class => true,
             default => false
         };
     }

@@ -15,9 +15,6 @@ readonly class IdentityCreatedHandler
 
     public function __invoke(IdentityCreatedIntegrationEvent $event): void
     {
-        if ($event->type() != 'auth.identity.created') {
-            throw new \InvalidArgumentException('Event type should be auth.identity.created');
-        }
         $this->userService->createUser(EntityId::fromString($event->getId()));
     }
 }

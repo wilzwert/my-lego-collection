@@ -7,11 +7,13 @@ namespace MyLegoCollection\SharedEvent;
  */
 class IdentityCreatedIntegrationEvent extends IntegrationEvent
 {
-    private string $id;
+    private readonly string $id;
 
-    public function __construct($type, string $id)
+    private const string TYPE = 'auth.identity.created';
+
+    public function __construct(string $id)
     {
-        parent::__construct($type, ['id' => $id]);
+        parent::__construct(self::TYPE, ['id' => $id]);
         $this->id = $id;
     }
 

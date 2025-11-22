@@ -7,7 +7,7 @@ use App\Shared\Domain\Service\EventBus;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
- * Auth local event bus for local DomainEvent
+ * Auth local event bus for local auth slice related DomainEvent
  * @author Wilhelm Zwertvaegher
  */
 class AuthEventBus implements EventBus
