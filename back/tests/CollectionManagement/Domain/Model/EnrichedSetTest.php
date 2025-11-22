@@ -46,7 +46,7 @@ final class EnrichedSetTest extends TestCase
     {
         $set = $this->createConcreteSet();
         $localSet = new Set(EntityId::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd'), 'external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011);
-        $userSet = new UserSet(EntityId::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd'), $localSet);
+        $userSet = new UserSet(EntityId::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd'), EntityId::fromString('cbcd1234-abcd-4bcd-abcd-abcd1234abcd'), $localSet);
         $enrichedSet = new EnrichedSet($set, $userSet);
 
         self::assertSame($userSet, $enrichedSet->getUserSet());

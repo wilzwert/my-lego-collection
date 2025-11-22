@@ -69,7 +69,7 @@ final class DefaultSetServiceTest extends TestCase
         ]);
 
         // Local user sets collection
-        $userSet = new UserSet($userSetId, new Set($localSetId, 'externalId2', 'legoId2', 'BaseSet 2', 200, '', 2009));
+        $userSet = new UserSet($userSetId, $userId, new Set($localSetId, 'externalId2', 'legoId2', 'BaseSet 2', 200, '', 2009));
         $userSetCollection = new UserSetCollection([$userSet]);
 
         // Mocks LegoDataProvider + UserSetRepository

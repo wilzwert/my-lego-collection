@@ -2,6 +2,7 @@
 
 namespace App\Tests\User\Domain\Service;
 
+use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
@@ -9,6 +10,7 @@ use App\Shared\Domain\Service\TransactionProvider;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Domain\Service\DefaultUserService;
+use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -40,11 +42,11 @@ final class DefaultUserServiceTest extends TestCase
     #[Test]
     public function shouldCreateUserWithinTransaction(): void
     {
-        $event = new DomainEvent('auth.identity.created', $this->identityId->__toString());
+        $event = new IdentityCreatedIntegrationEvent($this->identityId->value());
         $this->userRepository
             ->expects($this->once())
             ->method('findByIdentityId')
-            ->with($event->id())
+            ->with($event->getId())
             ->willReturn(null);
 
         $this->userRepository

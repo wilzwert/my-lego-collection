@@ -2,14 +2,10 @@
 
 namespace App\Tests\User\Application\Handler;
 
-use App\Auth\Application\Command\RegistrationCommand;
-use App\Auth\Application\Handler\RegistrationHandler;
-use App\Auth\Domain\Service\IdentityService;
-use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
-use App\User\Application\Command\CreateUserCommand;
 use App\User\Application\Handler\IdentityCreatedHandler;
 use App\User\Domain\Service\UserService;
+use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +18,7 @@ final class CreateUserHandlerTest extends TestCase
     public function shouldInvokeUserServiceToCreateUser(): void
     {
         $identityId = EntityId::generate();
-        $event = new DomainEvent('auth.identity.created', $identityId->__toString());
+        $event = new IdentityCreatedIntegrationEvent($identityId->value());
         $userService = $this->createMock(UserService::class);
 
         $userService

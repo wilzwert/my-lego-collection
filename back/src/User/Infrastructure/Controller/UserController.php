@@ -36,7 +36,6 @@ class UserController extends AbstractController
     #[IsGranted('ROLE_USER')]
     public function me(#[CurrentUser] ?UserInterface $user) :JsonResponse
     {
-        die('oké bro');
         $user = ($this->getUserHandler)(new GetUserByIdentityQuery($user->getUserIdentifier()));
 
         if (!$user) {

@@ -6,6 +6,7 @@ use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
 use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
 use App\User\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository;
+use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -33,8 +34,8 @@ class IdentityCreatedEventHandlerIT extends KernelTestCase
     {
 
         $uuid = EntityId::generate();
-        $domainEvent = new DomainEvent('auth.identity.created', $uuid->value());
-        ($this->identityCreatedEventHandler)($domainEvent);
+        $integrationEvent = new IdentityCreatedIntegrationEvent($uuid->value());
+        ($this->identityCreatedEventHandler)($integrationEvent);
 
         $createdUser = $this->doctrineUserRepository->findByIdentityId($uuid);
         self::assertNotNull($createdUser);
