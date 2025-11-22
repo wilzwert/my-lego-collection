@@ -1,6 +1,24 @@
 # See .env to set useful environment vars
 
-
+# ================================
+# ANCHORS
+# ================================
+x-worker-base: &worker-base
+  build:
+    context: ../..
+    dockerfile: docker/dev/worker/Dockerfile
+  environment:
+    APP_ENV: dev
+  volumes:
+    - ../../back:/app:cached
+  depends_on:
+    - ampq
+    - db
+    - redis
+  restart: unless-stopped
+  healthcheck:
+    test: ''
+    disable: true
 
 services:
   db:
@@ -69,16 +87,34 @@ services:
         APP_USER: ${APP_USER:-symfony}
     container_name: "${APP_NAME}-web"
     restart: unless-stopped
-    user: ${APP_USER:-symfony}
 
     volumes:
       # Mounting files / directories separately for performance on windows hosts
-      - ../../back:/app:delegated
+      # Avoid mounting the var directory as it is unreliable
+      - ../../back/src:/app/src
+      - ../../back/bin:/app/bin
+      - ../../back/tests:/app/tests
+      - ../../back/config:/app/config
+      - ../../back/coverage:/app/coverage
+      - ../../back/migrations:/app/migrations
+      - ../../back/templates:/app/templates
+      - ../../back/public:/app/public
+      - ../../back/packages:/app/packages
+      - ../../back/composer.json:/app/composer.json
+      - ../../back/composer.lock:/app/composer.lock
+      - ../../back/.env:/app/.env
+      - ../../back/.env.dev:/app/.env.dev
+      - ../../back/.env.test:/app/.env.test
+      - ../../back/phpunit.xml:/app/phpunit.xml
+
+      # - ../../back:/app:delegated
+      # bad performance when mounting vendor on windows machines
+      # - ../../back/vendor:/app/vendor
       # Windows (WSL) / Linux
       # Mounting docker socket is necessary to enable TestContainers to create containers
       # On windows hosts, you may be able to comment this line, expose the docker API via TCP in Docker Desktop
       # and then set DOCKER_HOST env variable, although it's not recommended
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - XDEBUG_MODE=debug
       - XDEBUG_START_WITH_REQUEST=yes
@@ -104,16 +140,14 @@ services:
       - default
 
   consumer-async:
-    container_name: "${APP_NAME}-async-consumer"
-    extends:
-      service: app
-    restart: unless-stopped
-    ports: !override []
-    healthcheck:
-      test: ''
-      disable: true
+    container_name: "${APP_NAME}-consumer-async"
+    <<: *worker-base
+    command: ['php', 'bin/console', 'messenger:consume', 'async', '-vv']
 
-    command: ['php', 'bin/console', 'messenger:consume', 'async']
+  consumer-failed:
+    container_name: "${APP_NAME}-consumer-failed"
+    <<: *worker-base
+    command: ['php', 'bin/console', 'messenger:consume', 'failed', '-vv']
 
 volumes:
   postgresql_data:

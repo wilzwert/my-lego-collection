@@ -22,6 +22,7 @@ ENV UID=${UID} \
 RUN addgroup --gid ${GID} ${APP_USER} \
  && adduser --uid ${UID} --gid ${GID} --disabled-password --gecos "" ${APP_USER}
 
+RUN chown -R ${APP_USER}:${APP_USER} /app
 
 RUN mkdir /app/var \
     && chown -R ${APP_USER}:${APP_USER} /app/var

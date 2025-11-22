@@ -11,6 +11,7 @@
 
 # Docker
 docker/dev/postgresql_data/
+docker/dev/.env
 docker/dev/rabbitmq_data/
 
 # OS / IDE

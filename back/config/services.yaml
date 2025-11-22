@@ -7,6 +7,7 @@ imports:
     - { resource: services/shared.yaml }
     - { resource: services/auth.yaml }
     - { resource: services/user.yaml }
+    - { resource: services/collection-management.yaml }
 
 parameters:
     public_upload_dir: '%kernel.project_dir%/public/uploads'
