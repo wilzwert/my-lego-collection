@@ -6,6 +6,7 @@ use App\Auth\Application\Command\RegistrationCommand;
 use App\Auth\Application\Handler\RegistrationHandler;
 use App\Auth\Domain\Service\IdentityService;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -17,6 +18,7 @@ final class RegistrationHandlerTest extends TestCase
     public function shouldInvokeIdentityServiceToCreateIdentity(): void
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
+
         $identityService = $this->createMock(IdentityService::class);
 
         $identityService
