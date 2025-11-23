@@ -7,7 +7,6 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Infrastructure\Messenging\AuthIntegrationEventFactory;
 use App\Shared\Domain\Model\EntityId;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
-use MyLegoCollection\SharedEvent\IntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

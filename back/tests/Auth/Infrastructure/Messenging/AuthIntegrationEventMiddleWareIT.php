@@ -5,6 +5,7 @@ namespace App\Tests\Auth\Infrastructure\Messenging;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Shared\Domain\Model\EntityId;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
+use App\Tests\Traits\ResetMessengerTransportsTrait;
 use App\User\Infrastructure\EventHandler\IdentityCreatedIntegrationEventHandler;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
@@ -18,11 +19,14 @@ use Symfony\Component\Messenger\Transport\TransportInterface;
 class AuthIntegrationEventMiddleWareIT extends KernelTestCase
 {
 
+    use ResetMessengerTransportsTrait;
+
     #[Test]
     public function testDomainEventDispatchesIntegrationEvent(): void
     {
         self::bootKernel();
         $container = self::getContainer();
+        $this->resetMessengerTransports();
 
         // replace the real handler by a spy to ensure it is actually called by the sync transport
         $spy = $this->getMockBuilder(IdentityCreatedIntegrationEventHandler::class)
@@ -58,6 +62,7 @@ class AuthIntegrationEventMiddleWareIT extends KernelTestCase
         $asyncEnvelopesAsArray = iterator_to_array($asyncEnvelopes);
         $this->assertNotEmpty($asyncEnvelopesAsArray, 'Le message a été dispatché sur le transport async');
         $this->assertCount(1, $asyncEnvelopesAsArray);
+
         $asyncFirst = $asyncEnvelopesAsArray[0]->getMessage();
         $this->assertInstanceOf(IdentityCreatedIntegrationEvent::class, $asyncFirst);
 

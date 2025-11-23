@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Shared\Infrastructure\EventSubscriber;
+namespace App\Auth\Infrastructure\Messenging;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
-namespace App\Auth\Infrastructure\Messenging;
 
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;

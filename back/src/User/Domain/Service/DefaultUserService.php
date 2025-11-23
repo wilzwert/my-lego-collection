@@ -2,8 +2,10 @@
 
 namespace App\User\Domain\Service;
 
+use App\User\Domain\Event\UserCreatedEvent;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
+use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\TransactionProviderException;
 use App\User\Domain\Model\User;
@@ -13,7 +15,8 @@ readonly class DefaultUserService implements UserService
 {
     public function __construct(
         private UserRepository      $userRepository,
-        private TransactionProvider $transactionProvider
+        private TransactionProvider $transactionProvider,
+        private EventBus            $eventBus
     ) {
     }
 
@@ -29,6 +32,9 @@ readonly class DefaultUserService implements UserService
             }
             $user = new User(EntityId::generate(), EntityId::fromString($identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
             $this->userRepository->save($user);
+
+            fwrite(STDERR, "User created!, dispatching event\n");
+            $this->eventBus->dispatch(new UserCreatedEvent($user));
 
             return $user;
         });

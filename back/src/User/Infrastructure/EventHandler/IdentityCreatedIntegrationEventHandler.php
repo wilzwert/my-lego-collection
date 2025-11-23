@@ -2,7 +2,6 @@
 
 namespace App\User\Infrastructure\EventHandler;
 
-use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
 use App\User\Application\Handler\IdentityCreatedHandler;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;

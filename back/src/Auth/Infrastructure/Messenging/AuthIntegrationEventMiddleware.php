@@ -10,8 +10,6 @@ namespace App\Auth\Infrastructure\Messenging;
  */
 
 use App\Shared\Infrastructure\Messaging\IntegrationEventBus;
-use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
-use MyLegoCollection\SharedEvent\IntegrationEvent;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
@@ -33,6 +31,7 @@ readonly class AuthIntegrationEventMiddleware implements MiddlewareInterface
         if ($this->factory->supports($message)) {
             $this->logger->info('Converting and dispatching message of class['.get_class($message).'] to integration bus.');
             $integrationEvent = $this->factory->fromDomainEvent($message);
+            fwrite(STDERR, "Supports factory: " . $message::class . ", dispatching " . json_encode($integrationEvent) . "\n");
             $this->integrationBus->dispatch($integrationEvent);
         }
 

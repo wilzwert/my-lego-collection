@@ -26,7 +26,7 @@ services:
     # and then dispatch to the integration bus
     # if not middleware is provided then a DomainEvent shouldn't be handled by an external handler
     user.integration_event_middleware:
-        class: App\User\Infrastructure\Messenger\IntegrationEventMiddleware
+        class: App\User\Infrastructure\Messenger\UserIntegrationEventMiddleware
         tags:
             - { name: messenger.middleware, bus: user.bus }
 
@@ -36,5 +36,10 @@ services:
         App\Shared\Infrastructure\EventHandler\DomainEventHandler:
             tags:
                 - { name: messenger.message_handler, bus: user.bus }
+
+    # we have to  manually pass the right EventBus because other slices may create other EventBuses
+    App\User\Domain\Service\DefaultUserService:
+        arguments:
+            $eventBus: '@App\User\Infrastructure\Messenging\UserEventBus'
 
 

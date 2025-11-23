@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * The User slice MUST handle IdentityCreatedEvent
+ * The User slice MUST handle UserCreatedEvent
  * @author Wilhelm Zwertvaegher
  */
 class ContractIT extends KernelTestCase
