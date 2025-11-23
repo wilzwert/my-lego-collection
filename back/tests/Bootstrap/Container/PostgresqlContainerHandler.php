@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Container;
 
+use App\Tests\Bootstrap\Container\AbstractTestContainerHandler;
 use Testcontainers\Container\GenericContainer;
 use Testcontainers\Modules\PostgresContainer;
 use Testcontainers\Wait\WaitForLog;

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Subscriber;
 
+use App\Tests\Bootstrap\TestSuiteService;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
 use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
 use Symfony\Component\Filesystem\Filesystem;

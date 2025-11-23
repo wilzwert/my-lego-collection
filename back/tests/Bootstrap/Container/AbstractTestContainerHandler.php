@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Container;
 
+use App\Tests\Bootstrap\Container\TestContainerHandler;
 use Testcontainers\Container\GenericContainer;
 use Testcontainers\Container\StartedGenericContainer;
 
@@ -48,9 +49,6 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
 
             $container = $this->createContainer();
             $this->container = $container->start();
-            foreach ($this->getEnvVars() as $envVar) {
-                putenv($envVar);
-            }
         }
     }
 

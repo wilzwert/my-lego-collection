@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Container;
 
 /**
  * A Testcontainer handler with utility methods.

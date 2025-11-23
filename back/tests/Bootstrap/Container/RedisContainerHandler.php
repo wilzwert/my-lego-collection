@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Container;
 
 use Testcontainers\Container\GenericContainer;
 use Testcontainers\Modules\RedisContainer;

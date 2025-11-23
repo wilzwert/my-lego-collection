@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Subscriber;
 
+use App\Tests\Bootstrap\Container\TestContainerHandler;
+use App\Tests\Bootstrap\TestSuiteService;
 use PHPUnit\Event\TestRunner\ExecutionStarted;
 use PHPUnit\Event\TestRunner\ExecutionStartedSubscriber;
 use Symfony\Component\Process\Process;

@@ -1,7 +1,9 @@
 <?php
 
-namespace App\Tests\Bootstrap;
+namespace App\Tests\Bootstrap\Subscriber;
 
+use App\Tests\Bootstrap\Container\TestContainerHandler;
+use App\Tests\Bootstrap\TestSuiteService;
 use PHPUnit\Event\TestRunner\ExecutionFinished;
 use PHPUnit\Event\TestRunner\ExecutionFinishedSubscriber;
 use Symfony\Component\Filesystem\Filesystem;
@@ -13,10 +15,14 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 readonly class TestContainersStopSubscriber implements ExecutionFinishedSubscriber
 {
+    /**
+     * @param TestSuiteService $suiteService
+     * @param array<TestContainerHandler> $containerHandlers
+     * @param Filesystem $fs
+     */
     public function __construct(
         private TestSuiteService $suiteService,
-        private TestContainerHandler $dbTestContainerHandler,
-        private TestContainerHandler $redisTestContainerHandler,
+        private array $containerHandlers,
         private Filesystem $fs = new Filesystem(),
     ) {
     }
@@ -24,9 +30,9 @@ readonly class TestContainersStopSubscriber implements ExecutionFinishedSubscrib
     public function notify(ExecutionFinished $event): void
     {
         if ($this->suiteService->isIntegrationTest()) {
-            $this->redisTestContainerHandler->stop();
-
-            $this->dbTestContainerHandler->stop();
+            foreach (array_reverse($this->containerHandlers) as $containerHandler) {
+                $containerHandler->stop();
+            }
 
             // cleanup temporary generated env file
             $this->fs->remove('.env.test.local');
