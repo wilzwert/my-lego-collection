@@ -17,7 +17,7 @@ final readonly class AddUserSetCommand
         return $this->externalSetId;
     }
 
-    public function getIdentityId() :?EntityId
+    public function getIdentityId(): EntityId
     {
         return $this->identityId;
     }

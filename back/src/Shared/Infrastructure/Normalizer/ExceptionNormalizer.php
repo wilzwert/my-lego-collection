@@ -14,6 +14,10 @@ abstract class ExceptionNormalizer implements NormalizerInterface
 {
     use ClockAwareTrait;
 
+    /**
+     * @param \Throwable $throwable
+     * @return array<string, array<string, string[]|int[]>>
+     */
     abstract protected function normalizeErrors(\Throwable $throwable): array;
 
     abstract protected function getStatus(\Throwable $throwable): int;
@@ -31,7 +35,14 @@ abstract class ExceptionNormalizer implements NormalizerInterface
     /**
      * @throws \InvalidArgumentException
      */
-    public final function normalize(mixed $data, ?string $format = null, array $context = []): array
+
+    /**
+     * @param mixed $data
+     * @param string|null $format
+     * @param array<string, mixed> $context
+     * @return array<string, mixed>
+     */
+    final public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
         return [
             'timestamp' => $this->now()->format(\DateTimeInterface::RFC3339_EXTENDED),

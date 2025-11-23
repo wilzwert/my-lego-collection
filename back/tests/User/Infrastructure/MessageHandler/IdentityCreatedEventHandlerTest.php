@@ -2,10 +2,6 @@
 
 namespace App\Tests\User\Infrastructure\MessageHandler;
 
-use App\Auth\Domain\Event\IdentityCreatedEvent;
-use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Model\EntityId;
 use App\User\Application\Handler\IdentityCreatedHandler;
 use App\User\Infrastructure\EventHandler\IdentityCreatedIntegrationEventHandler;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;

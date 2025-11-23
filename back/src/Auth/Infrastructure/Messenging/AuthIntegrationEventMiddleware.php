@@ -33,9 +33,7 @@ readonly class AuthIntegrationEventMiddleware implements MiddlewareInterface
         if ($this->factory->supports($message)) {
             $this->logger->info('Converting and dispatching message of class['.get_class($message).'] to integration bus.');
             $integrationEvent = $this->factory->fromDomainEvent($message);
-            if ($integrationEvent instanceof IntegrationEvent) {
-                $this->integrationBus->dispatch($integrationEvent);
-            }
+            $this->integrationBus->dispatch($integrationEvent);
         }
 
         return $stack->next()->handle($envelope, $stack);

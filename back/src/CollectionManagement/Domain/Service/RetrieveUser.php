@@ -10,5 +10,5 @@ use App\User\Domain\Model\User;
  */
 interface RetrieveUser
 {
-    public function __invoke(EntityId $identityId): ?User;
+    public function getUser(EntityId $identityId): ?User;
 }

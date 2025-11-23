@@ -2,7 +2,9 @@
 
 namespace App\Shared\Infrastructure\Service;
 
+use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Infrastructure\Dto\StoredFileDto;
+use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
 use Doctrine\ORM\Internal\StronglyConnectedComponents;
 use Symfony\Component\ObjectMapper\ObjectMapper;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
@@ -10,12 +12,13 @@ use Symfony\Component\ObjectMapper\TransformCallableInterface;
 
 /**
  * @author Wilhelm Zwertvaegher
+ * @implements  TransformCallableInterface<StoredFile, StoredFileDto>
  */
-class StoredFileDtoTransformer implements TransformCallableInterface
+readonly class StoredFileDtoTransformer implements TransformCallableInterface
 {
 
     public function __construct(
-        private readonly ObjectMapperInterface $objectMapper
+        private ObjectMapperInterface $objectMapper
 
     ) {
     }

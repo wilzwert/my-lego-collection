@@ -6,6 +6,7 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Auth\Infrastructure\Security\UserProvider;
+use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -25,8 +26,13 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function loadUserByIdentifier_shouldReturnAuthenticatedUserWhenFound(): void
     {
-        $domainIdentity = $this->createMock(Identity::class);
-        $domainIdentity->method('getId')->willReturn(EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
+        $domainIdentity = new Identity(
+            EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'),
+            'test@example.com',
+            'test',
+            'hash'
+        );
+
         $repository = $this->createMock(IdentityRepository::class);
         $repository->method('findById')->willReturn($domainIdentity);
         $logger = $this->createMock(LoggerInterface::class);
@@ -37,6 +43,32 @@ final class UserProviderTest extends TestCase
 
         self::assertInstanceOf(AuthenticatedUser::class, $result);
         self::assertSame('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1', $result->getUserIdentifier());
+    }
+
+    #[Test]
+    public function loadUserByIdentifier_shouldLoadByIdentifier_whenIdentityInvalid(): void
+    {
+        $domainIdentity = new Identity(
+            EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'),
+            'test@example.com',
+            'test',
+            'hash'
+        );
+
+        $repository = $this->createMock(IdentityRepository::class);
+        $repository->expects($this->never())->method('findById');
+        $repository->expects($this->once())
+            ->method('findByIdentifier')
+            ->with()
+            ->willReturn($domainIdentity);
+        $logger = $this->createMock(LoggerInterface::class);
+
+        $provider = new UserProvider($repository, $logger);
+
+        $result = $provider->loadUserByIdentifier('test@example.com');
+        self::assertInstanceOf(AuthenticatedUser::class, $result);
+        self::assertSame('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1', $result->getUserIdentifier());
+
     }
 
     #[Test]

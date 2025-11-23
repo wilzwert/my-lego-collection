@@ -9,10 +9,11 @@ namespace App\Auth\Infrastructure\Messenging;
 
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
+use MyLegoCollection\SharedEvent\IntegrationEvent;
 
 class AuthIntegrationEventFactory
 {
-    public function fromDomainEvent(object $event): object
+    public function fromDomainEvent(object $event): IntegrationEvent
     {
         return match ($event::class) {
 

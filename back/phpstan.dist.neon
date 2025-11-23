@@ -6,3 +6,9 @@ parameters:
         - public/
         - src/
         - tests/
+    excludePaths:
+            analyse:
+                - tests/bootstrap.php
+        errorFormat: table
+includes:
+    - vendor/phpstan/phpstan-doctrine/extension.neon

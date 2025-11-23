@@ -14,7 +14,7 @@ readonly class AuthenticatedUser implements UserInterface, PasswordAuthenticated
 
     public function getUserIdentifier(): string
     {
-        return $this->identity->getId();
+        return $this->identity->getId()->value();
     }
 
     public function getRoles(): array

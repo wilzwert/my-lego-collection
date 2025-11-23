@@ -2,21 +2,18 @@
 
 namespace App\Shared\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Repository\StoredFileRepository;
 use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
-use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineIdentity>
+ * @extends ServiceEntityRepository<DoctrineStoredFile>
  */
 class DoctrineStoredFileRepository extends ServiceEntityRepository implements StoredFileRepository
 {

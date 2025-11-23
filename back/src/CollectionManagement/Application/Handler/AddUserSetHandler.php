@@ -14,7 +14,7 @@ use App\User\Domain\Model\User;
 
 final readonly class AddUserSetHandler
 {
-    public function __construct(RetrieveUser $user, )
+    public function __construct(private readonly RetrieveUser $retrieveUser)
     {
     }
 
@@ -23,10 +23,15 @@ final readonly class AddUserSetHandler
         // get the user id associated to the command's identityId
 
         // create the UserSet
+        $user = $this->retrieveUser->getUser($command->getIdentityId());
 
         // add the event to the message bus
 
         // TODO
-        return new UserSet(EntityId::generate(), new Set(EntityId::generate(), 'externalId', 'legoId', 'name', 10, '', 2005));
+        return new UserSet(
+            EntityId::generate(),
+            $user->getId(),
+            new Set(EntityId::generate(), 'externalId', 'legoId', 'name', 10, '', 2005)
+        );
     }
 }

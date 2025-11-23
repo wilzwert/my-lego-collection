@@ -17,7 +17,7 @@ class ValidationError
     /**
      * @param String $field
      * @param BaseErrorCode $code
-     * @param array<string, string> $details as a detailKey => detailMessage array
+     * @param array<string, string|int> $details as a detailKey => message|number array
      */
     public function __construct(private readonly String $field, private readonly BaseErrorCode $code, private array $details = [])
     {
@@ -41,6 +41,9 @@ class ValidationError
         return $this->code;
     }
 
+    /**
+     * @return array<string, string|int>
+     */
     public function details(): array
     {
         return $this->details;
