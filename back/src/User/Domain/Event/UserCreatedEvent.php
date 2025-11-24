@@ -14,9 +14,9 @@ class UserCreatedEvent extends DomainEvent
 
     private readonly User $user;
 
-    public function __construct(User $user)
+    public function __construct(User $user, ?array $payload = null, ?array $metadata = null)
     {
-        parent::__construct(self::TYPE);
+        parent::__construct(self::TYPE, $payload, $metadata);
         $this->user = $user;
     }
 

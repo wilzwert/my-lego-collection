@@ -1,18 +1,21 @@
 <?php
 
-namespace App\Tests\Auth\Infrastructure\Messenging;
+namespace App\Tests\Auth\Infrastructure\Messaging;
 
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Model\Identity;
-use App\Auth\Infrastructure\Messenging\AuthIntegrationEventFactory;
+use App\Auth\Infrastructure\Messenger\AuthIntegrationEventFactory;
 use App\Shared\Domain\Model\EntityId;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
+
+#[Group('Messenger')]
 class AuthIntegrationEventFactoryTest extends TestCase
 {
 

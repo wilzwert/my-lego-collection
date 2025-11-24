@@ -6,9 +6,7 @@ namespace App\Tests\Shared\Infrastructure\Security;
  * @author Wilhelm Zwertvaegher
  */
 
-use App\Auth\Domain\Model\Identity;
 use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
-use App\Shared\Domain\Model\EntityId;
 use App\Shared\Infrastructure\Security\JwtTokenGenerator;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;

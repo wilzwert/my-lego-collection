@@ -31,10 +31,12 @@ readonly class TestContainersStopSubscriber implements ExecutionFinishedSubscrib
     {
         if ($this->suiteService->isIntegrationTest()) {
             foreach (array_reverse($this->containerHandlers) as $containerHandler) {
+                fwrite(STDOUT, "Stopping ".$containerHandler::class . PHP_EOL);
                 $containerHandler->stop();
             }
 
             // cleanup temporary generated env file
+            fwrite(STDOUT, "Cleaning local test env file" . PHP_EOL);
             $this->fs->remove('.env.test.local');
         }
     }

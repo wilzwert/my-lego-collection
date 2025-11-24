@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "28cfad101d63b9f6e3f1caa6ce1616e5",
+    "content-hash": "2b1ef25f60a71a7289e32d2bb3ce8635",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1570,7 +1570,7 @@
             "dist": {
                 "type": "path",
                 "url": "./packages/shared-events",
-                "reference": "773d743663ee546ba70ce09c774d5c9e367d9e00"
+                "reference": "794c4dac91e0b650964a9994863dda0599d19acd"
             },
             "type": "library",
             "autoload": {
@@ -7642,16 +7642,16 @@
         },
         {
             "name": "beluga-php/docker-php-api",
-            "version": "v7.1.45.2",
+            "version": "v7.1.45.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/beluga-php/docker-php-api.git",
-                "reference": "7db28dbd898211ba44bc582a660ec5e7cce12e2e"
+                "reference": "a287d09bb7164da7cef5b1e652550a15cb739d58"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/beluga-php/docker-php-api/zipball/7db28dbd898211ba44bc582a660ec5e7cce12e2e",
-                "reference": "7db28dbd898211ba44bc582a660ec5e7cce12e2e",
+                "url": "https://api.github.com/repos/beluga-php/docker-php-api/zipball/a287d09bb7164da7cef5b1e652550a15cb739d58",
+                "reference": "a287d09bb7164da7cef5b1e652550a15cb739d58",
                 "shasum": ""
             },
             "require": {
@@ -7704,7 +7704,7 @@
             "description": "Docker API generated files from OpenAPI Specification",
             "support": {
                 "issues": "https://github.com/beluga-php/docker-php-api/issues",
-                "source": "https://github.com/beluga-php/docker-php-api/tree/v7.1.45.2"
+                "source": "https://github.com/beluga-php/docker-php-api/tree/v7.1.45.3"
             },
             "funding": [
                 {
@@ -7712,7 +7712,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-02-03T21:59:38+00:00"
+            "time": "2025-11-23T13:53:40+00:00"
         },
         {
             "name": "clue/ndjson-react",

@@ -12,11 +12,13 @@ use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
 use App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
+#[Group('Rebrickable')]
 final class RebrickableDataLoaderTest extends TestCase
 {
 

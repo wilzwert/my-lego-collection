@@ -26,7 +26,7 @@ services:
     # and then dispatch to the integration bus
     # if not middleware is provided then a DomainEvent shouldn't be handled by an external handler
     auth.integration_event_middleware:
-        class: App\Auth\Infrastructure\Messenging\AuthIntegrationEventMiddleware
+        class: App\Auth\Infrastructure\Messenger\AuthIntegrationEventMiddleware
         tags:
             - { name: messenger.middleware, bus: auth.bus }
 
@@ -40,4 +40,4 @@ services:
     # we have to  manually pass the right EventBus because other slices may create other EventBuses
     App\Auth\Domain\Service\DefaultIdentityService:
         arguments:
-            $eventBus: '@App\Auth\Infrastructure\Messenging\AuthEventBus'
+            $eventBus: '@App\Auth\Infrastructure\Messenger\AuthEventBus'

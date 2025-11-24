@@ -11,9 +11,14 @@ class UserCreatedIntegrationEvent extends IntegrationEvent
 
     private const string TYPE = 'user.user.created';
 
-    public function __construct(string $id)
+    public function __construct(string $id, ?array $payload = null, ?array $metadata = null)
     {
-        parent::__construct(self::TYPE, ['id' => $id]);
+        $payload = array_merge(
+            ['id' => $id],
+            $payload ?? []
+        );
+
+        parent::__construct(self::TYPE, $payload, $metadata);
         $this->id = $id;
     }
 

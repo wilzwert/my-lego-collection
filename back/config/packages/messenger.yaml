@@ -17,6 +17,11 @@ framework:
                 middleware:
                     - auth.integration_event_middleware
 
+            user.bus:
+                default_middleware: allow_no_handlers
+                middleware:
+                    - user.integration_event_middleware
+
             collection-management.bus:
                 default_middleware: allow_no_handlers
 
@@ -36,6 +41,8 @@ framework:
             'MyLegoCollection\SharedEvent\IntegrationEvent': async
             # it's important the IdentityCreatedIntegrationEvent can also be handled immediately by some slices
             'MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent': sync
+            # it's important the UserCreatedIntegrationEvent can also be handled immediately by some slices
+            'MyLegoCollection\SharedEvent\UserCreatedIntegrationEvent': sync
 
 
 

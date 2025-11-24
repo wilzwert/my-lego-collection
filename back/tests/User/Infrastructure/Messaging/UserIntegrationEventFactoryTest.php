@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Tests\User\Infrastructure\Messenging;
+namespace App\Tests\User\Infrastructure\Messaging;
 
+use App\Tests\User\Utilities\UserTestsUtility;
 use App\User\Domain\Event\UserCreatedEvent;
 use App\User\Domain\Model\User;
-use App\User\Infrastructure\Messenging\UserIntegrationEventFactory;
+use App\User\Infrastructure\Messenger\UserIntegrationEventFactory;
 use App\Shared\Domain\Model\EntityId;
 use MyLegoCollection\SharedEvent\UserCreatedIntegrationEvent;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @author Wilhelm Zwertvaegher
+ *
  */
+
+#[Group('Messenger')]
 class UserIntegrationEventFactoryTest extends TestCase
 {
 
@@ -20,9 +25,7 @@ class UserIntegrationEventFactoryTest extends TestCase
     public function shouldSupport(): void
     {
         $factory = new UserIntegrationEventFactory();
-        self::assertTrue(
-            $factory->supports(
-                new UserCreatedEvent(new User(EntityId::generate(), 'test@example.com', 'test', 'hash'))));
+        self::assertTrue($factory->supports(new UserCreatedEvent(UserTestsUtility::generateUser())));
     }
 
     #[Test]
@@ -35,14 +38,19 @@ class UserIntegrationEventFactoryTest extends TestCase
     #[Test]
     public function shouldBuildIntegrationEvent(): void
     {
-        $entityId = EntityId::generate();
+        $userId = EntityId::generate();
 
         $factory = new UserIntegrationEventFactory();
-        $result = $factory->fromDomainEvent(new UserCreatedEvent(new User($entityId, 'test@example.com', 'test', 'hash')));
+        $result = $factory->fromDomainEvent(
+            new UserCreatedEvent(
+                UserTestsUtility::generateUser(
+                    userId: $userId
+                ),
+            )
+        );
 
         self::assertInstanceOf(UserCreatedIntegrationEvent::class, $result);
-        self::assertEquals($entityId->value(), $result->getId());
-
+        self::assertEquals($userId->value(), $result->getId());
     }
 
     #[Test]

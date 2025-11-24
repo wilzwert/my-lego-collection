@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Tests\Auth\Infrastructure\Messenging;
+namespace App\Tests\Auth\Infrastructure\Messaging;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
 
-use App\Auth\Infrastructure\Messenging\AuthIntegrationEventFactory;
-use App\Auth\Infrastructure\Messenging\AuthIntegrationEventMiddleware;
-use App\Shared\Infrastructure\Messaging\IntegrationEventBus;
+use App\Auth\Infrastructure\Messenger\AuthIntegrationEventFactory;
+use App\Auth\Infrastructure\Messenger\AuthIntegrationEventMiddleware;
+use App\Shared\Infrastructure\Messager\IntegrationEventBus;
 use MyLegoCollection\SharedEvent\IntegrationEvent;
 
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -18,6 +19,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
+#[Group('Messenger')]
 class AuthIntegrationEventMiddlewareTest extends TestCase
 {
     private AuthIntegrationEventFactory $factory;
@@ -113,7 +115,7 @@ class AuthIntegrationEventMiddlewareTest extends TestCase
             ->expects($this->never())
             ->method('dispatch');
 
-        $this->stack->next()
+        $this->nextMiddleware
             ->expects($this->once())
             ->method('handle')
             ->with($envelope)

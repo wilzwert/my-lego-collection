@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Infrastructure\Messenging;
+namespace App\Auth\Infrastructure\Messenger;
 
 /**
  * Messenging middleware that delegates local DomainEvents to IntegrationEvents conversion
@@ -9,22 +9,19 @@ namespace App\User\Infrastructure\Messenging;
  * @author Wilhelm Zwertvaegher
  */
 
-use App\Shared\Infrastructure\Messaging\IntegrationEventBus;
-use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
-use MyLegoCollection\SharedEvent\IntegrationEvent;
+use App\Shared\Infrastructure\Messager\IntegrationEventBus;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
-readonly class UserIntegrationEventMiddleware implements MiddlewareInterface
+readonly class AuthIntegrationEventMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private UserIntegrationEventFactory $factory,
+        private AuthIntegrationEventFactory $factory,
         private IntegrationEventBus         $integrationBus,
-        private LoggerInterface             $logger
-    )
-    {
+        private LoggerInterface $logger
+    ) {
     }
 
     public function handle(Envelope $envelope, StackInterface $stack): Envelope
@@ -32,7 +29,7 @@ readonly class UserIntegrationEventMiddleware implements MiddlewareInterface
         $message = $envelope->getMessage();
 
         if ($this->factory->supports($message)) {
-            $this->logger->info('Converting and dispatching message of class[' . get_class($message) . '] to integration bus.');
+            $this->logger->info('Converting and dispatching message of class['.$message::class.'] to integration bus.');
             $integrationEvent = $this->factory->fromDomainEvent($message);
             $this->integrationBus->dispatch($integrationEvent);
         }

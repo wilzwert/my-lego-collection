@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Infrastructure\Messenging;
+namespace App\User\Infrastructure\Messenger;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -20,7 +20,9 @@ class UserIntegrationEventFactory
 
             UserCreatedEvent::class =>
             new UserCreatedIntegrationEvent(
-                $event->getUser()->getId()->value()
+                $event->getUser()->getId()->value(),
+                $event->payload(),
+                $event->metadata()
             ),
 
             default => throw new \LogicException("No IntegrationEvent for " . $event::class)
