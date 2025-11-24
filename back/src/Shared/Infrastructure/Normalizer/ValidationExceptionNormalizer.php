@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Throwable;
 
 #[AutoconfigureTag('app.exception_normalizer')]
 class ValidationExceptionNormalizer extends ExceptionNormalizer
@@ -16,14 +17,25 @@ class ValidationExceptionNormalizer extends ExceptionNormalizer
 
     use ClockAwareTrait;
 
+    /**
+     * @param mixed $data
+     * @param string|null $format
+     * @param array<string, mixed> $context
+     * @return bool
+     */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof ValidationException;
     }
 
-    protected function normalizeErrors(\Throwable $throwable): array
+
+    /**
+     * @param Throwable $throwable
+     * @return array<string, array<string, string[]|int[]>>
+     */
+    protected function normalizeErrors(Throwable $throwable): array
     {
-        if(!$throwable instanceof ValidationException){
+        if (!$throwable instanceof ValidationException) {
             throw new InvalidArgumentException();
         }
 
@@ -46,13 +58,13 @@ class ValidationExceptionNormalizer extends ExceptionNormalizer
     }
 
     #[\Override]
-    protected function getErrorCode(\Throwable $throwable): string
+    protected function getErrorCode(Throwable $throwable): string
     {
         return 'validation-error';
     }
 
     #[\Override]
-    protected function getStatus(\Throwable $throwable): int
+    protected function getStatus(Throwable $throwable): int
     {
         return Response::HTTP_UNPROCESSABLE_ENTITY;
     }

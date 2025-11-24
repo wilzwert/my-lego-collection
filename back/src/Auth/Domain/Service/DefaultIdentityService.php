@@ -2,10 +2,9 @@
 
 namespace App\Auth\Domain\Service;
 
-use App\Auth\Application\Command\RegistrationCommand;
+use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
-use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\EventBus;
@@ -36,7 +35,7 @@ readonly class DefaultIdentityService implements IdentityService
             $identity = new Identity(EntityId::generate(), $email, $username, $this->passwordHasher->hash($password));
             $this->identityRepository->save($identity);
 
-            $this->eventBus->dispatch(new DomainEvent('auth.identity.created', $identity->getId()));
+            $this->eventBus->dispatch(new IdentityCreatedEvent($identity));
             return $identity;
         });
     }

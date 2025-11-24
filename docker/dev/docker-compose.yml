@@ -1,76 +1,162 @@
+# See .env to set useful environment vars
+
+# ================================
+# ANCHORS
+# ================================
+x-worker-base: &worker-base
+  build:
+    context: ../..
+    dockerfile: docker/dev/worker/Dockerfile
+  environment:
+    APP_ENV: dev
+  volumes:
+    - ../../back:/app:cached
+  depends_on:
+    - ampq
+    - db
+    - redis
+  restart: unless-stopped
+  healthcheck:
+    test: ''
+    disable: true
+
 services:
+  db:
+    image: postgres:16
+    container_name: "${APP_NAME}-db"
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      POSTGRES_DB: ${APP_NAME}
+      POSTGRES_USER: ${APP_NAME}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-d", "${APP_NAME}", "-U", "${APP_NAME}" ]
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    # uncomment if you want to directly access your db for querying...
+    # Change port if necessary, e.g. if you host already exposes another postgres container on the same port
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./postgresql_data:/var/lib/postgresql/data
+    networks:
+      - default
+
+  redis:
+    image: redis:7
+    container_name: "${APP_NAME}-redis"
+    restart: unless-stopped
+    # uncomment if you want to directly access your redis container for data visualization...
+    # Change port if necessary, e.g. if you host already exposes another redis container on the same port
+    # ports:
+    #  - "6379:6379"
+    networks:
+      - default
+
+  ampq:
+    image: rabbitmq:4-management
+    container_name: "${APP_NAME}-ampq"
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: ${APP_NAME}
+      RABBITMQ_DEFAULT_PASS: ${AMPQ_PASSWORD}
+    # uncomment if you want to directly access your redis container for data visualization...
+    # Change port if necessary, e.g. if you host already exposes another redis container on the same port
+    ports:
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - default
+
   app:
+    # allow linux hosts to resolve host.docker.internal
+    extra_hosts:
+      - "host.docker.internal=host-gateway"
     build:
       context: ../..
       dockerfile: docker/dev/frankenphp/Dockerfile
-    container_name: mylego_collection_app
+      target: frankenphp_dev
+      args:
+        UID: ${UID:-1000}
+        GID: ${GID:-1000}
+        DOCKER_GID: ${DOCKER_GID:-1001}
+        APP_USER: ${APP_USER:-symfony}
+    container_name: "${APP_NAME}-web"
     restart: unless-stopped
-    # run as root to allow TestContainers to start
-    # DO NOT USE in production environments
-    user: root
+
     volumes:
+      # Mounting files / directories separately for performance on windows hosts
+      # Avoid mounting the var directory as it is unreliable
+      # Mounting the project root on windows Hosts may compromise perfs, it is recommended to mount dir/files individually
+      #      - ../../back:/app:delegated
+
       - ../../back/src:/app/src
+      - ../../back/bin:/app/bin
       - ../../back/tests:/app/tests
       - ../../back/config:/app/config
       - ../../back/coverage:/app/coverage
       - ../../back/migrations:/app/migrations
       - ../../back/templates:/app/templates
       - ../../back/public:/app/public
+      - ../../back/packages:/app/packages
       - ../../back/composer.json:/app/composer.json
       - ../../back/composer.lock:/app/composer.lock
       - ../../back/.env:/app/.env
       - ../../back/.env.dev:/app/.env.dev
       - ../../back/.env.test:/app/.env.test
       - ../../back/phpunit.xml:/app/phpunit.xml
+      - ../../back/phpstan.dist.neon:/app/phpstan.dist.neon
+
+
       # bad performance when mounting vendor on windows machines
       # - ../../back/vendor:/app/vendor
-      # necessary to enable TestContainer to create containers
-      - /var/run/docker.sock:/var/run/docker.sock
+      # Windows (WSL) / Linux
+      # Mounting docker socket is necessary to enable TestContainers to create containers
+      # On windows hosts, you may be able to comment this line, expose the docker API via TCP in Docker Desktop
+      # and then set DOCKER_HOST env variable, although it's not recommended
+      - /var/run/docker.sock:/var/run/docker.sock:rw
     environment:
       - XDEBUG_MODE=debug
       - XDEBUG_START_WITH_REQUEST=yes
       - XDEBUG_CONFIG=client_host=host.docker.internal
-#      - POSTGRES_HOST=db
-#      - POSTGRES_DB=mylego_collection
-#      - POSTGRES_USER=mylego_collection
-#      - POSTGRES_PASSWORD=mylego_collection_pass
-#      - REDIS_URL=redis://mylego_collection_redis
-      # - DOCKER_HOST=tcp://host.docker.internal:2375
+
+    # comment the following line in production, it allows to have nice human-readable logs in dev
+    tty: true
+
+
+      # macOS (UNTESTED): it seems that to allow Testcontainers to create containers, the docker API should be exposed through TCP
+      # in Docker Desktop
+      # Then the DOCKER_HOST var below should be set (change port if necessary)
+      # DOCKER_HOST: tcp://host.docker.internal:2375
+
     ports:
       - "8080:80"   # FrankenPHP
     depends_on:
-      - db
-      - redis
+      db:
+        condition: service_healthy
+      redis:
+          condition: service_started
     networks:
-      - mylego_collection_net
+      - default
 
-  db:
-    image: postgres:16
-    container_name: mylego_collection_db
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: mylego_collection
-      POSTGRES_USER: mylego_collection
-      POSTGRES_PASSWORD: mylego_collection_pass
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./db_data:/var/lib/postgresql/data
-    networks:
-      - mylego_collection_net
+  consumer-async:
+    container_name: "${APP_NAME}-consumer-async"
+    <<: *worker-base
+    command: ['php', 'bin/console', 'messenger:consume', 'async', '-vv']
 
-  redis:
-    image: redis:7
-    container_name: mylego_collection_redis
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - mylego_collection_net
+  consumer-failed:
+    container_name: "${APP_NAME}-consumer-failed"
+    <<: *worker-base
+    command: ['php', 'bin/console', 'messenger:consume', 'failed', '-vv']
 
 volumes:
-  db_data:
-  
+  postgresql_data:
+  rabbitmq_data:
+
 networks:
-  mylego_collection_net:
+  default:
     driver: bridge

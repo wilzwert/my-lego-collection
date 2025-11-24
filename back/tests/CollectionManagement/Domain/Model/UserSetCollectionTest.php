@@ -14,6 +14,7 @@ use PHPUnit\Framework\TestCase;
 class UserSetCollectionTest extends TestCase
 {
     private static array $uuids = [
+        'userId1' => 'aacd1234-abcd-4bcd-abcd-abcd1234abcd',
         'localSetId1' => 'abcd1234-abcd-4bcd-abcd-abcd1234abcd',
         'localSetId2' => 'bbcd1234-abcd-4bcd-abcd-abcd1234abcd',
         'localSetId3' => 'cbcd1234-abcd-4bcd-abcd-abcd1234abcd',
@@ -30,10 +31,10 @@ class UserSetCollectionTest extends TestCase
         $localSet3 = new Set(EntityId::fromString(self::$uuids['localSetId3']), 'external-789', 'lego-789', 'Star Wars Cantina', 2000, '/images/cantina.png', 2014);
 
         $collection = new UserSetCollection([
-            new UserSet(EntityId::fromString(self::$uuids['userSetId1']), $localSet1),
-            new UserSet(EntityId::fromString(self::$uuids['userSetId2']), $localSet2)
+            new UserSet(EntityId::fromString(self::$uuids['userSetId1']), EntityId::fromString(self::$uuids['userId1']), $localSet1),
+            new UserSet(EntityId::fromString(self::$uuids['userSetId2']), EntityId::fromString(self::$uuids['userId1']), $localSet2)
         ]);
-        $collection->add(new UserSet(EntityId::fromString(self::$uuids['userSetId3']), $localSet3));
+        $collection->add(new UserSet(EntityId::fromString(self::$uuids['userSetId3']), EntityId::fromString(self::$uuids['userId1']), $localSet3));
 
         self::assertCount(3, $collection);
         self::assertInstanceOf(UserSet::class, $collection->get(0));
@@ -52,8 +53,8 @@ class UserSetCollectionTest extends TestCase
         $localSet3 = new Set(EntityId::fromString(self::$uuids['localSetId3']), 'external-789', 'lego-789', 'Star Wars Cantina', 2000, '/images/cantina.png', 2014);
 
         $collection = new UserSetCollection([
-            new UserSet(EntityId::fromString(self::$uuids['userSetId1']), $localSet1),
-            new UserSet(EntityId::fromString(self::$uuids['userSetId2']), $localSet2)
+            new UserSet(EntityId::fromString(self::$uuids['userSetId1']), EntityId::fromString(self::$uuids['userId1']), $localSet1),
+            new UserSet(EntityId::fromString(self::$uuids['userSetId2']), EntityId::fromString(self::$uuids['userId1']), $localSet2)
         ]);
 
         // adding a ExternalPart to a UserSetCollection should not be possible
@@ -61,7 +62,7 @@ class UserSetCollectionTest extends TestCase
         // @phpstan-ignore argument.type
         $collection->add(new ExternalPart('partExternalId', 'legoId', 'Part', ''));
 
-        $collection->add(new UserSet(EntityId::fromString(self::$uuids['userSetId3']), $localSet3));
+        $collection->add(new UserSet(EntityId::fromString(self::$uuids['userSetId3']), EntityId::fromString(self::$uuids['userId1']), $localSet3));
         self::assertCount(3, $collection);
     }
 }

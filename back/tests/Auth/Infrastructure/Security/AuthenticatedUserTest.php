@@ -7,8 +7,9 @@ namespace App\Tests\Auth\Infrastructure\Security;
  */
 
 use App\Auth\Domain\Model\Identity;
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
+use App\Tests\Auth\Utilities\AuthTestsUtility;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -17,11 +18,9 @@ final class AuthenticatedUserTest extends TestCase
     #[Test]
     public function getUserIdentifier_shouldReturnUserEmail(): void
     {
-        $user = $this->createMock(Identity::class);
-        $user->method('getEmail')->willReturn('john.doe@example.com');
-        $user->method('getId')->willReturn(EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
+        $identity = AuthTestsUtility::generateIdentity(EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'));
 
-        $authenticatedUser = new AuthenticatedUser($user);
+        $authenticatedUser = new AuthenticatedUser($identity);
 
         self::assertSame('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1', $authenticatedUser->getUserIdentifier());
     }
@@ -29,22 +28,19 @@ final class AuthenticatedUserTest extends TestCase
     #[Test]
     public function getRoles_shouldReturnUserRoles(): void
     {
-        $roles = ['ROLE_USER', 'ROLE_ADMIN'];
-        $user = $this->createMock(Identity::class);
-        $user->method('getRoles')->willReturn($roles);
+        $identity = AuthTestsUtility::generateIdentity(roles: ['ROLE_USER', 'ROLE_ADMIN']);
 
-        $authenticatedUser = new AuthenticatedUser($user);
+        $authenticatedUser = new AuthenticatedUser($identity);
 
-        self::assertSame($roles, $authenticatedUser->getRoles());
+        self::assertSame(['ROLE_USER', 'ROLE_ADMIN'], $authenticatedUser->getRoles());
     }
 
     #[Test]
     public function getPassword_shouldReturnPasswordHash(): void
     {
-        $user = $this->createMock(Identity::class);
-        $user->method('getPasswordHash')->willReturn('$2y$10$hashvalue');
+        $identity = AuthTestsUtility::generateIdentity(passwordHash: '$2y$10$hashvalue');
 
-        $authenticatedUser = new AuthenticatedUser($user);
+        $authenticatedUser = new AuthenticatedUser($identity);
 
         self::assertSame('$2y$10$hashvalue', $authenticatedUser->getPassword());
     }
@@ -53,8 +49,9 @@ final class AuthenticatedUserTest extends TestCase
     public function eraseCredentials_shouldDoNothing(): void
     {
         $this->expectNotToPerformAssertions();
-        $user = $this->createMock(Identity::class);
-        $authenticatedUser = new AuthenticatedUser($user);
+
+        $identity = AuthTestsUtility::generateIdentity();
+        $authenticatedUser = new AuthenticatedUser($identity);
 
         // Just ensure it doesn't throw
         $authenticatedUser->eraseCredentials();

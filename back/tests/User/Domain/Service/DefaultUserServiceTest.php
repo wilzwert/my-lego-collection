@@ -4,16 +4,12 @@ namespace App\Tests\User\Domain\Service;
 
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Model\TempFile;
-use App\Shared\Domain\Repository\StoredFileRepository;
 use App\Shared\Domain\Service\TransactionProvider;
-use App\Shared\Domain\Service\FileStorageService;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Command\DeleteAvatarCommand;
-use App\User\Application\Command\UpdateAvatarCommand;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Domain\Service\DefaultUserService;
+use App\User\Infrastructure\Messenging\UserEventBus;
+use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -35,21 +31,23 @@ final class DefaultUserServiceTest extends TestCase
 
         $this->userRepository = $this->createMock(UserRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
+        $this->eventBus = $this->createMock(UserEventBus::class);
 
         $this->service = new DefaultUserService(
             $this->userRepository,
-            $this->transactionProvider
+            $this->transactionProvider,
+            $this->eventBus
         );
     }
 
     #[Test]
     public function shouldCreateUserWithinTransaction(): void
     {
-        $command = new CreateUserCommand($this->identityId->__toString());
+        $event = new IdentityCreatedIntegrationEvent($this->identityId->value());
         $this->userRepository
             ->expects($this->once())
             ->method('findByIdentityId')
-            ->with($command->identityId)
+            ->with($event->getId())
             ->willReturn(null);
 
         $this->userRepository
@@ -66,7 +64,7 @@ final class DefaultUserServiceTest extends TestCase
                 fn (callable $callback) => $callback()
             );
 
-        $result = $this->service->createUser($command);
+        $result = $this->service->createUser($this->identityId);
 
         self::assertInstanceOf(User::class, $result);
         self::assertEquals($this->identityId, $result->getIdentityId());

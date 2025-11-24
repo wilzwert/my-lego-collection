@@ -3,12 +3,15 @@
 namespace App\DataFixtures;
 
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
-use App\Auth\Infrastructure\Security\DummyAuthenticatedUser;
+use App\Auth\Infrastructure\Security\User\DummyAuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+/**
+ * @codeCoverageIgnore
+ */
 class IdentityFixtures extends Fixture
 {
     public function __construct(private UserPasswordHasherInterface $hasher)

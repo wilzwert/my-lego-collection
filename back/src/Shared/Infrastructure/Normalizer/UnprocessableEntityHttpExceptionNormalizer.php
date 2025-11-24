@@ -8,7 +8,9 @@ use Symfony\Component\Clock\ClockAwareTrait;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\Exception\ValidationFailedException;
+use Throwable;
 
 #[AutoconfigureTag('app.exception_normalizer')]
 class UnprocessableEntityHttpExceptionNormalizer extends ExceptionNormalizer
@@ -16,12 +18,22 @@ class UnprocessableEntityHttpExceptionNormalizer extends ExceptionNormalizer
 
     use ClockAwareTrait;
 
+    /**
+     * @param mixed $data
+     * @param string|null $format
+     * @param array<string, mixed> $context
+     * @return bool
+     */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof UnprocessableEntityHttpException;
     }
 
-    protected function normalizeErrors(\Throwable $throwable): array
+    /**
+     * @param Throwable $throwable
+     * @return array<string, array<string, string[]|int[]>>
+     */
+    protected function normalizeErrors(Throwable $throwable): array
     {
         if (!$throwable instanceof UnprocessableEntityHttpException) {
             throw new InvalidArgumentException();
@@ -35,6 +47,7 @@ class UnprocessableEntityHttpExceptionNormalizer extends ExceptionNormalizer
         $errorsAsArray = [];
         foreach ($validationFailedException->getViolations() as $violation) {
             $propertyPath = $violation->getPropertyPath();
+            /** @var class-string<Constraint> $constraintClass */
             $constraintClass = $violation->getConstraint() ? $violation->getConstraint()::class : null;
             $detailCode = $constraintClass ? $constraintClass::getErrorName($violation->getCode()) : ErrorCode::UNKNOWN_ERROR->getCode();
             if (!isset($errorsAsArray[$propertyPath])) {
@@ -54,13 +67,13 @@ class UnprocessableEntityHttpExceptionNormalizer extends ExceptionNormalizer
     }
 
     #[\Override]
-    protected function getErrorCode(\Throwable $throwable): string
+    protected function getErrorCode(Throwable $throwable): string
     {
         return 'validation-error';
     }
 
     #[\Override]
-    protected function getStatus(\Throwable $throwable): int
+    protected function getStatus(Throwable $throwable): int
     {
         return Response::HTTP_UNPROCESSABLE_ENTITY;
     }

@@ -17,7 +17,7 @@ interface FileStorageProvider
     public function generateUrl(StoredFile $storedFile): string;
 
     /**
-     * @return array
+     * @return bool
      */
     public function supports(string $type): bool;
 }

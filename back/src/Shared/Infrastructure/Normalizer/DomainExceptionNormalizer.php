@@ -10,22 +10,36 @@ use App\Shared\Domain\Exception\ValidationException;
 use InvalidArgumentException;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 #[AutoconfigureTag('app.exception_normalizer')]
 class DomainExceptionNormalizer extends ExceptionNormalizer
 {
+    /**
+     * @var array<class-string, int>
+     */
     private static array $status_codes = [
         EntityNotFoundException::class => Response::HTTP_NOT_FOUND,
         EntityAlreadyExistsException::class => Response::HTTP_CONFLICT,
         FileStorageException::class => Response::HTTP_INTERNAL_SERVER_ERROR
     ];
 
+    /**
+     * @param mixed $data
+     * @param string|null $format
+     * @param array<string, mixed> $context
+     * @return bool
+     */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof DomainException;
     }
 
-    protected function normalizeErrors(\Throwable $throwable): array
+    /**
+     * @param Throwable $throwable
+     * @return array<string, array<string, string[]|int[]>>
+     */
+    protected function normalizeErrors(Throwable $throwable): array
     {
         if (!$throwable instanceof DomainException) {
             throw new InvalidArgumentException();
@@ -37,7 +51,7 @@ class DomainExceptionNormalizer extends ExceptionNormalizer
      * @param DomainException $throwable
      * @return string
      */
-    protected function getErrorCode(\Throwable $throwable): string
+    protected function getErrorCode(Throwable $throwable): string
     {
         return match ($throwable::class) {
             EntityNotFoundException::class => 'entity-not-found',
@@ -52,8 +66,8 @@ class DomainExceptionNormalizer extends ExceptionNormalizer
         return [ValidationException::class => true];
     }
 
-    protected function getStatus(\Throwable $throwable): int
+    protected function getStatus(Throwable $throwable): int
     {
-        return static::$status_codes[$throwable::class] ?? Response::HTTP_BAD_REQUEST;
+        return self::$status_codes[$throwable::class] ?? Response::HTTP_BAD_REQUEST;
     }
 }

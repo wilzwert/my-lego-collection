@@ -3,6 +3,7 @@
 namespace App\Auth\Infrastructure\Security;
 
 use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;
 use Override;

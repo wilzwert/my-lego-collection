@@ -2,10 +2,7 @@
 
 namespace App\Tests\Auth\Infrastructure\Controller;
 
-use App\Auth\Domain\Service\IdentityService;
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
 use App\Tests\Traits\WebTestCaseAuthenticateUserTrait;
-use App\User\Domain\Repository\UserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;

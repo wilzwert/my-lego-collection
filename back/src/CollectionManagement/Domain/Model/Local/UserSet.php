@@ -12,8 +12,11 @@ use App\Shared\Domain\Model\EntityId;
  */
 readonly class UserSet
 {
-    public function __construct(private EntityId $id, private Set $localSet)
-    {
+    public function __construct(
+        private EntityId $id,
+        private EntityId $userId,
+        private Set $localSet
+    ) {
     }
 
     public function getLocalSet(): Set
@@ -24,6 +27,11 @@ readonly class UserSet
     public function getId(): EntityId
     {
         return $this->id;
+    }
+
+    public function getUserId(): EntityId
+    {
+        return $this->userId;
     }
 
 }

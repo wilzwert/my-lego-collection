@@ -45,7 +45,7 @@ class Validator
     {
         if ($fieldValue === null
             || $fieldValue === ''
-            || $fieldValue instanceof EntityId && $fieldValue->value() === null
+            || $fieldValue instanceof EntityId && $fieldValue->value() === '    '
             || is_array($fieldValue) && count($fieldValue) === 0
         ) {
             $this->validationErrors->add(new ValidationError($fieldName, ErrorCode::FIELD_CANNOT_BE_EMPTY, ['empty' => 'Field cannot be empty']));

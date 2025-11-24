@@ -10,7 +10,9 @@
 /front/.env.local
 
 # Docker
-docker/dev/db_data/
+docker/dev/postgresql_data/
+docker/dev/.env
+docker/dev/rabbitmq_data/
 
 # OS / IDE
 .DS_Store

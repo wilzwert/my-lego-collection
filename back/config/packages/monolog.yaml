@@ -1,8 +1,21 @@
 monolog:
+
     handlers:
         main:
             type: stream
             path: "php://stdout"
-            level: debug
+            level: warning
             formatter: monolog.formatter.line
-            channels: ["!event"]
+            channels: ["!event", "!doctrine"]
+
+        doctrine:
+            type: stream
+            path: "php://stdout"
+            level: error
+            channels: [ "doctrine" ]
+
+        messenger:
+            type: stream
+            path: "php://stdout"
+            level: info
+            channels: [ "messenger" ]

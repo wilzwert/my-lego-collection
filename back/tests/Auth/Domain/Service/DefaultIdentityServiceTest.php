@@ -2,6 +2,7 @@
 
 namespace App\Tests\Auth\Domain\Service;
 
+use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Domain\Service\DefaultIdentityService;
@@ -12,6 +13,7 @@ use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Auth\Application\Command\RegistrationCommand;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -19,22 +21,22 @@ use PHPUnit\Framework\TestCase;
  */
 final class DefaultIdentityServiceTest extends TestCase
 {
-    private IdentityRepository $userRepository;
-    private PasswordHasher $passwordHasher;
-    private TransactionProvider $transactionProvider;
+    private IdentityRepository&MockObject $identityRepository;
+    private PasswordHasher&MockObject $passwordHasher;
+    private TransactionProvider&MockObject $transactionProvider;
     private DefaultIdentityService $service;
 
-    private EventBus $eventBus;
+    private EventBus&MockObject $eventBus;
 
     protected function setUp(): void
     {
-        $this->userRepository = $this->createMock(IdentityRepository::class);
+        $this->identityRepository = $this->createMock(IdentityRepository::class);
         $this->passwordHasher = $this->createMock(PasswordHasher::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
         $this->eventBus = $this->createMock(EventBus::class);
 
         $this->service = new DefaultIdentityService(
-            $this->userRepository,
+            $this->identityRepository,
             $this->passwordHasher,
             $this->transactionProvider,
             $this->eventBus
@@ -47,7 +49,7 @@ final class DefaultIdentityServiceTest extends TestCase
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $hashedPassword = 'hashed-password';
 
-        $this->userRepository
+        $this->identityRepository
             ->expects($this->once())
             ->method('findByEmailOrUsername')
             ->with($command->email, $command->username)
@@ -59,7 +61,7 @@ final class DefaultIdentityServiceTest extends TestCase
             ->with($command->password)
             ->willReturn($hashedPassword);
 
-        $this->userRepository
+        $this->identityRepository
             ->expects($this->once())
             ->method('save')
             ->with($this->isInstanceOf(Identity::class));
@@ -71,8 +73,11 @@ final class DefaultIdentityServiceTest extends TestCase
             ->with(
                 $this->callback(function (DomainEvent $event) use (&$eventId) {
                     self::assertSame('auth.identity.created', $event->type());
-                    self::assertNotEmpty($event->id());
-                    $eventId = $event->id();
+                    if (!$event instanceof IdentityCreatedEvent) {
+                        throw new \LogicException('Event should be instance of IdentityCreatedEvent');
+                    }
+                    self::assertNotEmpty($event->getIdentity()->getId());
+                    $eventId = $event->getIdentity()->getId()->value();
                     return true;
                 })
             );
@@ -100,7 +105,7 @@ final class DefaultIdentityServiceTest extends TestCase
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $existingUser = $this->createMock(Identity::class);
 
-        $this->userRepository
+        $this->identityRepository
             ->method('findByEmailOrUsername')
             ->willReturn($existingUser);
 
@@ -119,7 +124,7 @@ final class DefaultIdentityServiceTest extends TestCase
         $identifier = 'user-123';
         $expectedUser = $this->createMock(Identity::class);
 
-        $this->userRepository
+        $this->identityRepository
             ->expects($this->once())
             ->method('findByIdentifier')
             ->with($identifier)

@@ -1,0 +1,45 @@
+services:
+
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+
+    App\User\Domain\:
+        resource: '../../src/User/Domain/'
+        exclude:
+            - '../../src/User/Domain/Event'
+            - '../../src/User/Domain/Exception'
+            - '../../src/User/Domain/Model'
+
+    App\User\Application\:
+        resource: '../../src/User/Application/'
+        exclude:
+            - '../../src/User/Application/Command'
+
+    App\User\Infrastructure\:
+        resource: '../../src/User/Infrastructure/'
+        exclude:
+            - '../../src/User/Infrastructure/Dto'
+            - '../../src/User/Infrastructure/Persistence/Doctrine/Entity'
+
+    # each slice may provide, if needed, a middleware to convert DomainEvent to IntegrationEvent
+    # and then dispatch to the integration bus
+    # if not middleware is provided then a DomainEvent shouldn't be handled by an external handler
+    user.integration_event_middleware:
+        class: App\User\Infrastructure\Messenger\UserIntegrationEventMiddleware
+        tags:
+            - { name: messenger.middleware, bus: user.bus }
+
+    _instanceof:
+        # All services implementing the IntegrationEventHandler interface
+        # in the User slice must use only the user.bus
+        App\Shared\Infrastructure\EventHandler\DomainEventHandler:
+            tags:
+                - { name: messenger.message_handler, bus: user.bus }
+
+    # we have to  manually pass the right EventBus because other slices may create other EventBuses
+    App\User\Domain\Service\DefaultUserService:
+        arguments:
+            $eventBus: '@App\User\Infrastructure\Messenging\UserEventBus'
+
+

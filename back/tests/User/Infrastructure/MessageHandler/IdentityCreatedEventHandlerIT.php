@@ -3,14 +3,11 @@
 namespace App\Tests\User\Infrastructure\MessageHandler;
 
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Event\DomainEventHandler;
 use App\Shared\Domain\Model\EntityId;
-use App\User\Application\Command\CreateUserCommand;
-use App\User\Application\Handler\CreateUserHandler;
-use App\User\Infrastructure\EventHandler\IdentityCreatedEventHandler;
+use App\User\Infrastructure\EventHandler\IdentityCreatedIntegrationEventHandler;
 use App\User\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository;
+use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
@@ -19,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class IdentityCreatedEventHandlerIT extends KernelTestCase
 {
 
-    protected IdentityCreatedEventHandler $identityCreatedEventHandler;
+    protected IdentityCreatedIntegrationEventHandler $identityCreatedEventHandler;
 
     protected DoctrineUserRepository $doctrineUserRepository;
 
@@ -28,7 +25,7 @@ class IdentityCreatedEventHandlerIT extends KernelTestCase
         parent::setUp();
         self::bootKernel();
 
-        $this->identityCreatedEventHandler = self::getContainer()->get(IdentityCreatedEventHandler::class);
+        $this->identityCreatedEventHandler = self::getContainer()->get(IdentityCreatedIntegrationEventHandler::class);
         $this->doctrineUserRepository = self::getContainer()->get(DoctrineUserRepository::class);
     }
 
@@ -37,8 +34,8 @@ class IdentityCreatedEventHandlerIT extends KernelTestCase
     {
 
         $uuid = EntityId::generate();
-        $domainEvent = new DomainEvent('auth.identity.created', $uuid->value());
-        ($this->identityCreatedEventHandler)($domainEvent);
+        $integrationEvent = new IdentityCreatedIntegrationEvent($uuid->value());
+        ($this->identityCreatedEventHandler)($integrationEvent);
 
         $createdUser = $this->doctrineUserRepository->findByIdentityId($uuid);
         self::assertNotNull($createdUser);

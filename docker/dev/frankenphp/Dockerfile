@@ -1,66 +1,84 @@
-FROM dunglas/frankenphp:php8.4
+FROM dunglas/frankenphp:php8.4 AS frankenphp_upstream
+
+FROM frankenphp_upstream AS frankenphp_base
+
+WORKDIR /app
 
 # user/group
 ARG UID=1000
 ARG GID=1000
-ARG DOCKER_GID=999
+ARG DOCKER_GID=1001
+ARG APP_USER=symfony
 
-# Create a user to avoir working as root
-RUN addgroup --gid $GID symfony \
- && adduser --uid $UID --gid $GID --disabled-password --gecos "" symfony
+ENV UID=${UID} \
+    GID=${GID} \
+    DOCKER_GID=${DOCKER_GID} \
+    APP_USER=${APP_USER} \
+    APP_ENV=dev \
+    XDEBUG_MODE=off
 
-# Create a docker group and add our user to it
-RUN groupadd -g ${DOCKER_GID} docker && usermod -aG docker symfony
-# RUN groupadd -for -g ${DOCKER_GID} docker \
-#    && usermod -aG docker symfony
- 
+# Install sudo to allow our entrypoint to set ownership on docker.sock
+# Create a symfony user to avoid working as root
+RUN addgroup --gid ${GID} ${APP_USER} \
+ && adduser --uid ${UID} --gid ${GID} --disabled-password --gecos "" ${APP_USER}
+
+RUN chown -R ${APP_USER}:${APP_USER} /app
+
+RUN mkdir /app/var \
+    && chown -R ${APP_USER}:${APP_USER} /app/var
+
 # allows startup even if running as non-root user
 # otherwise caddy will e.g. try to create a certificate in /data/caddy which is not writable as non-root by default
 RUN mkdir -p /data/caddy \
-    && chown -R symfony:symfony /data/caddy
- 
+    && chown -R ${APP_USER}:${APP_USER} /data/caddy /config/caddy
+
 # Install PHP extensions for Symfony + PostgreSQL + Redis
 RUN install-php-extensions \
+    @composer \
     pdo_pgsql \
     redis \
     opcache \
     intl \
-    zip
-	
-# Install Xdebug
-RUN install-php-extensions xdebug
+    zip \
+    amqp
+
+# entrypoint
+COPY --link --chmod=755 docker/dev/frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
+
+# Caddyfile
+COPY --link docker/dev/frankenphp/Caddyfile /etc/caddy/Caddyfile
+
+HEALTHCHECK --start-period=60s CMD curl -f http://localhost:2019/metrics || exit 1
+
+
+# Dev
+FROM frankenphp_base AS frankenphp_dev
+
+# Create a docker group and add our symfony user to it
+# This is useful in systems where you are able to pass the right docker group id
+# as it will allow testcontainers to use docker.sock
+# otherwise it has no effect
+RUN groupadd -g ${DOCKER_GID} docker && usermod -aG docker ${APP_USER}
 
 # Configure PHP
-COPY docker/dev/php.ini /usr/local/etc/php/php.ini
-# COPY docker/dev/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY --link docker/dev/php.ini-dev /usr/local/etc/php/php.ini
 
-WORKDIR /app
+ENV APP_ENV=dev XDEBUG_MODE=off
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+VOLUME /app/var/
 
-# Install dependencies
-COPY back/composer.json back/composer.lock ./
-RUN composer install --no-scripts --no-interaction --no-progress
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
 
-# Copy app code
-COPY back/ ./
+RUN set -eux; \
+	install-php-extensions \
+		xdebug \
+	;
 
-# Use FrankenPHP as web server
-CMD php bin/console cache:clear --no-warmup && \
-    exec frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile
+COPY --link docker/dev/frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
-# Change app ownership
-RUN chown -R symfony:symfony /app
 
-# Clear + warmup cache dev
-RUN php bin/console cache:clear --env=dev --no-warmup \
- && php bin/console cache:warmup --env=dev
+ENTRYPOINT ["docker-entrypoint"]
 
-USER symfony
+USER ${APP_USER}
 
-# Copy Caddyfile to container
-COPY docker/dev/frankenphp/Caddyfile /etc/caddy/Caddyfile
-
-# Launch FrankenPHP
-CMD frankenphp run --config /etc/caddy/Caddyfile --adapter caddyfile
+CMD [ "frankenphp", "run", "--config", "/etc/caddy/Caddyfile", "--watch" ]

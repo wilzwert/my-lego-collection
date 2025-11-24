@@ -6,8 +6,11 @@ namespace App\Tests\Shared\Infrastructure\Security;
  * @author Wilhelm Zwertvaegher
  */
 
-use App\Auth\Infrastructure\Security\AuthenticatedUser;
+use App\Auth\Domain\Model\Identity;
+use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
+use App\Shared\Domain\Model\EntityId;
 use App\Shared\Infrastructure\Security\JwtTokenGenerator;
+use App\Tests\Auth\Utilities\AuthTestsUtility;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -26,7 +29,7 @@ final class JwtTokenGeneratorTest extends TestCase
     #[Test]
     public function shouldGenerateTokenFromAuthenticatedUser(): void
     {
-        $user = $this->createMock(AuthenticatedUser::class);
+        $user = new AuthenticatedUser(AuthTestsUtility::generateIdentity());
         $expectedToken = 'jwt.token.value';
 
         $this->jwtManager

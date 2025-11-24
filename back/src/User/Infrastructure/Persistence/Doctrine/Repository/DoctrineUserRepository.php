@@ -14,7 +14,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineIdentity>
+ * @extends ServiceEntityRepository<DoctrineUser>
  */
 class DoctrineUserRepository extends ServiceEntityRepository implements UserRepository
 {

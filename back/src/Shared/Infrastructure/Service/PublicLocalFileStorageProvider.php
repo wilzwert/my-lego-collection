@@ -17,8 +17,17 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 #[AutoconfigureTag('app.file_storage_provider')]
 final readonly class PublicLocalFileStorageProvider implements FileStorageProvider
 {
+    /**
+     * @var array<string, string>
+     */
     private array $supportedTypes;
 
+    /**
+     * @param Filesystem $filesystem
+     * @param SluggerInterface $slugger
+     * @param string $uploadsDirectory
+     * @param string $uploadsBaseUrl
+     */
     public function __construct(
         private readonly Filesystem $filesystem,
         private readonly SluggerInterface $slugger,
