@@ -4,6 +4,7 @@ namespace App\User\Application\Handler;
 
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\StoredFileService;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\User\Application\Command\UpdateAvatarCommand;
@@ -16,6 +17,7 @@ readonly class UpdateAvatarHandler
         private readonly TransactionProvider $transactionProvider,
         private readonly StoredFileService $storedFileService,
         private readonly UserService $userService,
+        private readonly EventBus $eventBus
     ){
     }
 
@@ -30,7 +32,9 @@ readonly class UpdateAvatarHandler
 
             $storedFile = $this->storedFileService->replace($user->getAvatar(), $command->tempFile, 'user.avatar');
 
-            return $this->userService->updateAvatar($user, $storedFile);
+            $updatedUser = $this->userService->updateAvatar($user, $storedFile);
+
+            $this->eventBus->dispatchAll($updatedUser->getEvents());
         });
     }
 }

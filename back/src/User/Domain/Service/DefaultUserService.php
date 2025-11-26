@@ -30,10 +30,8 @@ readonly class DefaultUserService implements UserService
             if ($user) {
                 return $user;
             }
-            $user = new User(EntityId::generate(), EntityId::fromString($identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
+            $user = User::create(EntityId::generate(), EntityId::fromString($identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
             $this->userRepository->save($user);
-
-            $this->eventBus->dispatch(new UserCreatedEvent($user));
 
             return $user;
         });

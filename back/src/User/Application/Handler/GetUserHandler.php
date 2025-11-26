@@ -13,8 +13,8 @@ readonly class GetUserHandler
 {
     public function __construct(
         private UserService $userService
-    )
-    {}
+    ) {
+    }
 
     public function __invoke(GetUserByIdentityQuery $query): ?User
     {
