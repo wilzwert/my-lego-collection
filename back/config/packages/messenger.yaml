@@ -7,11 +7,10 @@ framework:
 
         buses:
             command.bus:
-                default_middleware:
-                    - validation
-                    - doctrine_transaction
+                middleware:
                     - dispatch_after_current_bus
-                    -
+                    - doctrine_transaction
+
             integration.bus:
                 default_middleware:
                     enabled: true
@@ -44,12 +43,10 @@ framework:
         routing:
             # Route your messages to the transports
             # 'App\Message\YourM': async
-            'MyLegoCollection\SharedEvent\IntegrationEvent': async
-            'MyLegoCollection\SharedEvent\Command': async
-            # it's important the IdentityCreatedIntegrationEvent can also be handled immediately by some slices
-            'MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent': sync
-            # it's important the UserCreatedIntegrationEvent can also be handled immediately by some slices
-            'MyLegoCollection\SharedEvent\UserCreatedIntegrationEvent': sync
+            'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
+            'MyLegoCollection\SharedEvent\Command\Command': async
+            # it's important the CreateUserCommand can also be handled immediately by the User slice
+            'MyLegoCollection\SharedEvent\Command\CreateUserCommand': sync
 
 
 

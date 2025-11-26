@@ -31,7 +31,7 @@ services:
             - { name: messenger.middleware, bus: auth.bus }
 
     _instanceof:
-        # All services implementing the IntegrationEventHandler interface
+        # All services implementing the DomainEventHandler interface
         # in the auth slice must use only the auth.bus
         App\Shared\Infrastructure\EventHandler\DomainEventHandler:
             tags:
