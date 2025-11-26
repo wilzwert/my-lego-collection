@@ -76,7 +76,6 @@ RUN set -eux; \
 
 COPY --link docker/dev/frankenphp/conf.d/app.dev.ini $PHP_INI_DIR/conf.d/
 
-
 ENTRYPOINT ["docker-entrypoint"]
 
 USER ${APP_USER}

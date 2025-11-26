@@ -1,16 +1,12 @@
 <?php
 
-namespace App\Tests\Auth\Infrastructure\Messenging;
+namespace App\Tests\User\Infrastructure\Messaging;
 
-/**
- * @author Wilhelm Zwertvaegher
- */
-
-use App\Auth\Infrastructure\Messenging\AuthIntegrationEventFactory;
-use App\Auth\Infrastructure\Messenging\AuthIntegrationEventMiddleware;
-use App\Shared\Infrastructure\Messaging\IntegrationEventBus;
+use App\Shared\Infrastructure\Messager\IntegrationEventBus;
+use App\User\Infrastructure\Messenger\UserIntegrationEventFactory;
+use App\User\Infrastructure\Messenger\UserIntegrationEventMiddleware;
 use MyLegoCollection\SharedEvent\IntegrationEvent;
-
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -18,9 +14,14 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Middleware\MiddlewareInterface;
 use Symfony\Component\Messenger\Middleware\StackInterface;
 
-class AuthIntegrationEventMiddlewareTest extends TestCase
+/**
+ * @author Wilhelm Zwertvaegher
+ */
+
+#[Group('Messenger')]
+class UserIntegrationEventMiddlewareTest extends TestCase
 {
-    private AuthIntegrationEventFactory $factory;
+    private UserIntegrationEventFactory $factory;
     private IntegrationEventBus $integrationBus;
     private LoggerInterface $logger;
     private MiddlewareInterface $nextMiddleware;
@@ -29,7 +30,7 @@ class AuthIntegrationEventMiddlewareTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->factory = $this->createMock(AuthIntegrationEventFactory::class);
+        $this->factory = $this->createMock(UserIntegrationEventFactory::class);
         $this->integrationBus = $this->createMock(IntegrationEventBus::class);
         $this->logger = $this->createMock(LoggerInterface::class);
 
@@ -41,7 +42,7 @@ class AuthIntegrationEventMiddlewareTest extends TestCase
             ->method('next')
             ->willReturn($this->nextMiddleware);
 
-        $this->middleware = new AuthIntegrationEventMiddleware(
+        $this->middleware = new UserIntegrationEventMiddleware(
             $this->factory,
             $this->integrationBus,
             $this->logger
@@ -113,7 +114,7 @@ class AuthIntegrationEventMiddlewareTest extends TestCase
             ->expects($this->never())
             ->method('dispatch');
 
-        $this->stack->next()
+        $this->nextMiddleware
             ->expects($this->once())
             ->method('handle')
             ->with($envelope)

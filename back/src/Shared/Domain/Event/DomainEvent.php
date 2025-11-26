@@ -12,6 +12,8 @@ abstract class DomainEvent
      */
     private readonly array $metadata;
 
+    private readonly array $payload;
+
     /**
      * @param string $type
      * @param array<string, mixed>|null $payload
@@ -19,13 +21,15 @@ abstract class DomainEvent
      */
     public function __construct(
         private readonly string $type,
-        private readonly ?array $payload = null,
+        ?array $payload = null,
         ?array $metadata = null
     ) {
         $this->metadata = array_merge(
             array('occurred_at' => new \DateTimeImmutable()->format(DATE_ATOM)),
             $metadata ?? []
         );
+
+        $this->payload = $payload ?? [];
     }
 
     public function type(): string

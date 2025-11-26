@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Infrastructure\Messenging;
+namespace App\Auth\Infrastructure\Messenger;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -18,7 +18,9 @@ class AuthIntegrationEventFactory
 
             IdentityCreatedEvent::class =>
             new IdentityCreatedIntegrationEvent(
-                $event->getIdentity()->getId()->value()
+                $event->getIdentity()->getId()->value(),
+                $event->payload(),
+                $event->metadata()
             ),
 
             default => throw new \LogicException("No IntegrationEvent for ".$event::class)

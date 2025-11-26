@@ -40,10 +40,10 @@ trait WebTestCaseAuthenticateUserTrait
     }
 
 
-    private function getAuthenticatedUserTokens() : array
+    private function getAuthenticatedUserTokens(string $identifier = 'user1@test.com') : array
     {
         $identityService = self::getContainer()->get(IdentityService::class);
-        $testIdentity = $identityService->getIdentityByIdentifier('user1@test.com');
+        $testIdentity = $identityService->getIdentityByIdentifier($identifier);
         $authenticatedUser = new AuthenticatedUser($testIdentity);
         $jwtManager = self::getContainer()->get(JWTTokenManagerInterface::class);
         return [$jwtManager->create($authenticatedUser), 'TODO'];

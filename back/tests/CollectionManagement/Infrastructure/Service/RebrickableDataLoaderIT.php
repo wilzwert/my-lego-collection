@@ -3,11 +3,13 @@
 namespace App\Tests\CollectionManagement\Infrastructure\Service;
 
 use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use PHPUnit\Framework\Attributes\Test;
 use App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader;
 
+#[Group('Rebrickable')]
 class RebrickableDataLoaderIT extends KernelTestCase
 {
 

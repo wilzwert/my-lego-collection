@@ -87,7 +87,7 @@ services:
         APP_USER: ${APP_USER:-symfony}
     container_name: "${APP_NAME}-web"
     restart: unless-stopped
-
+    user: ${APP_USER:-symfony}
     volumes:
       # Mounting files / directories separately for performance on windows hosts
       # Avoid mounting the var directory as it is unreliable

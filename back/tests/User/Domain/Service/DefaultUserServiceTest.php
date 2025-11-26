@@ -8,7 +8,7 @@ use App\Shared\Domain\Service\TransactionProvider;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Domain\Service\DefaultUserService;
-use App\User\Infrastructure\Messenging\UserEventBus;
+use App\User\Infrastructure\Messenger\UserEventBus;
 use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

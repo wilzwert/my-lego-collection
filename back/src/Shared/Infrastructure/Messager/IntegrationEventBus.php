@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Infrastructure\Messaging;
+namespace App\Shared\Infrastructure\Messager;
 
 use MyLegoCollection\SharedEvent\IntegrationEvent;
 use Symfony\Component\Messenger\MessageBusInterface;

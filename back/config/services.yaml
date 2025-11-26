@@ -29,4 +29,7 @@ when@test:
     parameters:
         public_upload_dir: '%kernel.project_dir%/var/test/upload'
 
-
+    services:
+        App\Tests\Utilities\DummySyncHandler:
+            public: true
+            tags: [ 'messenger.message_handler' ]

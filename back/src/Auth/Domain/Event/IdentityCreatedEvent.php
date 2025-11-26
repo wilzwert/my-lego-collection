@@ -14,9 +14,9 @@ class IdentityCreatedEvent extends DomainEvent
 
     private readonly Identity $identity;
 
-    public function __construct(Identity $identity)
+    public function __construct(Identity $identity, ?array $payload = null, ?array $metadata = null)
     {
-        parent::__construct(self::TYPE);
+        parent::__construct(self::TYPE, $payload, $metadata);
         $this->identity = $identity;
     }
 
