@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
  * Auth local event bus for local auth slice related DomainEvent
  * @author Wilhelm Zwertvaegher
  */
-class AuthEventBus implements EventBus
+class AuthEventBus extends EventBus
 {
     public function __construct(private readonly MessageBusInterface $authBus)
     {

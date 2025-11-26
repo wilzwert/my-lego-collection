@@ -13,4 +13,6 @@ interface IdentityService
     public function getIdentityById(EntityId $id): ?Identity;
 
     public function getIdentityByIdentifier(string $identifier): ?Identity;
+
+    public function generateValidationToken(string $identifier): ?Identity;
 }

@@ -10,7 +10,18 @@ use App\Shared\Domain\Event\DomainEvent;
  * This MUST be implemented by the infra to allow sending events from handlers on entities operations
  */
 
-interface EventBus
+abstract class EventBus
 {
-    public function dispatch(DomainEvent $event): void;
+    abstract public function dispatch(DomainEvent $event): void;
+
+    /**
+     * @param array<DomainEvent> $events
+     * @return void
+     */
+    public function dispatchAll(array $events): void
+    {
+        foreach ($events as $event) {
+            $this->dispatch($event);
+        }
+    }
 }
