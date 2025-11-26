@@ -1,5 +1,5 @@
 <?php
-namespace MyLegoCollection\SharedEvent;
+namespace MyLegoCollection\SharedEvent\Event;
 
 /**
  * @author Wilhelm Zwertvaegher
