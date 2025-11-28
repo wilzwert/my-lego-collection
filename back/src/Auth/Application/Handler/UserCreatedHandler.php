@@ -19,9 +19,9 @@ readonly class UserCreatedHandler
     ) {
     }
 
-    public function __invoke(UserCreatedIntegrationEvent $event): ?Identity
+    public function __invoke(UserCreatedIntegrationEvent $event): void
     {
-        $identity = $this->identityService->generateValidationToken(EntityId::fromString($event->getEntityId()));
-        $this->eventBus->dispatchAll($identity->getEvents());
+        $identity = $this->identityService->completeIdentity(EntityId::fromString($event->getEntityId()));
+        $this->eventBus->dispatchAll($identity);
     }
 }

@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Tests\User\Infrastructure\MessageHandler;
+namespace App\Tests\Auth\Infrastructure\EventHandler;
 
+use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Tests\Traits\SliceInfraHandlersTrait;
-use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
+use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -19,6 +20,6 @@ class ContractIT extends KernelTestCase
     #[Test]
     public function shouldHaveDomainEventHandlers(): void
     {
-        self::assertHasEventHandlers('User', [IdentityCreatedIntegrationEvent::class]);
+        self::assertHasMessageHandlers('Auth', [IdentityCreatedEvent::class, UserCreatedIntegrationEvent::class]);
     }
 }

@@ -48,19 +48,36 @@ readonly class DefaultIdentityService implements IdentityService
         return $this->identityRepository->findByIdentifier($identifier);
     }
 
-    public function generateValidationToken(string $identifier): Identity
+    public function changeEmail(EntityId $id, string $email): Identity
     {
-        $identity = $this->identityRepository->findByIdentifier($identifier);
+        $identity = $this->identityRepository->findById($id);
         if (null === $identity) {
             throw new EntityNotFoundException("Identity with identifier could not be found");
         }
 
-        return $this->transactionProvider->transactional(function () use ($identity) {
-            $identity = $identity->generateValidationToken();
+        $existingIdentity = $this->identityRepository->findByIdentifier($email);
+        if (null !== $existingIdentity) {
+            throw new EntityAlreadyExistsException('Email is taken');
+        }
+
+        return $this->transactionProvider->transactional(function () use ($identity, $email) {
+            $identity = $identity->changeEmail($email);
             $this->identityRepository->save($identity);
             return $identity;
         });
     }
 
 
+    public function completeIdentity(EntityId $id): ?Identity
+    {
+        $identity = $this->identityRepository->findById($id);
+        if (null === $identity) {
+            throw new EntityNotFoundException("Identity with id $id could not be found");
+        }
+        return $this->transactionProvider->transactional(function () use ($identity) {
+            $identity = $identity->complete();
+            $this->identityRepository->save($identity);
+            return $identity;
+        });
+    }
 }

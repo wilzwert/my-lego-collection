@@ -15,8 +15,7 @@ readonly class DefaultUserService implements UserService
 {
     public function __construct(
         private UserRepository      $userRepository,
-        private TransactionProvider $transactionProvider,
-        private EventBus            $eventBus
+        private TransactionProvider $transactionProvider
     ) {
     }
 
@@ -30,7 +29,7 @@ readonly class DefaultUserService implements UserService
             if ($user) {
                 return $user;
             }
-            $user = User::create(EntityId::generate(), EntityId::fromString($identityId), new \DateTimeImmutable(), new \DateTimeImmutable());
+            $user = User::create(EntityId::generate(), $identityId, new \DateTimeImmutable(), new \DateTimeImmutable());
             $this->userRepository->save($user);
 
             return $user;

@@ -8,6 +8,7 @@ imports:
     - { resource: services/auth.yaml }
     - { resource: services/user.yaml }
     - { resource: services/collection-management.yaml }
+    - { resource: services/notification.yaml }
 
 parameters:
     public_upload_dir: '%kernel.project_dir%/public/uploads'
@@ -44,6 +45,12 @@ when@test:
         public_upload_dir: '%kernel.project_dir%/var/test/upload'
 
     services:
-        App\Tests\Utilities\DummySyncHandler:
+        App\Tests\Utilities\DummySyncIntegrationEventHandler:
             public: true
-            tags: [ 'messenger.message_handler' ]
+            tags:
+                - { name: 'messenger.message_handler', bus: integration.bus }
+
+        App\Tests\Utilities\DummySyncCommandHandler:
+            public: true
+            tags:
+                - { name: 'messenger.message_handler', bus: command.bus }

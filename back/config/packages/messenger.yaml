@@ -19,13 +19,9 @@ framework:
 
             auth.bus:
                 default_middleware: allow_no_handlers
-                middleware:
-                    - auth.integration_event_middleware
 
             user.bus:
                 default_middleware: allow_no_handlers
-                middleware:
-                    - user.integration_event_middleware
 
             collection-management.bus:
                 default_middleware: allow_no_handlers
@@ -44,9 +40,14 @@ framework:
             # Route your messages to the transports
             # 'App\Message\YourM': async
             'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
-            'MyLegoCollection\SharedEvent\Command\Command': async
+
             # it's important the CreateUserCommand can also be handled immediately by the User slice
             'MyLegoCollection\SharedEvent\Command\CreateUserCommand': sync
+
+            # it's important the UserCreatedIntegrationEvent can also be handled immediately by the Auth slice
+            'MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent': sync
+
+            'MyLegoCollection\SharedEvent\Command\Command': async
 
 
 

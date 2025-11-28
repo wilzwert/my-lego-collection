@@ -4,20 +4,22 @@ namespace App\Auth\Infrastructure\EventHandler;
 
 use App\Auth\Application\Orchestrator\IdentityCreatedOrchestrator;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
-use App\Shared\Infrastructure\EventHandler\DomainEventHandler;
+use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
+use App\Shared\Infrastructure\EventHandler\MessageHandler;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
+ * @implements IntegrationEventHandler<IdentityCreatedEvent>
  * @author Wilhelm Zwertvaegher
  */
 #[AsMessageHandler(fromTransport: 'sync', priority: 10)]
-readonly class IdentityCreatedEventHandler implements DomainEventHandler
+readonly class IdentityCreatedEventHandler implements IntegrationEventHandler
 {
     public function __construct(private IdentityCreatedOrchestrator $orchestrator)
     {
     }
 
-    public static function getEventHandled(): string
+    public static function getMessageHandled(): string
     {
         return IdentityCreatedEvent::class;
     }

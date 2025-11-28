@@ -22,13 +22,7 @@ services:
             - '../../src/User/Infrastructure/Dto'
             - '../../src/User/Infrastructure/Persistence/Doctrine/Entity'
 
-    # each slice may provide, if needed, a middleware to convert DomainEvent to IntegrationEvent
-    # and then dispatch to the integration bus
-    # if no middleware is provided then a DomainEvent shouldn't be handled by an external handler
-    user.integration_event_middleware:
-        class: App\User\Infrastructure\Messenger\UserIntegrationEventMiddleware
-        tags:
-            - { name: messenger.middleware, bus: user.bus }
+    App\Shared\Domain\Service\EventBus: '@App\User\Infrastructure\Messenger\UserEventBus'
 
     _instanceof:
         # All services implementing the DomainEventHandler interface
@@ -36,10 +30,3 @@ services:
         App\Shared\Infrastructure\EventHandler\DomainEventHandler:
             tags:
                 - { name: messenger.message_handler, bus: user.bus }
-
-    # we have to  manually pass the right EventBus because other slices may create other EventBuses
-    App\User\Domain\Service\DefaultUserService:
-        arguments:
-            $eventBus: '@App\User\Infrastructure\Messenger\UserEventBus'
-
-

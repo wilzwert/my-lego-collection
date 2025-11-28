@@ -3,6 +3,7 @@
 namespace App\Shared\Domain\Service;
 
 use App\Shared\Domain\Event\DomainEvent;
+use App\Shared\Domain\Model\ProducesDomainEvents;
 
 /**
  * @author W.Zwertvaegher
@@ -15,12 +16,12 @@ abstract class EventBus
     abstract public function dispatch(DomainEvent $event): void;
 
     /**
-     * @param array<DomainEvent> $events
+     * @param ProducesDomainEvents $aggregate
      * @return void
      */
-    public function dispatchAll(array $events): void
+    public function dispatchAll(ProducesDomainEvents $aggregate): void
     {
-        foreach ($events as $event) {
+        foreach ($aggregate->pullEvents() as $event) {
             $this->dispatch($event);
         }
     }

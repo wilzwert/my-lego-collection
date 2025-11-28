@@ -6,7 +6,7 @@ use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
- * Global bus for shared integration (i.e. cross-slices events)
+ * Global shared bus for integration (i.e. cross-slices events)
  * @author Wilhelm Zwertvaegher
  */
 readonly class IntegrationEventBus

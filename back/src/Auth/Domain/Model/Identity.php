@@ -2,22 +2,22 @@
 
 namespace App\Auth\Domain\Model;
 
+use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Exception\AuthErrorCode;
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Exception\ErrorCode;
 use App\Shared\Domain\Exception\ValidationException;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\ProducesDomainEvents;
 use App\Shared\Domain\Validation\Validator;
 
-class Identity
+final class Identity implements ProducesDomainEvents
 {
+
     /**
      * @var array<DomainEvent>
      */
-    private array $events;
-
-
+    private array $events = [];
 
     /**
      * @param EntityId $id
@@ -25,15 +25,18 @@ class Identity
      * @param string $username
      * @param string $passwordHash
      * @param list<string> $roles
+     * @param boolean $isComplete
      * @param string $validationToken
-    * @throws ValidationException
-     */
+     * @var array<DomainEvent> $events
+     * @throws ValidationException
+    */
     public function __construct(
         private readonly EntityId $id,
         public readonly string    $email,
         private readonly string   $username,
         private readonly string   $passwordHash,
         private readonly array    $roles = ['ROLE_USER'],
+        private readonly bool $isComplete = false,
         private readonly string $validationToken = ''
     ) {
         $validator = new Validator();
@@ -45,7 +48,6 @@ class Identity
             ->requireNotEmpty('passwordHash', $this->passwordHash)
             ->requireNotEmpty('roles', $this->roles)
             ->validate();
-        $this->events = [];
     }
 
     public static function create(
@@ -54,9 +56,15 @@ class Identity
         string   $username,
         string   $passwordHash,
         array    $roles = ['ROLE_USER']
-    ): self
-    {
-        $newUser = new self($id, $email, $username, $passwordHash, $roles);
+    ): self {
+        $newUser = new self(
+            id: $id,
+            email: $email,
+            username: $username,
+            passwordHash: $passwordHash,
+            roles: $roles,
+            isComplete: false,
+        );
         $newUser->events = [new IdentityCreatedEvent($newUser)];
         return $newUser;
     }
@@ -65,7 +73,6 @@ class Identity
     {
         return $this->id;
     }
-
 
     public function getEmail(): string
     {
@@ -88,6 +95,11 @@ class Identity
         return $this->roles;
     }
 
+    public function isComplete(): bool
+    {
+        return $this->isComplete;
+    }
+
     public function getValidationToken(): string
     {
         return $this->validationToken;
@@ -96,22 +108,45 @@ class Identity
     /**
      * @return array<DomainEvent>
      */
-    public function getEvents(): array
+    public function pullEvents(): array
     {
-        return $this->events;
+        $events = $this->events;
+        $this->events = [];
+        return $events;
     }
 
-    public function generateValidationToken(): self
+    public function complete(): self
     {
-        $result = new self(
-            $this->id,
-            $this->email,
-            $this->username,
-            $this->passwordHash,
-            $this->roles,
-            EntityId::generate()
+        $new = new self(
+            id: $this->id,
+            email: $this->email,
+            username: $this->username,
+            passwordHash: $this->passwordHash,
+            roles: $this->roles,
+            isComplete: true,
+            validationToken: $this->generateValidationToken()
         );
-        $result->events = [];
-        return $result;
+        $new->events = [new IdentityCompletedEvent($new)];
+        return $new;
+    }
+
+    public function changeEmail(string $email): self
+    {
+        $new = new self(
+            id: $this->id,
+            email: $email,
+            username: $this->username,
+            passwordHash: $this->passwordHash,
+            roles: $this->roles,
+            isComplete: true,
+            validationToken: $this->generateValidationToken()
+        );
+        // TODO $new->events = [new IdentityCompletedEvent($new)];
+        return $new;
+    }
+
+    private function generateValidationToken(): string
+    {
+        return EntityId::generate();
     }
 }

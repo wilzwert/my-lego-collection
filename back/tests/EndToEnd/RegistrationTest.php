@@ -34,7 +34,7 @@ class RegistrationTest extends WebTestCase
     {
         $this->client->jsonRequest('POST', '/api/auth/registration', [
             'email' => self::USER_EMAIL,
-            'username' => self:: USER_USERNAME,
+            'username' => self::USER_USERNAME,
             'password' => self::USER_PASSWORD,
         ]);
 
@@ -46,7 +46,7 @@ class RegistrationTest extends WebTestCase
         $identity = $identityRepository->findByIdentifier(self::USER_EMAIL);
         self::assertNotNull($identity);
 
-        // then, an event MUST have triggered the User creation (synchronously)
+        // then, an event MUST have triggered the User creation command (synchronously)
         /** @var UserRepository $identityRepository */
         $userRepository = $this->client->getContainer()->get(UserRepository::class);
         $user = $userRepository->findByIdentityId($identity->getId());

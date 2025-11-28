@@ -3,9 +3,11 @@
 namespace App\Tests\Traits;
 
 use App\Shared\Domain\Event\DomainEvent;
-use App\Tests\Utilities\DummySyncHandler;
-use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
-use MyLegoCollection\SharedEvent\IntegrationEvent;
+use App\Tests\Utilities\DummyHandler;
+use App\Tests\Utilities\DummySyncCommandHandler;
+use App\Tests\Utilities\DummySyncIntegrationEventHandler;
+use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
+use MyLegoCollection\SharedEvent\Message;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
 use Symfony\Component\Messenger\Transport\TransportInterface;
@@ -19,67 +21,124 @@ trait MessengerTestingTrait
 {
 
     /**
-     * @template T of DomainEvent
-     * @param callable(array, array): T $factory
+     * @var array<int, array<Envelope>> $envelopesCache
+     */
+    private array $envelopesCache = [];
+
+    protected function tearDown(): void
+    {
+        $this->envelopesCache = [];
+        parent::tearDown();
+    }
+
+
+    /**
+     * @template T of Message
+     * @param callable(array): T $factory
      * @return T
      */
-    protected function createTrackableDomainEvent(callable $factory): DomainEvent
+    protected function createTrackableMessage(callable $factory): Message
     {
-        $payload = [];
-
-        // passing an uniqid to allow checking that the message has been received by the dummy handler
+        // passing an uniqid to allows checking that the message has been received by a dummy handler
         // counting messages or retrieving by class name is not reliable because we cannot ensure the handler
-        // won't receive other messages
+        // won't receive or dispatch other messages
         $metadata = ['test_uniqid' => $uniqId = uniqid()];
 
-        return $factory($payload, $metadata);
+        return $factory($metadata);
     }
 
     /**
-     * @template T of IntegrationEvent
-     * @template U of DomainEvent
+     * Fetch envelopes from a transport and store them in a local cache
+     * This is useful because e.g. in case transport is async, fetching its envelopes with iterator_to_array(get())
+     * also resets them
+     *
      * @param TransportInterface $transport
-     * @param DomainEvent $event
-     * @param class-string<T>|class-string<U> $targetEventClass
-     * @param ?callable(T|U): bool $check
-     * @return T|U|null
+     * @return array
      */
-    protected function getTransportMatchingIntegrationEvent(
-        TransportInterface $transport,
-        DomainEvent $event,
-        string $targetEventClass,
-        ?callable $check = null
-    ): IntegrationEvent|DomainEvent|null {
-        do {
-            $envelopesAsArray = $transport instanceof InMemoryTransport ? $transport->getSent() : iterator_to_array($transport->get());
-            $asyncFirst = array_find(
-                $envelopesAsArray,
-                /**
-                 * @template TT of IntegrationEvent|DomainEvent
-                 * @param Envelope $env
-                 * @return bool
-                 */
-                fn (Envelope $env) =>
-                    ($e = $env->getMessage()) instanceof $targetEventClass
-                    /** @var TT $e */
-                    && $e->metadata()['test_uniqid'] === $event->metadata()['test_uniqid']
-                    && (null === $check || $check($e))
-            );
-            if (null !== $asyncFirst) {
-                return $asyncFirst->getMessage();
-            }
-        } while (count($envelopesAsArray) > 0);
+    private function getEnvelopes(TransportInterface $transport): array
+    {
+        $cacheId = spl_object_id($transport);
+        if (!isset($this->envelopesCache[$cacheId])) {
+            $this->envelopesCache[$cacheId] = [];
+        }
 
-        return null;
+
+        if ($transport instanceof InMemoryTransport) {
+            $sent = $transport->getSent();
+            $newEnvelopes = [];
+            foreach ($sent as $envelope) {
+                if (!isset($this->envelopesCache[$cacheId][spl_object_id($envelope)])) {
+                    $newEnvelopes[spl_object_id($envelope)] = $envelope;
+                }
+            }
+        } else {
+            $newEnvelopes = [];
+            do {
+                $envelopesAsArray = iterator_to_array($transport->get());
+                $newEnvelopes = array_merge($newEnvelopes, $envelopesAsArray);
+            } while (count($envelopesAsArray) > 0);
+        }
+
+        $this->envelopesCache[$cacheId] = array_merge($this->envelopesCache[$cacheId], $newEnvelopes);
+
+        return $this->envelopesCache[$cacheId];
     }
 
     /**
-     * @param DummySyncHandler $handler
-     * @param IntegrationEvent $event
+     * @template T of Message
+     * @param TransportInterface $transport
+     * @param T $message
+     * @param class-string<T> $targetMessageClass
+     * @param ?callable(T): bool $check
+     * @return ?T
+     */
+    protected function getTransportMatchingMessage(
+        TransportInterface $transport,
+        Message        $message,
+        string             $targetMessageClass,
+        ?callable          $check = null
+    ): ?Message {
+        fwrite(STDERR, "looking for $targetMessageClass\n");
+        // get envelopes
+        $envelopes = $this->getEnvelopes($transport);
+
+        foreach ($envelopes as $envelope) {
+            fwrite(
+                STDERR,
+                "Envelope " . $envelope->getMessage()::class
+                . ", uniqid = " . $envelope->getMessage()->metadata()['test_uniqid'].' / lookup for '.$message->metadata()['test_uniqid']
+                . ", id = " . $envelope->getMessage()->getId()
+                .", looking for $targetMessageClass\n"
+            );
+        }
+        $asyncFirst = array_find(
+            $envelopes,
+            /**
+             * @template TT of Message
+             * @param Envelope $env
+             * @return bool
+             */
+            fn (Envelope $env) =>
+                ($e = $env->getMessage()) instanceof $targetMessageClass
+                /** @var TT $e */
+                && $e->metadata()['test_uniqid'] === $message->metadata()['test_uniqid']
+                && (null === $check || $check($e))
+        );
+
+        return $asyncFirst?->getMessage();
+    }
+
+    /**
+     * @param DummyHandler $handler
+     * @param Message $event
      * @return bool
      */
-    protected function handlerContains(DummySyncHandler $handler, IntegrationEvent $event): bool
+    protected function handlerContains(DummyHandler $handler, Message $event): bool
     {
+        foreach ($handler->getReceivedMessages() as $message) {
+            fwrite(STDERR, "Received ".$message::class."\n");
+        }
+
         return array_any(
             $handler->getReceivedMessages(),
             fn ($receivedEvent) =>
@@ -89,6 +148,7 @@ trait MessengerTestingTrait
     }
 
     /**
+     * Resets the current async transport and the tests handlers
      * @return void
      */
     protected function resetMessenger(): void
@@ -105,7 +165,7 @@ trait MessengerTestingTrait
             }
         }
 
-        $dummyHandler = $container->get(DummySyncHandler::class);
-        $dummyHandler->reset();
+        $container->get(DummySyncIntegrationEventHandler::class)->reset();
+        $container->get(DummySyncCommandHandler::class)->reset();
     }
 }

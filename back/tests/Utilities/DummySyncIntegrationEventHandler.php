@@ -2,22 +2,23 @@
 
 namespace App\Tests\Utilities;
 
-use MyLegoCollection\SharedEvent\IntegrationEvent;
+use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
+ * @template T of IntegrationEvent
+ * @implements DummyHandler<T>
  * @author Wilhelm Zwertvaegher
  */
 #[AsMessageHandler(fromTransport: 'sync', priority: 10)]
-class DummySyncHandler
+class DummySyncIntegrationEventHandler implements DummyHandler
 {
     /**
-     * @var array<IntegrationEvent>
+     * @var array<T>
      */
     public array $received = [];
 
     /**
-     * @template T of IntegrationEvent
      * @param T $event
      * @return void
      */
@@ -27,7 +28,7 @@ class DummySyncHandler
     }
 
     /**
-     * @return array<IntegrationEvent>
+     * @return array<T>
      */
     public function getReceivedMessages(): array
     {

@@ -28,12 +28,6 @@ final class TestSuiteService
      */
     public function isIntegrationTest(?TestSuite $testSuite = null): bool
     {
-        if ($testSuite) {
-            foreach ($testSuite->tests()->asArray() as $test) {
-                fwrite(STDOUT, $test->file() . PHP_EOL);
-            }
-        }
-
         if (null === $this->isTestSuite) {
             $this->isTestSuite = null !== $testSuite
                 && array_any(

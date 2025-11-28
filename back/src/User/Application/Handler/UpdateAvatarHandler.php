@@ -34,7 +34,9 @@ readonly class UpdateAvatarHandler
 
             $updatedUser = $this->userService->updateAvatar($user, $storedFile);
 
-            $this->eventBus->dispatchAll($updatedUser->getEvents());
+            $this->eventBus->dispatchAll($updatedUser);
+
+            return $updatedUser;
         });
     }
 }

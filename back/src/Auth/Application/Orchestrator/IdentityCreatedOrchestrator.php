@@ -11,24 +11,28 @@ use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 /**
  * @author Wilhelm Zwertvaegher
  */
-class IdentityCreatedOrchestrator
+readonly class IdentityCreatedOrchestrator
 {
     public function __construct(
-        private readonly CommandBus          $commandBus,
-        private readonly IntegrationEventBus $integrationBus,
+        private CommandBus          $commandBus,
+        private IntegrationEventBus $integrationBus,
     ) {
     }
 
     public function __invoke(IdentityCreatedEvent $event): void
     {
+        // identity creation MUST trigger user creation
         $this->commandBus->dispatch(
-            new CreateUserCommand($event->getIdentity()->getId()),
+            new CreateUserCommand(
+                $event->getIdentity()->getId(),
+                $event->metadata()
+            ),
         );
 
+        // an integration event should be dispatched for possible handlers
         $this->integrationBus->dispatch(
             new IdentityCreatedIntegrationEvent(
                 $event->getIdentity()->getId(),
-                $event->payload(),
                 $event->metadata()
             )
         );

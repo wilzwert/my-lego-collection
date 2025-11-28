@@ -2,8 +2,8 @@
 
 namespace App\Tests\Traits;
 
-use App\Shared\Infrastructure\EventHandler\DomainEventHandler;
-use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
+use App\Shared\Infrastructure\EventHandler\MessageHandler;
+use MyLegoCollection\SharedEvent\Message;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
@@ -20,13 +20,14 @@ trait SliceInfraHandlersTrait
     }
 
     /**
+     * @template T of Message
      * @param string $slice
-     * @param list<class-string> $eventClasses
+     * @param list<class-string<T>> $eventClasses
      * @return void
      */
-    protected function assertHasEventHandlers(string $slice, array $eventClasses): void
+    protected function assertHasMessageHandlers(string $slice, array $eventClasses): void
     {
-        $handledEventClasses = $this->getSliceHandledEvents($slice);
+        $handledEventClasses = $this->getSliceHandledMessages($slice);
         $missing = [];
         foreach ($eventClasses as $eventClass) {
             if (!in_array($eventClass, $handledEventClasses)) {
@@ -41,26 +42,27 @@ trait SliceInfraHandlersTrait
     }
 
     /**
+     * @template T of Message
      * @param string $slice
-     * @param list<class-string> $eventClasses
+     * @param list<class-string<T>> $messageClasses
      * @return bool
      */
-    protected function sliceHasHandlers(string $slice, array $eventClasses): bool
+    protected function sliceHasHandlers(string $slice, array $messageClasses): bool
     {
-        if (empty($eventClasses) || count($eventClasses) === 0) {
+        if (empty($messageClasses) || count($messageClasses) === 0) {
             return true;
         }
 
-        return $this->getSliceHandledEvents($slice) === $eventClasses;
+        return $this->getSliceHandledMessages($slice) === $messageClasses;
     }
 
     /**
      * @param string $slice
      * @return list<class-string>
      */
-    protected function getSliceHandledEvents(string $slice): array
+    protected function getSliceHandledMessages(string $slice): array
     {
-        return array_map(fn ($handler) => $handler::getEventHandled(), $this->getSliceInfraHandlers($slice));
+        return array_map(fn ($handler) => $handler::getMessageHandled(), $this->getSliceInfraHandlers($slice));
     }
 
     /**
@@ -68,7 +70,7 @@ trait SliceInfraHandlersTrait
      */
     protected function getSliceInfraHandlers(string $slice): array
     {
-        $directory = $this->getSliceEventHandlerPath($slice);
+        $directory = $this->getSliceHandlerBasePath($slice);
         $classes = [];
 
         if (!is_dir($directory)) {
@@ -84,7 +86,7 @@ trait SliceInfraHandlersTrait
                 $class = $this->classFromFile($file->getRealPath());
                 if ($class && class_exists($class)) {
                     $ref = new ReflectionClass($class);
-                    if ($ref->implementsInterface(DomainEventHandler::class) || $ref->implementsInterface(IntegrationEventHandler::class)) {
+                    if ($ref->implementsInterface(MessageHandler::class)) {
                         $classes[] = $class;
                     }
                 }
@@ -97,7 +99,7 @@ trait SliceInfraHandlersTrait
     /**
      * Returns an absolute path to the EventHandler adapters path for the given slice
      */
-    protected function getSliceEventHandlerPath(string $slice): string
+    protected function getSliceHandlerBasePath(string $slice): string
     {
         return self::$kernel->getProjectDir() . '/src/' . $slice . '/Infrastructure/EventHandler';
     }

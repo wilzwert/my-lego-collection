@@ -3,11 +3,13 @@
 namespace App\User\Infrastructure\EventHandler;
 
 use App\Shared\Infrastructure\EventHandler\DomainEventHandler;
+use App\Shared\Infrastructure\EventHandler\MessageHandler;
 use App\User\Application\Orchestrator\UserCreatedOrchestrator;
 use App\User\Domain\Event\UserCreatedEvent;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**
+ * @implements DomainEventHandler<UserCreatedEvent>
  * @author Wilhelm Zwertvaegher
  */
 #[AsMessageHandler(fromTransport: 'sync', priority: 10)]
@@ -18,7 +20,7 @@ readonly class UserCreatedEventHandler implements DomainEventHandler
     }
 
 
-    public static function getEventHandled(): string
+    public static function getMessageHandled(): string
     {
         return UserCreatedEvent::class;
     }

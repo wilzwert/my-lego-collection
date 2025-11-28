@@ -7,20 +7,12 @@ namespace MyLegoCollection\SharedEvent\Event;
  */
 class UserCreatedIntegrationEvent extends IntegrationEvent
 {
-    private readonly string $id;
-    private readonly string $entityId;
 
     private const string TYPE = 'user.user.created';
 
-    public function __construct(string $id, string $entityId, ?array $payload = null, ?array $metadata = null)
+    public function __construct(private readonly string $id, private readonly string $entityId, ?array $metadata = null)
     {
-        $payload = array_merge(
-            ['id' => $id, 'entityId' => $entityId],
-            $payload ?? []
-        );
-
-        parent::__construct(self::TYPE, $payload, $metadata);
-        $this->id = $id;
+        parent::__construct(self::TYPE, $metadata);
     }
 
     public function getId(): string

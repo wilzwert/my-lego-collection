@@ -4,6 +4,7 @@ namespace App\Tests\Auth\Utilities;
 
 use App\Auth\Domain\Model\Identity;
 use App\Shared\Domain\Model\EntityId;
+use App\Tests\Utilities\TestData;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -27,5 +28,11 @@ class AuthTestsUtility
     {
         return new Identity($entityId ?? EntityId::generate(), $email, $username, $passwordHash, $roles);
     }
+
+    public static function generateKnownIdentity(): Identity
+    {
+        return static::generateIdentity(entityId: EntityId::fromString(TestData::EXISTING_ENTITY_ID));
+    }
+
 
 }

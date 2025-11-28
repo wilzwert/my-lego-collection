@@ -14,5 +14,7 @@ interface IdentityService
 
     public function getIdentityByIdentifier(string $identifier): ?Identity;
 
-    public function generateValidationToken(string $identifier): ?Identity;
+    public function changeEmail(EntityId $id, string $email): ?Identity;
+
+    public function completeIdentity(EntityId $id): ?Identity;
 }

@@ -26,7 +26,6 @@ readonly class UserCreatedOrchestrator
             new UserCreatedIntegrationEvent(
                 $event->getUser()->getId(),
                 $event->getUser()->getIdentityId(),
-                $event->payload(),
                 $event->metadata()
             )
         );

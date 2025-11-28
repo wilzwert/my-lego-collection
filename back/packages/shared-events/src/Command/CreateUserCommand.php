@@ -11,14 +11,9 @@ class CreateUserCommand extends Command
 
     private const string TYPE = 'user.create';
 
-    public function __construct(string $id, ?array $payload = null, ?array $metadata = null)
+    public function __construct(string $id, ?array $metadata = null)
     {
-        $payload = array_merge(
-            ['id' => $id],
-            $payload ?? []
-        );
-
-        parent::__construct(self::TYPE, $payload, $metadata);
+        parent::__construct(self::TYPE, $metadata);
         $this->id = $id;
     }
 
