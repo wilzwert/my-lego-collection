@@ -37,8 +37,7 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
                     fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                     $handler->start();
                     $envVars = array_merge($envVars, $handler->getEnvVars());
-                }
-                catch (\Exception $e) {
+                } catch (\Exception $e) {
                     fwrite(STDERR, "Failed to start " . $handler::class . ' : '.$e->getMessage(). PHP_EOL);
                 }
             }

@@ -12,7 +12,7 @@ use Testcontainers\Wait\WaitForLog;
  */
 final class RabbitMqContainerHandler extends AbstractTestContainerHandler
 {
-    private const string RABBITMQ_VERSION = 'rabbitmq:4-management';
+    private const string RABBITMQ_VERSION = 'rabbitmq:4';
 
     private const string ENV_VAR_TEMPLATE = 'MESSENGER_TRANSPORT_DSN=amqp://test:test@{{host}}:{{port}}/%2f/messages';
 
@@ -26,6 +26,6 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
         return new GenericContainer(self::RABBITMQ_VERSION)
             ->withExposedPorts(5672)  // port AMQP + port management
             ->withEnvironment(['RABBITMQ_DEFAULT_USER' => 'test', 'RABBITMQ_DEFAULT_PASS' => 'test'])
-            ->withWait(new WaitForLog('Server startup complete', false, 60000));
+            ->withWait(new WaitForLog('Server startup complete', false, 100000));
     }
 }
