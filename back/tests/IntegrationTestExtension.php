@@ -28,7 +28,7 @@ final class IntegrationTestExtension implements Extension
         $dbContainerHandler = new PostgresqlContainerHandler();
         $rabbitMQContainerHandler = new RabbitMQContainerHandler();
         $cacheContainerHandler = new RedisContainerHandler();
-        $containerHandlers = [$dbContainerHandler, $cacheContainerHandler, $rabbitMQContainerHandler];
+        $containerHandlers = [/*$dbContainerHandler, $cacheContainerHandler,*/ $rabbitMQContainerHandler];
 
         $fs = new Filesystem();
 
