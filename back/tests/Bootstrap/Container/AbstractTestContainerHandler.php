@@ -33,12 +33,12 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         }
 
         // in some environments, first mapped port is not instantly available
-        $maxAttempts = 5;
+        $maxAttempts = 10;
         for ($i = 0; $i < $maxAttempts; $i++) {
             try {
                 return $this->container->getFirstMappedPort();
             } catch (\Throwable $e) {
-                usleep(300_000); // 200 ms
+                usleep(500_000); // 500 ms
             }
         }
 
