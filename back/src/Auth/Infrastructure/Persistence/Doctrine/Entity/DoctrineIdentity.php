@@ -28,25 +28,25 @@ class DoctrineIdentity
     #[ORM\Column(type: "string", nullable: false)]
     private string $passwordHash;
 
+    #[ORM\Column(type: "boolean", nullable: false, options: ["default" => false])]
+    private bool $isComplete;
+    #[ORM\Column(type: "string", length: 36, nullable: false, options: ["default" => ""])]
+    private string $validationToken;
+
     /**
-     * @param string $id
-     * @param string $email
-     * @param string $username
-     * @param string $passwordHash
-     * @param list<string> $roles
      */
     public function __construct(
-        string $id,
+        /*string $id,
         string $email,
         string $username,
         string $passwordHash,
-        array $roles
+        array $roles*/
     ) {
-        $this->id = $id;
+        /*$this->id = $id;
         $this->email = $email;
         $this->username = $username;
         $this->passwordHash = $passwordHash;
-        $this->roles = $roles;
+        $this->roles = $roles;*/
     }
 
     public function getId(): string
@@ -72,9 +72,16 @@ class DoctrineIdentity
         return $this->passwordHash;
     }
 
-    public function setPasswordHash(?string $hash): void
+    public function fromDomain(Identity $identity): DoctrineIdentity
     {
-        $this->passwordHash = $hash;
+        $this->id = $identity->getId();
+        $this->email = $identity->getEmail();
+        $this->username = $identity->getUsername();
+        $this->roles = $identity->getRoles();
+        $this->passwordHash = $identity->getPasswordHash();
+        $this->isComplete = $identity->isComplete();
+        $this->validationToken = $identity->getValidationToken();
+        return $this;
     }
 
     public function toDomain(): Identity
@@ -84,7 +91,9 @@ class DoctrineIdentity
             $this->email,
             $this->username,
             $this->passwordHash,
-            $this->roles
+            $this->roles,
+            $this->validationToken,
+            $this->isComplete
         );
     }
 }

@@ -6,6 +6,8 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
+use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -68,14 +70,8 @@ class DoctrineIdentityRepository extends ServiceEntityRepository implements Iden
 
     public function save(Identity $identity): void
     {
-        $this->entityManager->persist(
-            new DoctrineIdentity(
-                $identity->getId(),
-                $identity->getEmail(),
-                $identity->getUsername(),
-                $identity->getPasswordHash(),
-                $identity->getRoles()
-            )
-        );
+        $doctrineEntity = $this->find($identity->getId()) ?? new DoctrineIdentity();
+        $doctrineEntity->fromDomain($identity);
+        $this->entityManager->persist($doctrineEntity);
     }
 }

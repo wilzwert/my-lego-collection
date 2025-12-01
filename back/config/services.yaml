@@ -8,6 +8,7 @@ imports:
     - { resource: services/auth.yaml }
     - { resource: services/user.yaml }
     - { resource: services/collection-management.yaml }
+    - { resource: services/notification.yaml }
 
 parameters:
     public_upload_dir: '%kernel.project_dir%/public/uploads'
@@ -25,11 +26,31 @@ services:
         resource: '../src/DataFixtures/'
 
 
+    _instanceof:
+        # All services implementing the IntegrationEventHandler interface
+        # in the auth slice must use only the auth.bus
+        App\Shared\Infrastructure\EventHandler\IntegrationEventHandler:
+            tags:
+                - { name: messenger.message_handler, bus: integration.bus }
+
+        # All services implementing the CommandHandler interface
+        # in the auth slice must use only the auth.bus
+        App\Shared\Infrastructure\EventHandler\CommandHandler:
+            tags:
+                - { name: messenger.message_handler, bus: command.bus }
+
+
 when@test:
     parameters:
         public_upload_dir: '%kernel.project_dir%/var/test/upload'
 
     services:
-        App\Tests\Utilities\DummySyncHandler:
+        App\Tests\Utilities\DummySyncIntegrationEventHandler:
             public: true
-            tags: [ 'messenger.message_handler' ]
+            tags:
+                - { name: 'messenger.message_handler', bus: integration.bus }
+
+        App\Tests\Utilities\DummySyncCommandHandler:
+            public: true
+            tags:
+                - { name: 'messenger.message_handler', bus: command.bus }

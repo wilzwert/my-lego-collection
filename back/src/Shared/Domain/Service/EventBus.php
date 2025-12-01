@@ -3,6 +3,7 @@
 namespace App\Shared\Domain\Service;
 
 use App\Shared\Domain\Event\DomainEvent;
+use App\Shared\Domain\Model\ProducesDomainEvents;
 
 /**
  * @author W.Zwertvaegher
@@ -10,7 +11,18 @@ use App\Shared\Domain\Event\DomainEvent;
  * This MUST be implemented by the infra to allow sending events from handlers on entities operations
  */
 
-interface EventBus
+abstract class EventBus
 {
-    public function dispatch(DomainEvent $event): void;
+    abstract public function dispatch(DomainEvent $event): void;
+
+    /**
+     * @param ProducesDomainEvents $aggregate
+     * @return void
+     */
+    public function dispatchAll(ProducesDomainEvents $aggregate): void
+    {
+        foreach ($aggregate->pullEvents() as $event) {
+            $this->dispatch($event);
+        }
+    }
 }

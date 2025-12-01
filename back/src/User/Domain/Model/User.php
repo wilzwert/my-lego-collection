@@ -2,22 +2,48 @@
 
 namespace App\User\Domain\Model;
 
+use App\Shared\Domain\Event\DomainEvent;
+use App\Shared\Domain\Model\ProducesDomainEvents;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
+use App\User\Domain\Event\AvatarUpdatedEvent;
+use App\User\Domain\Event\UserCreatedEvent;
+use DateTimeImmutable;
 
-readonly class User
+class User implements ProducesDomainEvents
 {
+    /**
+     * @var array<DomainEvent>
+     */
+    private array $events = [];
+
+
     /**
      * @param EntityId $id
      * @param EntityId $identityId
+     * @param DateTimeImmutable $createdAt
+     * @param DateTimeImmutable $updatedAt
+     * @param StoredFile|null $avatar
      */
     public function __construct(
-        private EntityId           $id,
-        private EntityId           $identityId,
-        private \DateTimeImmutable $createdAt,
-        private \DateTimeImmutable $updatedAt,
-        private ?StoredFile $avatar = null
+        private readonly EntityId           $id,
+        private readonly EntityId           $identityId,
+        private readonly DateTimeImmutable $createdAt,
+        private readonly DateTimeImmutable $updatedAt,
+        private readonly ?StoredFile $avatar = null
     ) {
+    }
+
+    public static function create(
+        EntityId           $id,
+        EntityId           $identityId,
+        DateTimeImmutable $createdAt,
+        DateTimeImmutable $updatedAt,
+        ?StoredFile $avatar = null
+    ): self {
+        $newUser = new self($id, $identityId, $createdAt, $updatedAt, $avatar);
+        $newUser->events = [new UserCreatedEvent($newUser)];
+        return $newUser;
     }
 
     public function getId(): EntityId
@@ -30,12 +56,12 @@ readonly class User
         return $this->identityId;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function getUpdatedAt(): \DateTimeImmutable
+    public function getUpdatedAt(): DateTimeImmutable
     {
         return $this->updatedAt;
     }
@@ -47,7 +73,18 @@ readonly class User
 
     public function setAvatar(?StoredFile $avatar): self
     {
-        return new User($this->id, $this->identityId, $this->createdAt, new \DateTimeImmutable(), $avatar);
+        $result = new User($this->id, $this->identityId, $this->createdAt, new DateTimeImmutable(), $avatar);
+        $result->events = [new AvatarUpdatedEvent($result)];
+        return $result;
+    }
+
+    /**
+     * @return array<DomainEvent>
+     */
+    public function pullEvents(): array
+    {
+        $events = $this->events;
+        $this->events = [];
+        return $events;
     }
 }
-

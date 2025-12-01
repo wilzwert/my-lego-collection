@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Auth\Domain\Model\Identity;
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Auth\Infrastructure\Security\User\DummyAuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
@@ -22,7 +23,17 @@ class IdentityFixtures extends Fixture
         // create a predictable and usable password
         $password = $this->hasher->hashPassword(new DummyAuthenticatedUser(''), 'Abcd_1234!');
         $id = EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1');
-        $identity = new DoctrineIdentity($id, 'user1@test.com', 'user1', $password, ['ROLE_USER']);
+        $identity = new DoctrineIdentity()->fromDomain(
+            new Identity(
+                id: $id,
+                email:'user1@test.com',
+                username: 'user1',
+                passwordHash: $password,
+                roles: ['ROLE_USER'],
+                isComplete: false,
+                validationToken: ''
+            )
+        );
         $manager->persist($identity);
         $manager->flush();
     }

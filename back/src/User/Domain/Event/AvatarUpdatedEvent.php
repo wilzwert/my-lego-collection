@@ -1,0 +1,27 @@
+<?php
+
+namespace App\User\Domain\Event;
+
+use App\Shared\Domain\Event\DomainEvent;
+use App\User\Domain\Model\User;
+
+/**
+ * @author Wilhelm Zwertvaegher
+ */
+class AvatarUpdatedEvent extends DomainEvent
+{
+    private const string TYPE = 'user.avatar.updated';
+
+    private readonly User $user;
+
+    public function __construct(User $user, ?array $metadata = null)
+    {
+        parent::__construct(self::TYPE, $metadata);
+        $this->user = $user;
+    }
+
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+}

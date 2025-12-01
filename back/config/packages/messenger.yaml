@@ -6,6 +6,11 @@ framework:
         default_bus: integration.bus
 
         buses:
+            command.bus:
+                middleware:
+                    - dispatch_after_current_bus
+                    - doctrine_transaction
+
             integration.bus:
                 default_middleware:
                     enabled: true
@@ -14,13 +19,9 @@ framework:
 
             auth.bus:
                 default_middleware: allow_no_handlers
-                middleware:
-                    - auth.integration_event_middleware
 
             user.bus:
                 default_middleware: allow_no_handlers
-                middleware:
-                    - user.integration_event_middleware
 
             collection-management.bus:
                 default_middleware: allow_no_handlers
@@ -38,11 +39,15 @@ framework:
         routing:
             # Route your messages to the transports
             # 'App\Message\YourM': async
-            'MyLegoCollection\SharedEvent\IntegrationEvent': async
-            # it's important the IdentityCreatedIntegrationEvent can also be handled immediately by some slices
-            'MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent': sync
-            # it's important the UserCreatedIntegrationEvent can also be handled immediately by some slices
-            'MyLegoCollection\SharedEvent\UserCreatedIntegrationEvent': sync
+            'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
+
+            # it's important the CreateUserCommand can also be handled immediately by the User slice
+            'MyLegoCollection\SharedEvent\Command\CreateUserCommand': sync
+
+            # it's important the UserCreatedIntegrationEvent can also be handled immediately by the Auth slice
+            'MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent': sync
+
+            'MyLegoCollection\SharedEvent\Command\Command': async
 
 
 

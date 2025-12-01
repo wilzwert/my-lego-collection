@@ -2,14 +2,14 @@
 
 namespace App\Tests\User\Domain\Service;
 
-use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\User\Domain\Model\User;
 use App\User\Domain\Repository\UserRepository;
 use App\User\Domain\Service\DefaultUserService;
 use App\User\Infrastructure\Messenger\UserEventBus;
-use MyLegoCollection\SharedEvent\IdentityCreatedIntegrationEvent;
+use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

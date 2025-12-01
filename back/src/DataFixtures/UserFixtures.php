@@ -17,6 +17,8 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $id = EntityId::fromString('a2a2a2a2-a2a2-42a2-8a2a-a2a2a2a2a2a2');
+        // we use a "real" entityId (see fixtures) because the Auth slice must be able to load it
+        // to complete the Identity after user creation
         $entityId = EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1');
         $user = new DoctrineUser()->fromDomain(
             new User(

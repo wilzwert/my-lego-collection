@@ -11,7 +11,7 @@ monolog:
         doctrine:
             type: stream
             path: "php://stdout"
-            level: error
+            level: info
             channels: [ "doctrine" ]
 
         messenger:

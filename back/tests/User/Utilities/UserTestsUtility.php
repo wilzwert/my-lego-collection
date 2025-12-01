@@ -12,14 +12,14 @@ class UserTestsUtility
 {
     public static function generateUser(
         ?EntityId $userId = null,
-        ?EntityId $entityId = null,
+        ?EntityId $identityId = null,
         ?\DateTimeImmutable   $createdAt = null,
         ?\DateTimeImmutable   $updatedAt = null
     ): User
     {
         return new User(
             $userId ?? EntityId::generate(),
-            $entityId ?? EntityId::generate(),
+            $identityId ?? EntityId::generate(),
             $createdAt ?? new \DateTimeImmutable(),
             $updatedAt ?? new \DateTimeImmutable()
         );
