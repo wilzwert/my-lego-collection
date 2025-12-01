@@ -41,9 +41,10 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
             foreach ($envVars as $envVar) {
                 putenv($envVar);
             }
+
+            fwrite(STDOUT, "Writing to .env.test.local ".implode("\n", $envVars).PHP_EOL);
             $envFile = '.env.test.local';
             $this->fs->dumpFile($envFile, implode("\n", $envVars));
-            fwrite(STDOUT, "Writing to .env.test.local ".implode("\n", $envVars).PHP_EOL);
             $dotenv = new Dotenv();
             $dotenv->overload($envFile);
         }
