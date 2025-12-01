@@ -25,6 +25,26 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         return getenv('TESTCONTAINERS_HOST') ?: 'host.docker.internal';
     }
 
+    #[\Override]
+    public function getFirstMappedPort(): int
+    {
+        if (!$this->container) {
+            throw new \Exception('First mapped port cannot be determined before the container is started.');
+        }
+
+        // in some environments, first mapped port is not instantly available
+        $maxAttempts = 5;
+        for ($i = 0; $i < $maxAttempts; $i++) {
+            try {
+                return $this->container->getFirstMappedPort();
+            } catch (\Throwable $e) {
+                usleep(300_000); // 200 ms
+            }
+        }
+
+        throw new \RuntimeException("Mapped port could not be determined after {$i} attempts");
+    }
+
     /**
      * @return list<string>
      *
@@ -34,7 +54,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
     {
         return [str_replace(
             ['{{host}}', '{{port}}'],
-            [$this->getHost(), (string) $this->container->getFirstMappedPort()],
+            [$this->getHost(), (string) $this->getFirstMappedPort()],
             $this->getEnvVarTemplate()
         )];
     }

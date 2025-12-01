@@ -19,6 +19,8 @@ interface TestContainerHandler
 
     public function getHost(): string;
 
+    public function getFirstMappedPort(): int;
+
     /**
      * @return list<string>
      */
