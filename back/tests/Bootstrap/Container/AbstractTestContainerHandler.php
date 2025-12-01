@@ -46,8 +46,12 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
     {
         if (!$this->container instanceof StartedGenericContainer) {
             try {
+                fwrite(STDOUT, 'Creating container '.get_class($this).PHP_EOL);
                 $container = $this->createContainer();
+                fwrite(STDOUT, 'Starting actual container '.get_class($this).PHP_EOL);
                 $this->container = $container->start();
+                fwrite(STDOUT, 'Started actual container '.get_class($this).PHP_EOL);
+
             } catch (\Exception $e) {
                 fwrite(STDERR, 'An exception occurred while starting container '.get_class($this).' : '.$e->getMessage() . PHP_EOL);
                 throw new \RuntimeException('An exception occurred while starting container '.get_class($this).' : '.$e->getMessage());
