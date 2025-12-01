@@ -13,7 +13,7 @@ use Testcontainers\Container\StartedGenericContainer;
  */
 abstract class AbstractTestContainerHandler implements TestContainerHandler
 {
-    private ?StartedGenericContainer $container = null;
+    protected ?StartedGenericContainer $container = null;
 
     #[\Override]
     public function getHost(): string
@@ -32,18 +32,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
             throw new \Exception('First mapped port cannot be determined before the container is started.');
         }
 
-        // in some environments, first mapped port is not instantly available
-        $maxAttempts = 100;
-        for ($i = 0; $i < $maxAttempts; $i++) {
-            try {
-                return $this->container->getFirstMappedPort();
-            } catch (\Throwable $e) {
-                fwrite(STDERR, "Failed to get mapped port: {$e->getMessage()}, waiting for 500ms\n");
-                usleep(500_000); // 500 ms
-            }
-        }
-
-        throw new \RuntimeException("Mapped port could not be determined after {$i} attempts");
+        return $this->container->getFirstMappedPort();
     }
 
     /**

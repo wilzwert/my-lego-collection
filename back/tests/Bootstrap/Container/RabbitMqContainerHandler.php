@@ -22,6 +22,16 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
         return self::ENV_VAR_TEMPLATE;
     }
 
+    #[\Override]
+    public function getFirstMappedPort(): int
+    {
+        // for some reason, in CI (GitHub action), port is not available at first
+        if ($this->container) {
+            sleep(1);
+        }
+        return parent::getFirstMappedPort();
+    }
+
     protected function createContainer(): GenericContainer
     {
         return new GenericContainer(self::RABBITMQ_VERSION)
