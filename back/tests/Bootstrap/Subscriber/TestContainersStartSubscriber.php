@@ -37,9 +37,10 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
                 try {
                     fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                     $container = $handler->start();
+                    fwrite(STDOUT, "Started " . $handler::class . PHP_EOL);
                 } catch (\Exception $e) {
                     fwrite(STDERR, "Failed to start " . $handler::class . ' : '.$e->getMessage(). PHP_EOL);
-                    if (isset($container)){
+                    if (isset($container)) {
                         $containerId = $container->getId();
                         fwrite(STDOUT, "Container logs:\n");
                         passthru("docker logs $containerId");
