@@ -34,21 +34,25 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
             $envVars = [];
             $container = null;
             foreach ($this->containerHandlers as $handler) {
+                fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                 try {
-                    fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                     $container = $handler->start();
                     fwrite(STDOUT, "Started " . $handler::class . PHP_EOL);
-                } catch (\Exception $e) {
+                } catch (\Throwable $e) {
                     fwrite(STDERR, "Failed to start " . $handler::class . ' : '.$e->getMessage(). PHP_EOL);
                     if (isset($container)) {
                         $containerId = $container->getId();
                         fwrite(STDOUT, "Container logs:\n");
-                        passthru("docker logs $containerId");
+                        passthru("docker logs  --tail 200 ontainerId ||true");
                     }
-                    throw $e;
+                    exit(1);
                 }
                 $envVars = array_merge($envVars, $handler->getEnvVars());
+                fwrite(STDOUT, "Collected env from " . $handler::class . PHP_EOL);
             }
+
+            fwrite(STDOUT, "All handlers started, updating env\n");
+
             // set env and generate a temporary env file and force symfony reload env and use our generated env vars
             foreach ($envVars as $envVar) {
                 putenv($envVar);
@@ -59,6 +63,7 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
             $this->fs->dumpFile($envFile, implode("\n", $envVars));
             $dotenv = new Dotenv();
             $dotenv->overload($envFile);
+            fwrite(STDOUT, "Env file written\n");
         }
     }
 }
