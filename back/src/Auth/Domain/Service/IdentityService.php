@@ -10,11 +10,11 @@ interface IdentityService
 {
     public function createIdentity(string $email, string $username, string $password): ?Identity;
 
-    public function getIdentityById(EntityId $id): ?Identity;
+    public function getIdentityById(EntityId $identityId): ?Identity;
 
     public function getIdentityByIdentifier(string $identifier): ?Identity;
 
-    public function changeEmail(EntityId $id, string $email): ?Identity;
+    public function changeEmail(EntityId $identityId, string $email): ?Identity;
 
-    public function completeIdentity(EntityId $id): ?Identity;
+    public function completeIdentity(EntityId $identityId): ?Identity;
 }

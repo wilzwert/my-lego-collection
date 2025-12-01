@@ -22,7 +22,7 @@ readonly class ChangeEmailHandler
 
     public function __invoke(ChangeEmailCommand $command): ?Identity
     {
-        $identity = $this->identityService->changeEmail(EntityId::fromString($command->id), $command->email);
+        $identity = $this->identityService->changeEmail(EntityId::fromString($command->identityId), $command->email);
         $this->eventBus->dispatchAll($identity);
         return $identity;
     }

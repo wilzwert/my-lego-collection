@@ -38,9 +38,9 @@ readonly class DefaultIdentityService implements IdentityService
         });
     }
 
-    public function getIdentityById(EntityId $id): ?Identity
+    public function getIdentityById(EntityId $identityId): ?Identity
     {
-        return $this->identityRepository->findById($id);
+        return $this->identityRepository->findById($identityId);
     }
 
     public function getIdentityByIdentifier(string $identifier): ?Identity
@@ -48,11 +48,15 @@ readonly class DefaultIdentityService implements IdentityService
         return $this->identityRepository->findByIdentifier($identifier);
     }
 
-    public function changeEmail(EntityId $id, string $email): Identity
+    public function changeEmail(EntityId $identityId, string $email): Identity
     {
-        $identity = $this->identityRepository->findById($id);
+        $identity = $this->identityRepository->findById($identityId);
         if (null === $identity) {
             throw new EntityNotFoundException("Identity with identifier could not be found");
+        }
+
+        if ($identity->getEmail() === $email) {
+            return $identity;
         }
 
         $existingIdentity = $this->identityRepository->findByIdentifier($email);
@@ -68,12 +72,17 @@ readonly class DefaultIdentityService implements IdentityService
     }
 
 
-    public function completeIdentity(EntityId $id): ?Identity
+    public function completeIdentity(EntityId $identityId): ?Identity
     {
-        $identity = $this->identityRepository->findById($id);
+        $identity = $this->identityRepository->findById($identityId);
         if (null === $identity) {
-            throw new EntityNotFoundException("Identity with id $id could not be found");
+            throw new EntityNotFoundException("Identity with id $identityId could not be found");
         }
+
+        if ($identity->isComplete()) {
+            return $identity;
+        }
+
         return $this->transactionProvider->transactional(function () use ($identity) {
             $identity = $identity->complete();
             $this->identityRepository->save($identity);
