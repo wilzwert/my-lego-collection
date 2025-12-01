@@ -27,7 +27,8 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
     {
         // for some reason, in CI (GitHub action), port is not available at first
         if ($this->container) {
-            sleep(1);
+            fwrite(STDERR, "Waiting for rabbitmq connection...\n");
+            sleep(2);
         }
         return parent::getFirstMappedPort();
     }
