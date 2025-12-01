@@ -7,5 +7,5 @@ namespace App\Tests\Utilities;
  */
 class TestData
 {
-    public const string EXISTING_ENTITY_ID = 'a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1';
+    public const string EXISTING_IDENTITY_ID = 'a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1';
 }

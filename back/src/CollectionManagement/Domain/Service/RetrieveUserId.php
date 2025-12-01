@@ -8,7 +8,7 @@ use App\User\Domain\Model\User;
 /**
  * @author Wilhelm Zwertvaegher
  */
-interface RetrieveUser
+interface RetrieveUserId
 {
-    public function getUser(EntityId $identityId): ?User;
+    public function getUserId(EntityId $identityId): ?EntityId;
 }

@@ -1,12 +1,9 @@
 <?php
 
-namespace App\Tests\Notification\EventHandler;
+namespace App\Tests\Notification\Infrastructure\EventHandler;
 
 use App\Tests\Traits\SliceInfraHandlersTrait;
-use App\User\Domain\Event\UserCreatedEvent;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

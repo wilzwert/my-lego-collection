@@ -98,19 +98,9 @@ trait MessengerTestingTrait
         string             $targetMessageClass,
         ?callable          $check = null
     ): ?Message {
-        fwrite(STDERR, "looking for $targetMessageClass\n");
         // get envelopes
         $envelopes = $this->getEnvelopes($transport);
 
-        foreach ($envelopes as $envelope) {
-            fwrite(
-                STDERR,
-                "Envelope " . $envelope->getMessage()::class
-                . ", uniqid = " . $envelope->getMessage()->metadata()['test_uniqid'].' / lookup for '.$message->metadata()['test_uniqid']
-                . ", id = " . $envelope->getMessage()->getId()
-                .", looking for $targetMessageClass\n"
-            );
-        }
         $asyncFirst = array_find(
             $envelopes,
             /**
@@ -135,10 +125,6 @@ trait MessengerTestingTrait
      */
     protected function handlerContains(DummyHandler $handler, Message $event): bool
     {
-        foreach ($handler->getReceivedMessages() as $message) {
-            fwrite(STDERR, "Received ".$message::class."\n");
-        }
-
         return array_any(
             $handler->getReceivedMessages(),
             fn ($receivedEvent) =>
