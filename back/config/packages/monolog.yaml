@@ -24,4 +24,4 @@ when@test:
     monolog:
         handlers:
             main:
-                level: info
+                level: debug
