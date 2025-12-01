@@ -23,6 +23,6 @@ final class RedisContainerHandler extends AbstractTestContainerHandler
     protected function createContainer(): GenericContainer
     {
         return new RedisContainer(self::REDIS_VERSION)
-            ->withWait(new WaitForLog('Ready to accept connections', false, 30000));
+            ->withWait(new WaitForLog('Ready to accept connections', false, 60000));
     }
 }
