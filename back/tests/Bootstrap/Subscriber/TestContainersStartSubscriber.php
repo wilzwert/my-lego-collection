@@ -38,10 +38,12 @@ class TestContainersStartSubscriber implements ExecutionStartedSubscriber
             $envVars = [];
             $container = null;
             foreach ($this->containerHandlers as $handler) {
-                fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                 try {
+                    fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                     $container = $handler->start();
                     fwrite(STDOUT, "Started " . $handler::class . PHP_EOL);
+                    $envVars = array_merge($envVars, $handler->getEnvVars());
+                    fwrite(STDOUT, "Collected env from " . $handler::class . PHP_EOL);
                 } catch (\Throwable $e) {
                     fwrite(STDERR, "Failed to start " . $handler::class . ' : '.$e->getMessage(). PHP_EOL);
                     if (isset($container)) {
@@ -51,8 +53,6 @@ class TestContainersStartSubscriber implements ExecutionStartedSubscriber
                     }
                     exit(1);
                 }
-                $envVars = array_merge($envVars, $handler->getEnvVars());
-                fwrite(STDOUT, "Collected env from " . $handler::class . PHP_EOL);
             }
 
             fwrite(STDOUT, "All handlers started, updating env\n");
