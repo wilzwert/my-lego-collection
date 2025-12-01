@@ -39,11 +39,20 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         )];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function start(): StartedGenericContainer
     {
         if (!$this->container instanceof StartedGenericContainer) {
-            $container = $this->createContainer();
-            $this->container = $container->start();
+            try {
+                $container = $this->createContainer();
+                $this->container = $container->start();
+            } catch (\Exception $e) {
+                fwrite(STDERR, 'An exception occurred while starting container '.get_class($this).' : '.$e->getMessage() . PHP_EOL);
+                throw new \RuntimeException('An exception occurred while starting container '.get_class($this).' : '.$e->getMessage());
+
+            }
         }
 
         return $this->container;

@@ -14,8 +14,10 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author Wilhelm Zwertvaegher
  */
-readonly class TestContainersStartSubscriber implements ExecutionStartedSubscriber
+class TestContainersStartSubscriber implements ExecutionStartedSubscriber
 {
+    private bool $containersStarted = false;
+
     /**
      * @param TestSuiteService $suiteService
      * @param array<TestContainerHandler> $containerHandlers
@@ -30,7 +32,9 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
 
     public function notify(ExecutionStarted $event): void
     {
-        if ($this->suiteService->isIntegrationTest($event->testSuite())) {
+        fwrite(STDOUT, 'calling notify on TestContainersStartSubscriber'.PHP_EOL);
+        if ($this->suiteService->isIntegrationTest($event->testSuite()) && !$this->containersStarted) {
+            $this->containersStarted = true;
             $envVars = [];
             $container = null;
             foreach ($this->containerHandlers as $handler) {
