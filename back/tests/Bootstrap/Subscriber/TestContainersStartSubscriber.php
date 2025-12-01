@@ -42,6 +42,7 @@ class TestContainersStartSubscriber implements ExecutionStartedSubscriber
                     fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
                     $container = $handler->start();
                     fwrite(STDOUT, "Started " . $handler::class . PHP_EOL);
+                    usleep(500_000);
                     $envVars = array_merge($envVars, $handler->getEnvVars());
                     fwrite(STDOUT, "Collected env from " . $handler::class . PHP_EOL);
                 } catch (\Throwable $e) {
