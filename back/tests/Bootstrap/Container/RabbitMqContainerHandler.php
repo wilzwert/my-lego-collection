@@ -5,6 +5,7 @@ namespace App\Tests\Bootstrap\Container;
 use App\Tests\Bootstrap\Container\AbstractTestContainerHandler;
 use Testcontainers\Container\GenericContainer;
 use Testcontainers\Modules\RedisContainer;
+use Testcontainers\Wait\WaitForHostPort;
 use Testcontainers\Wait\WaitForLog;
 
 /**
@@ -26,6 +27,7 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
         return new GenericContainer(self::RABBITMQ_VERSION)
             ->withExposedPorts(5672)  // port AMQP + port management
             ->withEnvironment(['RABBITMQ_DEFAULT_USER' => 'test', 'RABBITMQ_DEFAULT_PASS' => 'test'])
-            ->withWait(new WaitForLog('Server startup complete', false, 100000));
+            ->withWait(new WaitForLog('Server startup complete', false, 120000))
+        ;
     }
 }
