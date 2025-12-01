@@ -47,6 +47,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         if (!$this->container instanceof StartedGenericContainer) {
             $container = $this->createContainer();
             $this->container = $container->start();
+            fwrite(STDOUT, $this->container->logs().PHP_EOL);
         }
     }
 

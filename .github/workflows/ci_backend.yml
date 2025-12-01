@@ -89,12 +89,20 @@ jobs:
       - name: Fix executable permissions
         run: chmod +x vendor/bin/phpunit vendor/bin/coverage-check
 
+      - name: Check docker
+        run: |
+          docker info
+          docker ps -a
+
       - name: Run tests with coverage
         id: run-tests
         run: composer test
         # this step may fail if minimum coverage is not reached, but we need do continue anyway
         # because we need to update coverage report and run sonar scan later
         continue-on-error: true
+        env:
+          REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
+          JWT_SECRET_KEY: ${{JWT_SECRET_KEY_TEST}}
 
       # if coverage doesn't exist, something bad happened, and we can't go further
       - name: Verify coverage report existence and stop if missing
