@@ -38,6 +38,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
             try {
                 return $this->container->getFirstMappedPort();
             } catch (\Throwable $e) {
+                fwrite(STDERR, "Failed to get mapped port: {$e->getMessage()}, waiting for 500ms\n");
                 usleep(500_000); // 500 ms
             }
         }
