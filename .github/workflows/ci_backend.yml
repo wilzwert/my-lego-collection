@@ -102,7 +102,7 @@ jobs:
         continue-on-error: true
         env:
           REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
-          JWT_SECRET_KEY: ${{JWT_SECRET_KEY_TEST}}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST }}
 
       # if coverage doesn't exist, something bad happened, and we can't go further
       - name: Verify coverage report existence and stop if missing
