@@ -32,14 +32,21 @@ readonly class TestContainersStartSubscriber implements ExecutionStartedSubscrib
     {
         if ($this->suiteService->isIntegrationTest($event->testSuite())) {
             $envVars = [];
+            $container = null;
             foreach ($this->containerHandlers as $handler) {
                 try {
                     fwrite(STDOUT, "Starting " . $handler::class . PHP_EOL);
-                    $handler->start();
-                    $envVars = array_merge($envVars, $handler->getEnvVars());
+                    $container = $handler->start();
                 } catch (\Exception $e) {
                     fwrite(STDERR, "Failed to start " . $handler::class . ' : '.$e->getMessage(). PHP_EOL);
+                    if (isset($container)){
+                        $containerId = $container->getId();
+                        fwrite(STDOUT, "Container logs:\n");
+                        passthru("docker logs $containerId");
+                    }
+                    throw $e;
                 }
+                $envVars = array_merge($envVars, $handler->getEnvVars());
             }
             // set env and generate a temporary env file and force symfony reload env and use our generated env vars
             foreach ($envVars as $envVar) {
