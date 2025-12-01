@@ -1,0 +1,228 @@
+
+name: CI for backend
+
+concurrency:
+  group: ${{ github.ref }}.ci
+  cancel-in-progress: true
+on:
+  # CI should be able to run manually
+  # which will be interpreted as a push on main
+  workflow_dispatch:
+  # CI should run on pull requests and push on main branch
+  # some steps are executed only on pushes on main branch
+  pull_request:
+    branches: [ "master" ]
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - master
+
+jobs:
+  setup:
+    name: Setup project
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: back
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: intl, pdo_pgsql, redis, zip
+
+      - name: Install Composer dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Upload vendor
+        uses: actions/upload-artifact@v4
+        with:
+          name: vendor
+          path: back/vendor
+
+  test:
+    name: Run tests with coverage
+    runs-on: ubuntu-latest
+    needs: setup
+    env:
+      TESTCONTAINERS_HOST: 127.0.0.1
+
+    defaults:
+      run:
+        working-directory: back
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Prepare backend environment
+        run: |
+          cp .env.test.dist .env.test
+          cp phpunit.dist.xml phpunit.xml
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: intl, pdo_pgsql, redis, zip
+          coverage: xdebug
+
+      - name: Download vendor
+        uses: actions/download-artifact@v6
+        with:
+          name: vendor
+          path: back/vendor
+
+      - name: Fix executable permissions
+        run: chmod +x vendor/bin/phpunit vendor/bin/coverage-check
+
+      - name: Run tests with coverage
+        id: run-tests
+        run: composer test
+        # this step may fail if minimum coverage is not reached, but we need do continue anyway
+        # because we need to update coverage report and run sonar scan later
+        continue-on-error: true
+
+      # if coverage doesn't exist, something bad happened, and we can't go further
+      - name: Verify coverage report existence and stop if missing
+        run: |
+          if [ ! -f "./coverage/clover.xml" ]; then          
+           echo "Error: File 'back/coverage/clover.xml' not found. Job failed."
+           exit 1
+          fi
+        shell: bash
+
+      - name: Upload backend coverage report artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: backend-coverage
+          path: back/coverage
+          retention-days: 7
+
+  analysis:
+    name: Static analysis with phpstan
+    needs: setup
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_pgsql, redis, intl, zip
+
+      - name: Download vendor
+        uses: actions/download-artifact@v6
+        with:
+          name: vendor
+          path: back/vendor
+
+      - name: Fix executable permissions
+        run: chmod +x vendor/bin/phpstan
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan > phpstan-report.txt || true
+
+      - name: Upload PHPStan report (optional)
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: phpstan-report
+          path: back/phpstan-report.txt
+          retention-days: 7
+
+  quality:
+    name: Sonar Scan analysis + quality gate
+    needs: test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: back
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: backend-coverage
+          path: back/coverage
+
+      # Run SonarQube analysis on push or manual run
+      - name: Sonar scan on push or manual run
+        if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: back
+          args: >
+            -Dsonar.branch.name=${{ github.ref_name }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+
+      # Run SonarQube analysis on pull request
+      - name: Sonar scan on pull request
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: SonarSource/sonarqube-scan-action@v6
+        with:
+          projectBaseDir: back
+          args: >
+            -Dsonar.pullrequest.key=${{ github.event.pull_request.number }}
+            -Dsonar.pullrequest.branch=${{ github.head_ref }}
+            -Dsonar.pullrequest.base=${{ github.base_ref }}
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
+
+      - name: SonarQube Quality Gate Check
+        id: quality-gate
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        with:
+          scanMetadataReportFile: back/.scannerwork/report-task.txt
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SYMFONY }}
+
+  reporting:
+    name: Add coverage to github pages, update Codecov
+    needs: test
+    runs-on: ubuntu-latest
+    # we only update pages and codecov if code has actually been pushed to main branch, or if workflow is run manually
+    # because we want coverage reports to reflect the actual master branch coverage state
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master' }}
+    defaults:
+      run:
+        working-directory: back
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download coverage
+        uses: actions/download-artifact@v6
+        with:
+          name: backend-coverage
+          path: back/coverage
+
+      - name: Publish backend coverage report to Github Pages
+
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./back/coverage
+          destination_dir: ./backend-coverage
+
+      - name: Upload backend coverage report to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: backend
+          files: ./back/coverage/clover.xml
