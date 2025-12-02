@@ -20,12 +20,11 @@ class WaitForDockerPortAssigned implements WaitStrategy
             $id = $container->getId();
             fwrite(STDERR, "Container ID: $id\n");
 
-            passthru("docker info | grep -i rootless");
             /** @var ContainersIdJsonGetResponse200 $inspect */
             $inspect = $container->getClient()->containerInspect($id);
             $ports = $inspect->getNetworkSettings()->getPorts();
 
-            if (!empty($ports['5672/tcp'][0]->getHostPort())) {
+            if (!empty($ports['5672/tcp']) &&!empty($ports['5672/tcp'][0]) && !empty($ports['5672/tcp'][0]->getHostPort())) {
                 fwrite(STDERR, 'Port available  '.$ports['5672/tcp'][0]->getHostPort(). PHP_EOL);
                 return;
             }

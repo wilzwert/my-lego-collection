@@ -104,6 +104,10 @@ jobs:
           REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST }}
 
+      - name: Debug inspect
+        run: |
+          docker inspect $(docker ps -q) | jq '.[0].NetworkSettings'
+
       # if coverage doesn't exist, something bad happened, and we can't go further
       - name: Verify coverage report existence and stop if missing
         run: |
