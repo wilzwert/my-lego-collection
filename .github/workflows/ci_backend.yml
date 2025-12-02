@@ -11,11 +11,11 @@ on:
   # CI should run on pull requests and push on main branch
   # some steps are executed only on pushes on main branch
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main" ]
     types: [opened, synchronize, reopened]
   push:
     branches:
-      - master
+      - main
 
 jobs:
   setup:
@@ -208,8 +208,8 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     # we only update pages and codecov if code has actually been pushed to main branch, or if workflow is run manually
-    # because we want coverage reports to reflect the actual master branch coverage state
-    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/master' }}
+    # because we want coverage reports to reflect the actual main branch coverage state
+    if: ${{ (github.event_name == 'push' || github.event_name == 'workflow_dispatch') && github.ref == 'refs/heads/main' }}
     defaults:
       run:
         working-directory: back
