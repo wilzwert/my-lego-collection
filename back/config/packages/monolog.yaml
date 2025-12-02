@@ -19,3 +19,9 @@ monolog:
             path: "php://stdout"
             level: info
             channels: [ "messenger" ]
+
+when@test:
+    monolog:
+        handlers:
+            main:
+                level: debug

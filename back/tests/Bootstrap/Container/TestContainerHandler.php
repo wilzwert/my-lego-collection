@@ -2,6 +2,8 @@
 
 namespace App\Tests\Bootstrap\Container;
 
+use Testcontainers\Container\StartedGenericContainer;
+
 /**
  * A Testcontainer handler with utility methods.
  *
@@ -9,13 +11,15 @@ namespace App\Tests\Bootstrap\Container;
  */
 interface TestContainerHandler
 {
-    public function start(): void;
+    public function start(): StartedGenericContainer;
 
     public function stop(): void;
 
     public function isStarted(): bool;
 
     public function getHost(): string;
+
+    public function getFirstMappedPort(): int;
 
     /**
      * @return list<string>

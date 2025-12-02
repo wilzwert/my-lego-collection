@@ -13,7 +13,7 @@ use Testcontainers\Container\StartedGenericContainer;
  */
 abstract class AbstractTestContainerHandler implements TestContainerHandler
 {
-    private ?StartedGenericContainer $container = null;
+    protected ?StartedGenericContainer $container = null;
 
     #[\Override]
     public function getHost(): string
@@ -25,6 +25,16 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
         return getenv('TESTCONTAINERS_HOST') ?: 'host.docker.internal';
     }
 
+    #[\Override]
+    public function getFirstMappedPort(): int
+    {
+        if (!$this->container) {
+            throw new \Exception('First mapped port cannot be determined before the container is started.');
+        }
+
+        return $this->container->getFirstMappedPort();
+    }
+
     /**
      * @return list<string>
      *
@@ -34,7 +44,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
     {
         return [str_replace(
             ['{{host}}', '{{port}}'],
-            [$this->getHost(), (string) $this->container->getFirstMappedPort()],
+            [$this->getHost(), (string) $this->getFirstMappedPort()],
             $this->getEnvVarTemplate()
         )];
     }
@@ -42,12 +52,23 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
     /**
      * @throws \Exception
      */
-    public function start(): void
+    public function start(): StartedGenericContainer
     {
         if (!$this->container instanceof StartedGenericContainer) {
-            $container = $this->createContainer();
-            $this->container = $container->start();
+            try {
+                fwrite(STDOUT, 'Creating container '.get_class($this).PHP_EOL);
+                $container = $this->createContainer();
+                fwrite(STDOUT, 'Starting actual container '.get_class($this).PHP_EOL);
+                $this->container = $container->start();
+                fwrite(STDOUT, 'Started actual container '.get_class($this).PHP_EOL);
+
+            } catch (\Exception $e) {
+                fwrite(STDERR, 'An exception occurred while starting container '.get_class($this).' : '.$e->getMessage() . PHP_EOL);
+                throw new \RuntimeException('An exception occurred while starting container '.get_class($this).' : '.$e->getMessage());
+            }
         }
+
+        return $this->container;
     }
 
     public function stop(): void

@@ -7,6 +7,7 @@ use App\Shared\Infrastructure\Normalizer\DomainExceptionNormalizer;
 use App\Shared\Infrastructure\Normalizer\UnprocessableEntityHttpExceptionNormalizer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -64,8 +65,9 @@ class UnprocessableEntityHttpExceptionNormalizerTest extends TestCase
                 'INVALID_CHARACTERS_ERROR' => ['invalid_characters_error' => 'Invalid UUID'],
             ]
         ];
+
         $expectedNormalizedException = [
-            'timestamp' => '2025-11-07T13:10:00.000+01:00',
+            'timestamp' => new DatePoint('2025-11-07 13:10:00')->format(\DateTimeInterface::RFC3339_EXTENDED),
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
             'error' => 'validation-error',
             'message' => 'Validation failed',

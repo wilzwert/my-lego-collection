@@ -95,6 +95,9 @@ jobs:
         # this step may fail if minimum coverage is not reached, but we need do continue anyway
         # because we need to update coverage report and run sonar scan later
         continue-on-error: true
+        env:
+          REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
+          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST }}
 
       # if coverage doesn't exist, something bad happened, and we can't go further
       - name: Verify coverage report existence and stop if missing
@@ -198,7 +201,7 @@ jobs:
         with:
           scanMetadataReportFile: back/.scannerwork/report-task.txt
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SYMFONY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
 
   reporting:
     name: Add coverage to github pages, update Codecov
