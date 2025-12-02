@@ -6,15 +6,20 @@ use App\Auth\Application\Command\ChangeEmailCommand;
 use App\Auth\Application\Command\GetIdentityQuery;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Model\Identity;
+use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
+use App\Shared\Domain\Exception\EntityAlreadyExistsException;
+use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\EventBus;
+use App\Shared\Domain\Service\TransactionProvider;
 use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
 
 readonly class ChangeEmailHandler
 {
     public function __construct(
-        private IdentityService $identityService,
+        private IdentityRepository  $identityRepository,
+        private TransactionProvider $transactionProvider,
         private EventBus $eventBus
 
     ) {
@@ -22,8 +27,27 @@ readonly class ChangeEmailHandler
 
     public function __invoke(ChangeEmailCommand $command): ?Identity
     {
-        $identity = $this->identityService->changeEmail(EntityId::fromString($command->identityId), $command->email);
-        $this->eventBus->dispatchAll($identity);
-        return $identity;
+        $identityId = EntityId::fromString($command->identityId);
+        $identity = $this->identityRepository->findById($identityId);
+        if (null === $identity) {
+            throw new EntityNotFoundException("Identity with identifier could not be found");
+        }
+
+        if ($identity->getEmail() === $command->email) {
+            return $identity;
+        }
+
+        $existingIdentity = $this->identityRepository->findByIdentifier($command->email);
+        if (null !== $existingIdentity) {
+            throw new EntityAlreadyExistsException('Email is taken');
+        }
+
+        return $this->transactionProvider->transactional(function () use ($identity, $command) {
+            $identity = $identity->changeEmail($command->email);
+            $this->identityRepository->save($identity);
+            $this->eventBus->dispatchAll($identity);
+            return $identity;
+        });
+
     }
 }
