@@ -39,7 +39,8 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
         return new GenericContainer(self::RABBITMQ_VERSION)
             ->withExposedPorts(5672)  // port AMQP + port management
             ->withEnvironment(['RABBITMQ_DEFAULT_USER' => 'test', 'RABBITMQ_DEFAULT_PASS' => 'test'])
-            ->withWait(new WaitForLog('Time to start RabbitMQ', false, 30000))
+            ->withWait(new WaitForDockerPortAssigned())
+            // ->withWait(new WaitForLog('Time to start RabbitMQ', false, 30000))
             // ->withWait(new WaitForHostPort(30000))
         ;
     }
