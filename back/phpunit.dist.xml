@@ -19,6 +19,9 @@
     </php>
 
     <testsuites>
+        <testsuite name="E2e">
+            <directory>tests/EndToEnd</directory>
+        </testsuite>
         <testsuite name="Unit">
             <directory>tests</directory>
         </testsuite>
@@ -35,6 +38,10 @@
         <include>
             <directory>src</directory>
         </include>
+
+        <exclude>
+            <directory>src/DataFixtures</directory>
+        </exclude>
 
         <deprecationTrigger>
             <method>Doctrine\Deprecations\Deprecation::trigger</method>
