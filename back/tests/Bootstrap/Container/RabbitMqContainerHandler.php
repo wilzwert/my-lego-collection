@@ -29,25 +29,14 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
     {
         // for some unknown reason, in CI (GitHub action), getFirstMappedPort does not work
         // we have to freshly inspect the container to get the actual host port
-        /*
+
         $inspect = $this->container->getClient()->containerInspect($this->container->getId());
         $ports = $inspect->getNetworkSettings()->getPorts();
-
-        if (!empty($ports['5672/tcp']) &&!empty($ports['5672/tcp'][0]) && !empty($ports['5672/tcp'][0]->getHostPort())) {
-            return (int)$ports['5672/tcp'][0]->getHostPort();
-        }
-        */
-
-        $bounded = (array) $this->container->getBoundPorts();
-        foreach ($bounded as $port => $ports) {
-            foreach ($ports as $p) {
-                fwrite(STDOUT, sprintf('Bound %s:%s', $port, $p->getHostPort()).PHP_EOL);
-            }
+        $lookupPort = sprintf('%s/tcp', self::RABBITMQ_PORT);
+        if (!empty($ports[$lookupPort]) &&!empty($ports[$lookupPort][0]) && !empty($ports[$lookupPort][0]->getHostPort())) {
+            return (int)$ports[$lookupPort][0]->getHostPort();
         }
 
-        $first = parent::getFirstMappedPort();
-        fwrite(STDOUT, sprintf('First from parent %s', $first).PHP_EOL);
-        return $first;
         return parent::getFirstMappedPort();
     }
 
