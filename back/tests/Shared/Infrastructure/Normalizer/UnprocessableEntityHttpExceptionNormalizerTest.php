@@ -66,8 +66,6 @@ class UnprocessableEntityHttpExceptionNormalizerTest extends TestCase
             ]
         ];
 
-
-
         $expectedNormalizedException = [
             'timestamp' => new DatePoint('2025-11-07 13:10:00')->format(\DateTimeInterface::RFC3339_EXTENDED),
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
