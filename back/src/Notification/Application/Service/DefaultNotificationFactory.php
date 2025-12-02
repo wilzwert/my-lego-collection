@@ -4,7 +4,7 @@ namespace App\Notification\Application\Service;
 
 use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\WelcomeNotification;
-use App\Notification\Domain\Service\RetrieveIdentityInfo;
+use App\Notification\Application\Ports\Driven\RetrieveIdentityInfo;
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
 use MyLegoCollection\SharedEvent\Message;

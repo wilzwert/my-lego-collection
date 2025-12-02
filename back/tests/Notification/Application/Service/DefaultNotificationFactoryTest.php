@@ -6,7 +6,7 @@ use App\Notification\Application\Service\DefaultNotificationFactory;
 use App\Notification\Domain\Model\IdentityInfo;
 use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\WelcomeNotification;
-use App\Notification\Domain\Service\RetrieveIdentityInfo;
+use App\Notification\Application\Ports\Driven\RetrieveIdentityInfo;
 use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedEvent\Command\Command;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;

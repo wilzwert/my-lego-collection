@@ -2,6 +2,7 @@
 
 namespace App\Notification\Infrastructure\EventHandler;
 
+use App\Notification\Application\Handler\NotificationCommandHandler;
 use App\Shared\Infrastructure\EventHandler\CommandHandler;
 use App\Shared\Infrastructure\EventHandler\MessageHandler;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
@@ -13,8 +14,14 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  */
 
 #[AsMessageHandler]
-class SendWelcomeNotificationCommandHandler implements CommandHandler
+readonly class SendWelcomeNotificationCommandHandler implements CommandHandler
 {
+    public function __construct(
+        private NotificationCommandHandler $notificationCommandHandler
+    )
+    {
+    }
+
     public static function getMessageHandled(): string
     {
         return SendWelcomeNotificationCommand::class;
@@ -22,8 +29,6 @@ class SendWelcomeNotificationCommandHandler implements CommandHandler
 
     public function __invoke(SendWelcomeNotificationCommand $command): void
     {
-        // TODO : implement notification handling
-
-
+        ($this->notificationCommandHandler)($command);
     }
 }
