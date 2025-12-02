@@ -6,6 +6,7 @@ use Docker\API\Model\ContainersIdJsonGetResponse200;
 use Testcontainers\Container\StartedTestContainer;
 use Testcontainers\Exception\ContainerNotReadyException;
 use Testcontainers\Wait\BaseWaitStrategy;
+use Testcontainers\Wait\WaitStrategy;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -13,9 +14,17 @@ use Testcontainers\Wait\BaseWaitStrategy;
 class WaitForDockerPortAssigned extends BaseWaitStrategy
 {
 
+    private ?WaitStrategy $decorated = null;
+
     public function __construct(private readonly int $port, int $timeout = 10000, int $pollInterval = 500)
     {
         parent::__construct($timeout, $pollInterval);
+    }
+
+    public function withWait(WaitStrategy $wait): self
+    {
+        $this->decorated = $wait;
+        return $this;
     }
 
     public function wait(StartedTestContainer $container): void
@@ -35,6 +44,9 @@ class WaitForDockerPortAssigned extends BaseWaitStrategy
             $ports = $inspect->getNetworkSettings()->getPorts();
 
             if (!empty($ports[$lookupPort]) && !empty($ports[$lookupPort][0]) && !empty($ports[$lookupPort][0]->getHostPort())) {
+                if ($this->decorated) {
+                    $this->decorated->wait($container);
+                }
                 return;
             }
 

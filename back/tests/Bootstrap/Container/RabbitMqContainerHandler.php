@@ -47,7 +47,12 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
             ->withEnvironment(['RABBITMQ_DEFAULT_USER' => 'test', 'RABBITMQ_DEFAULT_PASS' => 'test'])
             // for some unknown reason, in CI (GitHub action), WaitForLog + getFirstMappedPort does not work
             // so we had to create a custom strategy to freshly inspect the container to get the actual host port
-            ->withWait(new WaitForDockerPortAssigned(self::RABBITMQ_PORT, 30000))
+            ->withWait(
+                new WaitForDockerPortAssigned(
+                    self::RABBITMQ_PORT,
+                    30000
+                )->withWait(new WaitForLog('Server startup complete', false, 30000))
+            )
             // ->withWait(new WaitForLog('Server startup complete', false, 30000))
             // ->withWait(new WaitForHostPort(30000))
         ;
