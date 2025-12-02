@@ -22,6 +22,8 @@ class SendWelcomeNotificationCommandHandler implements CommandHandler
 
     public function __invoke(SendWelcomeNotificationCommand $command): void
     {
+        // TODO : implement notification handling
+
 
     }
 }

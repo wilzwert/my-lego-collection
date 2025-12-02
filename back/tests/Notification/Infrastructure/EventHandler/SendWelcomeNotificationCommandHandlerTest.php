@@ -3,6 +3,7 @@
 namespace App\Tests\Notification\Infrastructure\EventHandler;
 
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
+use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -23,7 +24,6 @@ class SendWelcomeNotificationCommandHandlerTest extends TestCase
     {
         self::expectNotToPerformAssertions();
         $handler = new SendWelcomeNotificationCommandHandler();
-        $handler(new SendWelcomeNotificationCommand('test@example.com', 'user', 'validationToken'));
+        $handler(new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_ID, 'validationToken'));
     }
 }
-
