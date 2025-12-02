@@ -24,10 +24,9 @@ class IdentityCompletedOrchestrator
     {
         $this->commandBus->dispatch(
             new SendWelcomeNotificationCommand(
-                $event->getIdentity()->getEmail(),
-                $event->getIdentity()->getEmail(),
+                $event->getIdentity()->getId()->value(),
                 $event->getIdentity()->getValidationToken()
-            ),
+            )
         );
 
         $this->integrationBus->dispatch(

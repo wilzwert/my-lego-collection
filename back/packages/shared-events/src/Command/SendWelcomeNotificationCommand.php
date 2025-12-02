@@ -11,22 +11,16 @@ class SendWelcomeNotificationCommand extends Command
     private const string TYPE = 'welcome.notification';
 
     public function __construct(
-        private readonly string $email,
-        private readonly string $username,
+        private readonly string $identityId,
         private readonly string $validationToken,
         ?array $metadata = null)
     {
         parent::__construct(self::TYPE, $metadata);
     }
 
-    public function getEmail(): string
+    public function getIdentityId(): string
     {
-        return $this->email;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->username;
+        return $this->identityId;
     }
 
     public function getValidationToken(): string
