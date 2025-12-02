@@ -31,11 +31,16 @@ class RebrickableCacheManagerTest extends TestCase
         $this->manager = new ExternalDataCacheManager($this->cache);
     }
 
+    private function expectedHash(string $key): string
+    {
+        return hash('sha256', strtolower($key));
+    }
+
     #[Test]
     public function getSetsShouldCallCacheWithCorrectKeyAndCallback(): void
     {
         $search = 'Millennium Falcon';
-        $expectedKey = 'search_set_' . md5(strtolower($search));
+        $expectedKey = 'search_set_' . $this->expectedHash($search);
         $expectedSets = new SetCollection([
             new ExternalSet('externalId1', 'legoId1', 'Cached set 1', 100, '', 2005),
             new ExternalSet('externalId2', 'legoId2', 'Cached set 2', 200, '', 2006),
@@ -63,7 +68,7 @@ class RebrickableCacheManagerTest extends TestCase
     public function getPartsShouldCallCacheWithCorrectKeyAndCallback(): void
     {
         $search = 'Millennium Falcon';
-        $expectedKey = 'search_part_' . md5(strtolower($search));
+        $expectedKey = 'search_part_' . $this->expectedHash($search);
         $expectedParts = new PartCollection([
             new ExternalPart('externalId1', 'legoId1', 'Cached part 1', ''),
             new ExternalPart('externalId2', 'legoId2', 'Cached part 2', ''),
@@ -91,7 +96,7 @@ class RebrickableCacheManagerTest extends TestCase
     public function getPartsShouldUseCorrectCacheKey(): void
     {
         $search = 'Brick';
-        $expectedKey = 'search_part_' . md5(strtolower($search));
+        $expectedKey = 'search_part_' . $this->expectedHash($search);
 
         $expectedParts = new PartCollection([
             new ExternalPart('externalId1', 'legoId1', 'Cached part 1', ''),
@@ -110,7 +115,7 @@ class RebrickableCacheManagerTest extends TestCase
     public function getPartElementsShouldUseCorrectCacheKey(): void
     {
         $id = '3001';
-        $expectedKey = 'get_part_elements' . md5(strtolower($id));
+        $expectedKey = 'get_part_elements' . $this->expectedHash($id);
 
         $expectedElements = new ExternalElementCollection([
             new ExternalElement('externalId1', 'legoId1', 'externalPartId1', '', '0', 'Black'),
@@ -129,7 +134,7 @@ class RebrickableCacheManagerTest extends TestCase
     public function getSetElementsShouldUseCorrectCacheKey(): void
     {
         $id = '75257';
-        $expectedKey = 'get_set_elements' . md5(strtolower($id));
+        $expectedKey = 'get_set_elements' . $this->expectedHash($id);
 
         $expectedElements = new ExternalSetElementCollection([
             new ExternalSetElement('externalId1', '93061', 'externalPartId1', 5),

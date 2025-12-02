@@ -9,6 +9,7 @@ use App\Shared\Domain\Validation\ValidationErrors;
 use App\Shared\Infrastructure\Normalizer\ValidationExceptionNormalizer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\DatePoint;
 use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -36,7 +37,7 @@ class ValidationExceptionNormalizerTest extends TestCase
             ]
         ];
         $expectedNormalizedException = [
-            'timestamp' => '2025-11-07T13:10:00.000+01:00',
+            'timestamp' => new DatePoint('2025-11-07 13:10:00')->format(\DateTimeInterface::RFC3339_EXTENDED),
             'status' => Response::HTTP_UNPROCESSABLE_ENTITY,
             'error' => 'validation-error',
             'message' => 'VALIDATION_FAILED',
