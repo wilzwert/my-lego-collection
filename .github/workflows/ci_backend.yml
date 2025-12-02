@@ -206,7 +206,7 @@ jobs:
         with:
           scanMetadataReportFile: back/.scannerwork/report-task.txt
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_SYMFONY }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN_BACKEND }}
 
   reporting:
     name: Add coverage to github pages, update Codecov

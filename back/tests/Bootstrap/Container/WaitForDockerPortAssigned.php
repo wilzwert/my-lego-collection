@@ -30,8 +30,6 @@ class WaitForDockerPortAssigned extends BaseWaitStrategy
                 throw new ContainerNotReadyException($id);
             }
 
-            fwrite(STDERR, "Container ID: $id\n");
-
             /** @var ContainersIdJsonGetResponse200 $inspect */
             $inspect = $container->getClient()->containerInspect($id);
             $ports = $inspect->getNetworkSettings()->getPorts();
@@ -41,8 +39,6 @@ class WaitForDockerPortAssigned extends BaseWaitStrategy
             }
 
             usleep($this->pollInterval * 1000);
-
-            usleep(200_000);
         }
     }
 }
