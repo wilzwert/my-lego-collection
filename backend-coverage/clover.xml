@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764675485">
-  <project timestamp="1764675485" name="Clover Coverage">
+<coverage generated="1764677576">
+  <project timestamp="1764677576" name="Clover Coverage">
     <package name="App\Auth\Application\Command">
       <file name="/home/runner/work/my-lego-collection/my-lego-collection/back/src/Auth/Application/Command/ChangeEmailCommand.php">
         <class name="App\Auth\Application\Command\ChangeEmailCommand" namespace="App\Auth\Application\Command">
@@ -1053,13 +1053,13 @@
         <line num="26" type="stmt" count="11"/>
         <line num="29" type="method" name="getSets" visibility="public" complexity="1" crap="1" count="3"/>
         <line num="32" type="stmt" count="3"/>
-        <line num="33" type="stmt" count="2"/>
-        <line num="34" type="stmt" count="2"/>
+        <line num="33" type="stmt" count="3"/>
+        <line num="34" type="stmt" count="3"/>
         <line num="35" type="stmt" count="3"/>
         <line num="38" type="method" name="getParts" visibility="public" complexity="1" crap="1" count="4"/>
         <line num="41" type="stmt" count="4"/>
-        <line num="42" type="stmt" count="2"/>
-        <line num="43" type="stmt" count="2"/>
+        <line num="42" type="stmt" count="3"/>
+        <line num="43" type="stmt" count="3"/>
         <line num="44" type="stmt" count="4"/>
         <line num="47" type="method" name="getPartElements" visibility="public" complexity="1" crap="1" count="2"/>
         <line num="50" type="stmt" count="2"/>
