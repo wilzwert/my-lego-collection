@@ -27,9 +27,10 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
     {
         // for some reason, in CI (GitHub action), port is not available at first
         if ($this->container) {
-            fwrite(STDERR, "Waiting for rabbitmq connection...\n");
+            fwrite(STDERR, '['.microtime(true)."]Waiting for rabbitmq connection...\n");
             sleep(2);
         }
+
         return parent::getFirstMappedPort();
     }
 
@@ -38,7 +39,7 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
         return new GenericContainer(self::RABBITMQ_VERSION)
             ->withExposedPorts(5672)  // port AMQP + port management
             ->withEnvironment(['RABBITMQ_DEFAULT_USER' => 'test', 'RABBITMQ_DEFAULT_PASS' => 'test'])
-            ->withWait(new WaitForLog('Server startup complete', false, 30000))
+            ->withWait(new WaitForLog('Time to start RabbitMQ', false, 30000))
             // ->withWait(new WaitForHostPort(30000))
         ;
     }

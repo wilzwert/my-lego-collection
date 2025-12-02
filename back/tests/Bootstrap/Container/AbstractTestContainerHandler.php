@@ -32,6 +32,7 @@ abstract class AbstractTestContainerHandler implements TestContainerHandler
             throw new \Exception('First mapped port cannot be determined before the container is started.');
         }
 
+        fwrite(STDERR, '['.microtime(true)."]Attempting to get mapped port...\n");
         return $this->container->getFirstMappedPort();
     }
 
