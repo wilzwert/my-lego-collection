@@ -89,11 +89,6 @@ jobs:
       - name: Fix executable permissions
         run: chmod +x vendor/bin/phpunit vendor/bin/coverage-check
 
-      - name: Check docker
-        run: |
-          docker info
-          docker ps -a
-
       - name: Run tests with coverage
         id: run-tests
         run: composer test
