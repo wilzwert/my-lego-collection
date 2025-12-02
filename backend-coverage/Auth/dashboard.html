@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <title>Dashboard for /home/runner/work/my-lego-collection/my-lego-collection/back/src/Auth</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="../_css/bootstrap.min.css?v=12.4.0" rel="stylesheet" type="text/css">
+  <link href="../_css/billboard.min.css?v=12.4.0" rel="stylesheet" type="text/css">
+  <link href="../_css/style.css?v=12.4.0" rel="stylesheet" type="text/css">
+  <link href="../_css/custom.css" rel="stylesheet" type="text/css">
+ </head>
+ <body>
+  <header>
+   <div class="container-fluid">
+    <div class="row">
+     <div class="col-md-12">
+      <nav aria-label="breadcrumb">
+       <ol class="breadcrumb">
+         <li class="breadcrumb-item"><a href="../index.html">/home/runner/work/my-lego-collection/my-lego-collection/back/src</a></li>
+         <li class="breadcrumb-item"><a href="index.html">Auth</a></li>
+         <li class="breadcrumb-item active">(Dashboard)</li>
+
+       </ol>
+      </nav>
+     </div>
+    </div>
+   </div>
+  </header>
+  <div class="container-fluid">
+   <div class="row">
+    <div class="col-md-12">
+     <h2>Classes</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="classesCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="classComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Application/Command/ChangeEmailCommand.php.html#5">App\Auth\Application\Command\ChangeEmailCommand</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Handler/ChangeEmailHandler.php.html#14">App\Auth\Application\Handler\ChangeEmailHandler</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Orchestrator/IdentityCompletedOrchestrator.php.html#15">App\Auth\Application\Orchestrator\IdentityCompletedOrchestrator</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Exception/AuthErrorCode.php.html#10">App\Auth\Domain\Exception\AuthErrorCode</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Messenger/AuthEventBus.php.html#13">App\Auth\Infrastructure\Messenger\AuthEventBus</a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Entity/DoctrineIdentity.php.html#9">App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity</a></td><td class="text-right">42%</td></tr>
+       <tr><td><a href="Domain/Event/IdentityCompletedEvent.php.html#11">App\Auth\Domain\Event\IdentityCompletedEvent</a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Infrastructure/Security/User/DummyAuthenticatedUser.php.html#12">App\Auth\Infrastructure\Security\User\DummyAuthenticatedUser</a></td><td class="text-right">50%</td></tr>
+       <tr><td><a href="Infrastructure/EventHandler/IdentityCreatedEventHandler.php.html#15">App\Auth\Infrastructure\EventHandler\IdentityCreatedEventHandler</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Infrastructure/EventHandler/UserCreatedIntegrationEventHandler.php.html#16">App\Auth\Infrastructure\EventHandler\UserCreatedIntegrationEventHandler</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Infrastructure/Service/SymfonyPasswordHasher.php.html#10">App\Auth\Infrastructure\Service\SymfonyPasswordHasher</a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#19">App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository</a></td><td class="text-right">78%</td></tr>
+       <tr><td><a href="Domain/Service/DefaultIdentityService.php.html#15">App\Auth\Domain\Service\DefaultIdentityService</a></td><td class="text-right">81%</td></tr>
+       <tr><td><a href="Infrastructure/Controller/AuthController.php.html#22">App\Auth\Infrastructure\Controller\AuthController</a></td><td class="text-right">85%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Class</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#19">App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository</a></td><td class="text-right">78.9%</td><td class="text-right">11</td><td class="text-right">17</td></tr>
+       <tr><td><a href="Domain/Service/DefaultIdentityService.php.html#15">App\Auth\Domain\Service\DefaultIdentityService</a></td><td class="text-right">81.2%</td><td class="text-right">12</td><td class="text-right">14</td></tr>
+       <tr><td><a href="Infrastructure/Controller/AuthController.php.html#22">App\Auth\Infrastructure\Controller\AuthController</a></td><td class="text-right">85.7%</td><td class="text-right">5</td><td class="text-right">5</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-12">
+     <h2 style="margin-top: 3rem;">Methods</h2>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3>Coverage Distribution</h3>
+     <div id="methodsCoverageDistribution" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3>Complexity</h3>
+     <div id="methodComplexity" style="height: 300px;">
+       <svg></svg>
+     </div>
+    </div>
+   </div>
+   <div class="row">
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Insufficient Coverage</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right">Coverage</th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Application/Command/ChangeEmailCommand.php.html#7"><abbr title="App\Auth\Application\Command\ChangeEmailCommand::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Handler/ChangeEmailHandler.php.html#16"><abbr title="App\Auth\Application\Handler\ChangeEmailHandler::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Handler/ChangeEmailHandler.php.html#23"><abbr title="App\Auth\Application\Handler\ChangeEmailHandler::__invoke">__invoke</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Orchestrator/IdentityCompletedOrchestrator.php.html#17"><abbr title="App\Auth\Application\Orchestrator\IdentityCompletedOrchestrator::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Application/Orchestrator/IdentityCompletedOrchestrator.php.html#23"><abbr title="App\Auth\Application\Orchestrator\IdentityCompletedOrchestrator::__invoke">__invoke</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Event/IdentityCompletedEvent.php.html#23"><abbr title="App\Auth\Domain\Event\IdentityCompletedEvent::getIdentity">getIdentity</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Exception/AuthErrorCode.php.html#15"><abbr title="App\Auth\Domain\Exception\AuthErrorCode::getMessage">getMessage</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Domain/Exception/AuthErrorCode.php.html#20"><abbr title="App\Auth\Domain\Exception\AuthErrorCode::getCode">getCode</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Messenger/AuthEventBus.php.html#15"><abbr title="App\Auth\Infrastructure\Messenger\AuthEventBus::__construct">__construct</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Messenger/AuthEventBus.php.html#19"><abbr title="App\Auth\Infrastructure\Messenger\AuthEventBus::dispatch">dispatch</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Entity/DoctrineIdentity.php.html#52"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity::getId">getId</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Entity/DoctrineIdentity.php.html#57"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity::getEmail">getEmail</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Entity/DoctrineIdentity.php.html#65"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity::getRoles">getRoles</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Entity/DoctrineIdentity.php.html#70"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity::getPasswordHash">getPasswordHash</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Security/User/DummyAuthenticatedUser.php.html#18"><abbr title="App\Auth\Infrastructure\Security\User\DummyAuthenticatedUser::getPassword">getPassword</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Service/SymfonyPasswordHasher.php.html#24"><abbr title="App\Auth\Infrastructure\Service\SymfonyPasswordHasher::isValid">isValid</abbr></a></td><td class="text-right">0%</td></tr>
+       <tr><td><a href="Infrastructure/Controller/AuthController.php.html#44"><abbr title="App\Auth\Infrastructure\Controller\AuthController::me">me</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#26"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository::findByEmail">findByEmail</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#35"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository::findByUsername">findByUsername</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#57"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository::findByIdentifier">findByIdentifier</abbr></a></td><td class="text-right">66%</td></tr>
+       <tr><td><a href="Domain/Service/DefaultIdentityService.php.html#51"><abbr title="App\Auth\Domain\Service\DefaultIdentityService::changeEmail">changeEmail</abbr></a></td><td class="text-right">71%</td></tr>
+       <tr><td><a href="Domain/Service/DefaultIdentityService.php.html#75"><abbr title="App\Auth\Domain\Service\DefaultIdentityService::completeIdentity">completeIdentity</abbr></a></td><td class="text-right">80%</td></tr>
+       <tr><td><a href="Infrastructure/EventSubscriber/AuthRateLimitSubscriber.php.html#39"><abbr title="App\Auth\Infrastructure\EventSubscriber\AuthRateLimitSubscriber::routeShouldBeLimited">routeShouldBeLimited</abbr></a></td><td class="text-right">83%</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="col-md-6">
+     <h3 style="margin-top: 2rem;">Project Risks</h3>
+     <div class="scrollbox">
+      <table class="table">
+       <thead>
+        <tr>
+         <th>Method</th>
+         <th class="text-right"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></th>
+        </tr>
+       </thead>
+       <tbody>
+       <tr><td><a href="Domain/Service/DefaultIdentityService.php.html#51"><abbr title="App\Auth\Domain\Service\DefaultIdentityService::changeEmail">changeEmail</abbr></a></td><td class="text-right">71.4%</td><td class="text-right">4</td><td class="text-right">6</td></tr>
+       <tr><td><a href="Domain/Service/DefaultIdentityService.php.html#75"><abbr title="App\Auth\Domain\Service\DefaultIdentityService::completeIdentity">completeIdentity</abbr></a></td><td class="text-right">80.0%</td><td class="text-right">3</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#57"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository::findByIdentifier">findByIdentifier</abbr></a></td><td class="text-right">66.7%</td><td class="text-right">2</td><td class="text-right">3</td></tr>
+       <tr><td><a href="Infrastructure/Controller/AuthController.php.html#44"><abbr title="App\Auth\Infrastructure\Controller\AuthController::me">me</abbr></a></td><td class="text-right">66.7%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Infrastructure/EventSubscriber/AuthRateLimitSubscriber.php.html#39"><abbr title="App\Auth\Infrastructure\EventSubscriber\AuthRateLimitSubscriber::routeShouldBeLimited">routeShouldBeLimited</abbr></a></td><td class="text-right">83.3%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#26"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository::findByEmail">findByEmail</abbr></a></td><td class="text-right">66.7%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+       <tr><td><a href="Infrastructure/Persistence/Doctrine/Repository/DoctrineIdentityRepository.php.html#35"><abbr title="App\Auth\Infrastructure\Persistence\Doctrine\Repository\DoctrineIdentityRepository::findByUsername">findByUsername</abbr></a></td><td class="text-right">66.7%</td><td class="text-right">2</td><td class="text-right">2</td></tr>
+
+       </tbody>
+      </table>
+     </div>
+    </div>
+   </div>
+   <footer>
+    <hr/>
+    <p>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 12.4.0</a> using <a href="https://www.php.net/" target="_top">PHP 8.4.15</a> and <a href="https://phpunit.de/">PHPUnit 12.4.4</a> at Tue Dec 2 11:38:05 UTC 2025.</small>
+    </p>
+   </footer>
+  </div>
+  <script src="_js/billboard.pkgd.min.js?v=12.4.0" type="text/javascript"></script>
+  <script type="application/json" id="complexity_class">[[0,1,"Application\/Command\/ChangeEmailCommand.php.html#5","App\\Auth\\Application\\Command\\ChangeEmailCommand","2"],[0,2,"Application\/Handler\/ChangeEmailHandler.php.html#14","App\\Auth\\Application\\Handler\\ChangeEmailHandler","6"],[0,2,"Application\/Orchestrator\/IdentityCompletedOrchestrator.php.html#15","App\\Auth\\Application\\Orchestrator\\IdentityCompletedOrchestrator","6"],[0,2,"Domain\/Exception\/AuthErrorCode.php.html#10","App\\Auth\\Domain\\Exception\\AuthErrorCode","6"],[0,2,"Infrastructure\/Messenger\/AuthEventBus.php.html#13","App\\Auth\\Infrastructure\\Messenger\\AuthEventBus","6"],[42.857142857142854,7,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#9","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity","16.14"],[50,2,"Domain\/Event\/IdentityCompletedEvent.php.html#11","App\\Auth\\Domain\\Event\\IdentityCompletedEvent","2.50"],[50,2,"Infrastructure\/Security\/User\/DummyAuthenticatedUser.php.html#12","App\\Auth\\Infrastructure\\Security\\User\\DummyAuthenticatedUser","2.50"],[66.66666666666666,3,"Infrastructure\/EventHandler\/IdentityCreatedEventHandler.php.html#15","App\\Auth\\Infrastructure\\EventHandler\\IdentityCreatedEventHandler","3.33"],[66.66666666666666,3,"Infrastructure\/EventHandler\/UserCreatedIntegrationEventHandler.php.html#16","App\\Auth\\Infrastructure\\EventHandler\\UserCreatedIntegrationEventHandler","3.33"],[66.66666666666666,3,"Infrastructure\/Service\/SymfonyPasswordHasher.php.html#10","App\\Auth\\Infrastructure\\Service\\SymfonyPasswordHasher","3.33"],[78.94736842105263,11,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#19","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository","17.88"],[81.25,12,"Domain\/Service\/DefaultIdentityService.php.html#15","App\\Auth\\Domain\\Service\\DefaultIdentityService","14.92"],[85.71428571428571,5,"Infrastructure\/Controller\/AuthController.php.html#22","App\\Auth\\Infrastructure\\Controller\\AuthController","5.20"],[94.73684210526315,11,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#25","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber","11.06"],[100,1,"Application\/Command\/GetIdentityQuery.php.html#5","App\\Auth\\Application\\Command\\GetIdentityQuery","1"],[100,1,"Application\/Command\/RegistrationCommand.php.html#5","App\\Auth\\Application\\Command\\RegistrationCommand","1"],[100,2,"Application\/Handler\/GetIdentityHandler.php.html#10","App\\Auth\\Application\\Handler\\GetIdentityHandler","2"],[100,2,"Application\/Handler\/RegistrationHandler.php.html#9","App\\Auth\\Application\\Handler\\RegistrationHandler","2"],[100,2,"Application\/Handler\/UserCreatedHandler.php.html#13","App\\Auth\\Application\\Handler\\UserCreatedHandler","2"],[100,2,"Application\/Orchestrator\/IdentityCreatedOrchestrator.php.html#14","App\\Auth\\Application\\Orchestrator\\IdentityCreatedOrchestrator","2"],[100,2,"Domain\/Event\/IdentityCreatedEvent.php.html#11","App\\Auth\\Domain\\Event\\IdentityCreatedEvent","2"],[100,13,"Domain\/Model\/Identity.php.html#14","App\\Auth\\Domain\\Model\\Identity","13"],[100,3,"Infrastructure\/Dto\/IdentityDto.php.html#8","App\\Auth\\Infrastructure\\Dto\\IdentityDto","3"],[100,4,"Infrastructure\/Dto\/RegistrationRequest.php.html#10","App\\Auth\\Infrastructure\\Dto\\RegistrationRequest","4"],[100,0,"Infrastructure\/Persistence\/Doctrine\/Entity\/RefreshToken.php.html#8","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\RefreshToken","0"],[100,5,"Infrastructure\/Security\/User\/AuthenticatedUser.php.html#9","App\\Auth\\Infrastructure\\Security\\User\\AuthenticatedUser","5"],[100,6,"Infrastructure\/Security\/UserProvider.php.html#19","App\\Auth\\Infrastructure\\Security\\UserProvider","6.10"]]</script>
+  <script type="application/json" id="complexity_method">[[0,1,"Application\/Command\/ChangeEmailCommand.php.html#7","App\\Auth\\Application\\Command\\ChangeEmailCommand::__construct","2"],[0,1,"Application\/Handler\/ChangeEmailHandler.php.html#16","App\\Auth\\Application\\Handler\\ChangeEmailHandler::__construct","2"],[0,1,"Application\/Handler\/ChangeEmailHandler.php.html#23","App\\Auth\\Application\\Handler\\ChangeEmailHandler::__invoke","2"],[0,1,"Application\/Orchestrator\/IdentityCompletedOrchestrator.php.html#17","App\\Auth\\Application\\Orchestrator\\IdentityCompletedOrchestrator::__construct","2"],[0,1,"Application\/Orchestrator\/IdentityCompletedOrchestrator.php.html#23","App\\Auth\\Application\\Orchestrator\\IdentityCompletedOrchestrator::__invoke","2"],[0,1,"Domain\/Event\/IdentityCompletedEvent.php.html#23","App\\Auth\\Domain\\Event\\IdentityCompletedEvent::getIdentity","2"],[0,1,"Domain\/Exception\/AuthErrorCode.php.html#15","App\\Auth\\Domain\\Exception\\AuthErrorCode::getMessage","2"],[0,1,"Domain\/Exception\/AuthErrorCode.php.html#20","App\\Auth\\Domain\\Exception\\AuthErrorCode::getCode","2"],[0,1,"Infrastructure\/Messenger\/AuthEventBus.php.html#15","App\\Auth\\Infrastructure\\Messenger\\AuthEventBus::__construct","2"],[0,1,"Infrastructure\/Messenger\/AuthEventBus.php.html#19","App\\Auth\\Infrastructure\\Messenger\\AuthEventBus::dispatch","2"],[0,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#52","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::getId","2"],[0,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#57","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::getEmail","2"],[0,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#65","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::getRoles","2"],[0,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#70","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::getPasswordHash","2"],[0,1,"Infrastructure\/Security\/User\/DummyAuthenticatedUser.php.html#18","App\\Auth\\Infrastructure\\Security\\User\\DummyAuthenticatedUser::getPassword","2"],[0,1,"Infrastructure\/Service\/SymfonyPasswordHasher.php.html#24","App\\Auth\\Infrastructure\\Service\\SymfonyPasswordHasher::isValid","2"],[66.66666666666666,2,"Infrastructure\/Controller\/AuthController.php.html#44","App\\Auth\\Infrastructure\\Controller\\AuthController::me","2.50"],[66.66666666666666,2,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#26","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::findByEmail","2.50"],[66.66666666666666,2,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#35","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::findByUsername","2.50"],[66.66666666666666,2,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#57","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::findByIdentifier","3.69"],[71.42857142857143,4,"Domain\/Service\/DefaultIdentityService.php.html#51","App\\Auth\\Domain\\Service\\DefaultIdentityService::changeEmail","6.00"],[80,3,"Domain\/Service\/DefaultIdentityService.php.html#75","App\\Auth\\Domain\\Service\\DefaultIdentityService::completeIdentity","3.33"],[83.33333333333334,2,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#39","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber::routeShouldBeLimited","2.15"],[100,1,"Application\/Command\/GetIdentityQuery.php.html#7","App\\Auth\\Application\\Command\\GetIdentityQuery::__construct","1"],[100,1,"Application\/Command\/RegistrationCommand.php.html#7","App\\Auth\\Application\\Command\\RegistrationCommand::__construct","1"],[100,1,"Application\/Handler\/GetIdentityHandler.php.html#12","App\\Auth\\Application\\Handler\\GetIdentityHandler::__construct","1"],[100,1,"Application\/Handler\/GetIdentityHandler.php.html#17","App\\Auth\\Application\\Handler\\GetIdentityHandler::__invoke","1"],[100,1,"Application\/Handler\/RegistrationHandler.php.html#11","App\\Auth\\Application\\Handler\\RegistrationHandler::__construct","1"],[100,1,"Application\/Handler\/RegistrationHandler.php.html#17","App\\Auth\\Application\\Handler\\RegistrationHandler::__invoke","1"],[100,1,"Application\/Handler\/UserCreatedHandler.php.html#15","App\\Auth\\Application\\Handler\\UserCreatedHandler::__construct","1"],[100,1,"Application\/Handler\/UserCreatedHandler.php.html#22","App\\Auth\\Application\\Handler\\UserCreatedHandler::__invoke","1"],[100,1,"Application\/Orchestrator\/IdentityCreatedOrchestrator.php.html#16","App\\Auth\\Application\\Orchestrator\\IdentityCreatedOrchestrator::__construct","1"],[100,1,"Application\/Orchestrator\/IdentityCreatedOrchestrator.php.html#22","App\\Auth\\Application\\Orchestrator\\IdentityCreatedOrchestrator::__invoke","1"],[100,1,"Domain\/Event\/IdentityCompletedEvent.php.html#17","App\\Auth\\Domain\\Event\\IdentityCompletedEvent::__construct","1"],[100,1,"Domain\/Event\/IdentityCreatedEvent.php.html#17","App\\Auth\\Domain\\Event\\IdentityCreatedEvent::__construct","1"],[100,1,"Domain\/Event\/IdentityCreatedEvent.php.html#23","App\\Auth\\Domain\\Event\\IdentityCreatedEvent::getIdentity","1"],[100,1,"Domain\/Model\/Identity.php.html#33","App\\Auth\\Domain\\Model\\Identity::__construct","1"],[100,1,"Domain\/Model\/Identity.php.html#53","App\\Auth\\Domain\\Model\\Identity::create","1"],[100,1,"Domain\/Model\/Identity.php.html#72","App\\Auth\\Domain\\Model\\Identity::getId","1"],[100,1,"Domain\/Model\/Identity.php.html#77","App\\Auth\\Domain\\Model\\Identity::getEmail","1"],[100,1,"Domain\/Model\/Identity.php.html#81","App\\Auth\\Domain\\Model\\Identity::getUsername","1"],[100,1,"Domain\/Model\/Identity.php.html#85","App\\Auth\\Domain\\Model\\Identity::getPasswordHash","1"],[100,1,"Domain\/Model\/Identity.php.html#93","App\\Auth\\Domain\\Model\\Identity::getRoles","1"],[100,1,"Domain\/Model\/Identity.php.html#98","App\\Auth\\Domain\\Model\\Identity::isComplete","1"],[100,1,"Domain\/Model\/Identity.php.html#103","App\\Auth\\Domain\\Model\\Identity::getValidationToken","1"],[100,1,"Domain\/Model\/Identity.php.html#111","App\\Auth\\Domain\\Model\\Identity::pullEvents","1"],[100,1,"Domain\/Model\/Identity.php.html#118","App\\Auth\\Domain\\Model\\Identity::complete","1"],[100,1,"Domain\/Model\/Identity.php.html#133","App\\Auth\\Domain\\Model\\Identity::changeEmail","1"],[100,1,"Domain\/Model\/Identity.php.html#148","App\\Auth\\Domain\\Model\\Identity::generateValidationToken","1"],[100,1,"Domain\/Service\/DefaultIdentityService.php.html#17","App\\Auth\\Domain\\Service\\DefaultIdentityService::__construct","1"],[100,2,"Domain\/Service\/DefaultIdentityService.php.html#28","App\\Auth\\Domain\\Service\\DefaultIdentityService::createIdentity","2"],[100,1,"Domain\/Service\/DefaultIdentityService.php.html#41","App\\Auth\\Domain\\Service\\DefaultIdentityService::getIdentityById","1"],[100,1,"Domain\/Service\/DefaultIdentityService.php.html#46","App\\Auth\\Domain\\Service\\DefaultIdentityService::getIdentityByIdentifier","1"],[100,1,"Infrastructure\/Controller\/AuthController.php.html#25","App\\Auth\\Infrastructure\\Controller\\AuthController::__construct","1"],[100,2,"Infrastructure\/Controller\/AuthController.php.html#32","App\\Auth\\Infrastructure\\Controller\\AuthController::register","2"],[100,1,"Infrastructure\/Dto\/IdentityDto.php.html#20","App\\Auth\\Infrastructure\\Dto\\IdentityDto::getEmail","1"],[100,1,"Infrastructure\/Dto\/IdentityDto.php.html#25","App\\Auth\\Infrastructure\\Dto\\IdentityDto::getUsername","1"],[100,1,"Infrastructure\/Dto\/IdentityDto.php.html#33","App\\Auth\\Infrastructure\\Dto\\IdentityDto::getRoles","1"],[100,1,"Infrastructure\/Dto\/RegistrationRequest.php.html#28","App\\Auth\\Infrastructure\\Dto\\RegistrationRequest::__construct","1"],[100,1,"Infrastructure\/Dto\/RegistrationRequest.php.html#38","App\\Auth\\Infrastructure\\Dto\\RegistrationRequest::getEmail","1"],[100,1,"Infrastructure\/Dto\/RegistrationRequest.php.html#42","App\\Auth\\Infrastructure\\Dto\\RegistrationRequest::getUsername","1"],[100,1,"Infrastructure\/Dto\/RegistrationRequest.php.html#47","App\\Auth\\Infrastructure\\Dto\\RegistrationRequest::getPassword","1"],[100,1,"Infrastructure\/EventHandler\/IdentityCreatedEventHandler.php.html#18","App\\Auth\\Infrastructure\\EventHandler\\IdentityCreatedEventHandler::__construct","1"],[100,1,"Infrastructure\/EventHandler\/IdentityCreatedEventHandler.php.html#22","App\\Auth\\Infrastructure\\EventHandler\\IdentityCreatedEventHandler::getMessageHandled","1"],[100,1,"Infrastructure\/EventHandler\/IdentityCreatedEventHandler.php.html#27","App\\Auth\\Infrastructure\\EventHandler\\IdentityCreatedEventHandler::__invoke","1"],[100,1,"Infrastructure\/EventHandler\/UserCreatedIntegrationEventHandler.php.html#19","App\\Auth\\Infrastructure\\EventHandler\\UserCreatedIntegrationEventHandler::__construct","1"],[100,1,"Infrastructure\/EventHandler\/UserCreatedIntegrationEventHandler.php.html#23","App\\Auth\\Infrastructure\\EventHandler\\UserCreatedIntegrationEventHandler::getMessageHandled","1"],[100,1,"Infrastructure\/EventHandler\/UserCreatedIntegrationEventHandler.php.html#28","App\\Auth\\Infrastructure\\EventHandler\\UserCreatedIntegrationEventHandler::__invoke","1"],[100,1,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#27","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber::__construct","1"],[100,1,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#34","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber::isMainRequest","1"],[100,2,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#49","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber::limitShouldBeApplied","2"],[100,4,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#54","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber::onKernelController","4"],[100,1,"Infrastructure\/EventSubscriber\/AuthRateLimitSubscriber.php.html#76","App\\Auth\\Infrastructure\\EventSubscriber\\AuthRateLimitSubscriber::getSubscribedEvents","1"],[100,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#38","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::__construct","1"],[100,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#75","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::fromDomain","1"],[100,1,"Infrastructure\/Persistence\/Doctrine\/Entity\/DoctrineIdentity.php.html#87","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Entity\\DoctrineIdentity::toDomain","1"],[100,1,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#21","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::__construct","1"],[100,2,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#44","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::findByEmailOrUsername","2"],[100,1,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#65","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::findById","1"],[100,1,"Infrastructure\/Persistence\/Doctrine\/Repository\/DoctrineIdentityRepository.php.html#71","App\\Auth\\Infrastructure\\Persistence\\Doctrine\\Repository\\DoctrineIdentityRepository::save","1"],[100,1,"Infrastructure\/Security\/User\/AuthenticatedUser.php.html#11","App\\Auth\\Infrastructure\\Security\\User\\AuthenticatedUser::__construct","1"],[100,1,"Infrastructure\/Security\/User\/AuthenticatedUser.php.html#15","App\\Auth\\Infrastructure\\Security\\User\\AuthenticatedUser::getUserIdentifier","1"],[100,1,"Infrastructure\/Security\/User\/AuthenticatedUser.php.html#20","App\\Auth\\Infrastructure\\Security\\User\\AuthenticatedUser::getRoles","1"],[100,1,"Infrastructure\/Security\/User\/AuthenticatedUser.php.html#25","App\\Auth\\Infrastructure\\Security\\User\\AuthenticatedUser::getPassword","1"],[100,1,"Infrastructure\/Security\/User\/AuthenticatedUser.php.html#30","App\\Auth\\Infrastructure\\Security\\User\\AuthenticatedUser::eraseCredentials","1"],[100,1,"Infrastructure\/Security\/User\/DummyAuthenticatedUser.php.html#15","App\\Auth\\Infrastructure\\Security\\User\\DummyAuthenticatedUser::__construct","1"],[100,1,"Infrastructure\/Security\/UserProvider.php.html#21","App\\Auth\\Infrastructure\\Security\\UserProvider::__construct","1"],[100,3,"Infrastructure\/Security\/UserProvider.php.html#25","App\\Auth\\Infrastructure\\Security\\UserProvider::loadUserByIdentifier","3.14"],[100,1,"Infrastructure\/Security\/UserProvider.php.html#42","App\\Auth\\Infrastructure\\Security\\UserProvider::refreshUser","1"],[100,1,"Infrastructure\/Security\/UserProvider.php.html#48","App\\Auth\\Infrastructure\\Security\\UserProvider::supportsClass","1"],[100,1,"Infrastructure\/Service\/SymfonyPasswordHasher.php.html#13","App\\Auth\\Infrastructure\\Service\\SymfonyPasswordHasher::__construct","1"],[100,1,"Infrastructure\/Service\/SymfonyPasswordHasher.php.html#16","App\\Auth\\Infrastructure\\Service\\SymfonyPasswordHasher::hash","1"]]</script>
+  <script type="text/javascript" defer>
+  const barLabels = [
+    '0%',
+    '0-10%',
+    '10-20%',
+    '20-30%',
+    '30-40%',
+    '40-50%',
+    '50-60%',
+    '60-70%',
+    '70-80%',
+    '80-90%',
+    '90-100%',
+    '100%'
+  ];
+  const barConfig = (name, fullName, values) => ({
+    axis: {
+      x: {
+        type: "category",
+        categories: barLabels,
+      },
+      y: {
+        label: {
+          text: `#${name}`,
+          position: 'outer-top',
+        },
+      },
+    },
+    bindto: `#${name}CoverageDistribution`,
+    data: {
+      columns: [
+        [fullName].concat(values),
+      ],
+      colors: {
+        [fullName]: "rgba(69, 114, 167, 0.75)",
+      },
+      type: "bar",
+    },
+    bar: {
+      width: {
+        ratio: 0.9,
+      },
+    },
+    grid: {
+      focus: {
+        show: false,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">Coverage ${barLabels[data[0].x]}</th></tr>
+            <tr><td class="value">${data[0].value} ${name}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  bb.generate(
+    barConfig('classes', "Class Coverage", [5,0,0,0,0,1,2,3,1,2,1,13])
+  );
+  bb.generate(
+    barConfig('methods', "Method Coverage", [16,0,0,0,0,0,0,4,1,2,0,69])
+  );
+
+  const scatterConfig = (name, complexityData) => ({
+    axis: {
+      x: {
+        label: {
+          text: 'Code Coverage (in percent)',
+          position: 'outer-right',
+        },
+        tick: {
+          values: [0, 20, 40, 60, 80, 100],
+        },
+      },
+      y: {
+        label: {
+          text: 'Cyclomatic Complexity',
+          position: 'outer-top',
+        },
+        min: 0,
+        padding: {
+          bottom: 0,
+          top: 5,
+        },
+      },
+    },
+    bindto: `#${name}Complexity`,
+    data: {
+      columns: [
+        ["complexity_x"].concat(complexityData.map(d => d[0])),
+        ["complexity"].concat(complexityData.map(d => d[1])),
+      ],
+      onclick: function(data, element) {
+        window.location = complexityData[data.index][2];
+      },
+      type: "scatter",
+      xs: {
+        "complexity": "complexity_x",
+      },
+    },
+    grid: {
+      focus: {
+        show: true,
+        y: true,
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        show: true,
+      },
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      contents: function (data) {
+        const coverage = Math.round(data[0].x);
+        const complexity = data[0].value;
+        const targetName = complexityData[data[0].index][3];
+        return `<table class="bb-tooltip"><tbody>
+            <tr><th colspan="2">${targetName}</th></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Coverage</td><td class="name">${coverage}%</td></tr>
+            <tr class="bb-tooltip-name-complexity"><td>Complexity</td><td class="value">${complexity}</td></tr>
+          </tbody></table>`;
+      },
+      grouped: false,
+    },
+  });
+  const classComplexityData = JSON.parse(document.getElementById('complexity_class').textContent);
+  bb.generate(
+    scatterConfig("class", classComplexityData)
+  );
+  const methodComplexityData = JSON.parse(document.getElementById('complexity_method').textContent);
+  bb.generate(
+    scatterConfig("method", methodComplexityData),
+  );
+  </script>
+ </body>
+</html>
