@@ -256,10 +256,10 @@ jobs:
         if: ${{ needs.test.outputs.outcome == 'failure' || needs.quality.outputs.outcome == 'failure' }}
         run: |
           echo "Job failed :"
-          if [ "${{ steps.run-backend-tests.outcome }}" == "failure" ]; then
-            echo "Coverage checks have not been met. See step 'Run tests and generate coverage report' output, and coverage report"
+          if [ "${{ needs.test.outputs.outcome }}" == "failure" ]; then
+            echo "Coverage checks have not been met. See step 'Run tests with coverage"
           fi
-          if [ "${{ steps.quality-gate.outcome }}" == "failure" ]; then
+          if [ "${{ needs.quality.outputs.outcome }}" == "failure" ]; then
             echo "Code quality gate check failed. See step 'SonarQube Quality Gate Check'"
           fi
           exit 1
