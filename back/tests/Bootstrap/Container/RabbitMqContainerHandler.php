@@ -15,6 +15,8 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
 {
     private const string RABBITMQ_VERSION = 'rabbitmq:4';
 
+    private const int RABBITMQ_PORT = 5672;
+
     private const string ENV_VAR_TEMPLATE = 'MESSENGER_TRANSPORT_DSN=amqp://test:test@{{host}}:{{port}}/%2f/messages';
 
     protected function getEnvVarTemplate(): string
@@ -25,21 +27,38 @@ final class RabbitMqContainerHandler extends AbstractTestContainerHandler
     #[\Override]
     public function getFirstMappedPort(): int
     {
-        // for some reason, in CI (GitHub action), port is not available at first
-        if ($this->container) {
-            fwrite(STDERR, '['.microtime(true)."]Waiting for rabbitmq connection...\n");
-            sleep(2);
+        // for some unknown reason, in CI (GitHub action), getFirstMappedPort does not work
+        // we have to freshly inspect the container to get the actual host port
+        /*
+        $inspect = $this->container->getClient()->containerInspect($this->container->getId());
+        $ports = $inspect->getNetworkSettings()->getPorts();
+
+        if (!empty($ports['5672/tcp']) &&!empty($ports['5672/tcp'][0]) && !empty($ports['5672/tcp'][0]->getHostPort())) {
+            return (int)$ports['5672/tcp'][0]->getHostPort();
+        }
+        */
+
+        $bounded = (array) $this->container->getBoundPorts();
+        foreach ($bounded as $port => $ports) {
+            foreach ($ports as $p) {
+                fwrite(STDOUT, sprintf('Bound %s:%s', $port, $p->getHostPort()).PHP_EOL);
+            }
         }
 
+        $first = parent::getFirstMappedPort();
+        fwrite(STDOUT, sprintf('First from parent %s', $first).PHP_EOL);
+        return $first;
         return parent::getFirstMappedPort();
     }
 
     protected function createContainer(): GenericContainer
     {
         return new GenericContainer(self::RABBITMQ_VERSION)
-            ->withExposedPorts(5672)  // port AMQP + port management
+            ->withExposedPorts(self::RABBITMQ_PORT)  // port AMQP + port management
             ->withEnvironment(['RABBITMQ_DEFAULT_USER' => 'test', 'RABBITMQ_DEFAULT_PASS' => 'test'])
-            ->withWait(new WaitForDockerPortAssigned())
+            // for some unknown reason, in CI (GitHub action), WaitForLog + getFirstMappedPort does not work
+            // so we had to create a custom strategy to freshly inspect the container to get the actual host port
+            ->withWait(new WaitForDockerPortAssigned(self::RABBITMQ_PORT, 30000))
             // ->withWait(new WaitForLog('Time to start RabbitMQ', false, 30000))
             // ->withWait(new WaitForHostPort(30000))
         ;
