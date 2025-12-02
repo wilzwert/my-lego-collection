@@ -8,7 +8,6 @@ use App\Auth\Domain\Repository\IdentityRepository;
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Shared\Domain\Service\TransactionProviderException;
 
