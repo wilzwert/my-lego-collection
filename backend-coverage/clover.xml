@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1764677576">
-  <project timestamp="1764677576" name="Clover Coverage">
+<coverage generated="1764684082">
+  <project timestamp="1764684082" name="Clover Coverage">
     <package name="App\Auth\Application\Command">
       <file name="/home/runner/work/my-lego-collection/my-lego-collection/back/src/Auth/Application/Command/ChangeEmailCommand.php">
         <class name="App\Auth\Application\Command\ChangeEmailCommand" namespace="App\Auth\Application\Command">
@@ -1176,60 +1176,6 @@
         <metrics loc="197" ncloc="168" classes="1" methods="11" coveredmethods="5" conditionals="21" coveredconditionals="14" statements="82" coveredstatements="75" elements="114" coveredelements="94"/>
       </file>
     </package>
-    <package name="App\DataFixtures">
-      <file name="/home/runner/work/my-lego-collection/my-lego-collection/back/src/DataFixtures/AppFixtures.php">
-        <class name="App\DataFixtures\AppFixtures" namespace="App\DataFixtures">
-          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
-        </class>
-        <line num="13" type="method" name="load" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="15" type="stmt" count="0"/>
-        <metrics loc="18" ncloc="15" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="1" coveredstatements="0" elements="2" coveredelements="0"/>
-      </file>
-      <file name="/home/runner/work/my-lego-collection/my-lego-collection/back/src/DataFixtures/IdentityFixtures.php">
-        <class name="App\DataFixtures\IdentityFixtures" namespace="App\DataFixtures">
-          <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="0" elements="18" coveredelements="0"/>
-        </class>
-        <line num="18" type="method" name="__construct" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="19" type="stmt" count="0"/>
-        <line num="21" type="method" name="load" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="24" type="stmt" count="0"/>
-        <line num="25" type="stmt" count="0"/>
-        <line num="26" type="stmt" count="0"/>
-        <line num="27" type="stmt" count="0"/>
-        <line num="28" type="stmt" count="0"/>
-        <line num="29" type="stmt" count="0"/>
-        <line num="30" type="stmt" count="0"/>
-        <line num="31" type="stmt" count="0"/>
-        <line num="32" type="stmt" count="0"/>
-        <line num="33" type="stmt" count="0"/>
-        <line num="34" type="stmt" count="0"/>
-        <line num="35" type="stmt" count="0"/>
-        <line num="36" type="stmt" count="0"/>
-        <line num="37" type="stmt" count="0"/>
-        <line num="38" type="stmt" count="0"/>
-        <metrics loc="41" ncloc="37" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="16" coveredstatements="0" elements="18" coveredelements="0"/>
-      </file>
-      <file name="/home/runner/work/my-lego-collection/my-lego-collection/back/src/DataFixtures/UserFixtures.php">
-        <class name="App\DataFixtures\UserFixtures" namespace="App\DataFixtures">
-          <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="0" elements="14" coveredelements="0"/>
-        </class>
-        <line num="17" type="method" name="load" visibility="public" complexity="1" crap="2" count="0"/>
-        <line num="19" type="stmt" count="0"/>
-        <line num="22" type="stmt" count="0"/>
-        <line num="23" type="stmt" count="0"/>
-        <line num="24" type="stmt" count="0"/>
-        <line num="25" type="stmt" count="0"/>
-        <line num="26" type="stmt" count="0"/>
-        <line num="27" type="stmt" count="0"/>
-        <line num="28" type="stmt" count="0"/>
-        <line num="29" type="stmt" count="0"/>
-        <line num="30" type="stmt" count="0"/>
-        <line num="31" type="stmt" count="0"/>
-        <line num="32" type="stmt" count="0"/>
-        <line num="33" type="stmt" count="0"/>
-        <metrics loc="36" ncloc="31" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="0" elements="14" coveredelements="0"/>
-      </file>
-    </package>
     <package name="App">
       <file name="/home/runner/work/my-lego-collection/my-lego-collection/back/src/Kernel.php">
         <class name="App\Kernel" namespace="App">
@@ -2327,6 +2273,6 @@
         <metrics loc="45" ncloc="41" classes="1" methods="4" coveredmethods="3" conditionals="7" coveredconditionals="6" statements="8" coveredstatements="6" elements="19" coveredelements="15"/>
       </file>
     </package>
-    <metrics files="145" loc="5676" ncloc="4890" classes="111" methods="388" coveredmethods="287" conditionals="652" coveredconditionals="541" statements="1028" coveredstatements="825" elements="2068" coveredelements="1653"/>
+    <metrics files="142" loc="5581" ncloc="4807" classes="108" methods="384" coveredmethods="287" conditionals="652" coveredconditionals="541" statements="998" coveredstatements="825" elements="2034" coveredelements="1653"/>
   </project>
 </coverage>
