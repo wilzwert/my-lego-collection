@@ -12,7 +12,7 @@ final class WelcomeNotification extends Notification
         parent::__construct(
             $identityInfo,
             NotificationType::WELCOME,
-            ['validationToken' => $validationToken]
+            ['username' => $identityInfo->getUsername(), 'validationToken' => $validationToken]
         );
     }
 }

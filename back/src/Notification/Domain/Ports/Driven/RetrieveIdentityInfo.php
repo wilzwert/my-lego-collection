@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notification\Application\Ports\Driven;
+namespace App\Notification\Domain\Ports\Driven;
 
 use App\Notification\Domain\Model\IdentityInfo;
 

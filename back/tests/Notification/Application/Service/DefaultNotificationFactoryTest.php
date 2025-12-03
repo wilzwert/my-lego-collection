@@ -2,11 +2,10 @@
 
 namespace App\Tests\Notification\Application\Service;
 
-use App\Notification\Application\Service\DefaultNotificationFactory;
 use App\Notification\Domain\Model\IdentityInfo;
-use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\WelcomeNotification;
-use App\Notification\Application\Ports\Driven\RetrieveIdentityInfo;
+use App\Notification\Domain\Ports\Driven\RetrieveIdentityInfo;
+use App\Notification\Domain\Service\DefaultNotificationFactory;
 use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedEvent\Command\Command;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
@@ -21,7 +20,7 @@ class DefaultNotificationFactoryTest extends TestCase
 {
     private RetrieveIdentityInfo&MockObject $retrieveIdentityInfoMock;
 
-    private DefaultNotificationFactory $factory;
+    private \App\Notification\Domain\Service\DefaultNotificationFactory $factory;
 
     protected function setUp(): void
     {
@@ -33,7 +32,11 @@ class DefaultNotificationFactoryTest extends TestCase
     public function shouldCreateWelcomeNotification(): void
     {
         $command = new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_ID, 'validationToken');
-        $info = new IdentityInfo(TestData::EXISTING_IDENTITY_ID, 'test@example.com');
+        $info = new IdentityInfo(
+            TestData::EXISTING_IDENTITY_ID,
+            'test@example.com',
+        'username'
+        );
 
         $this->retrieveIdentityInfoMock
             ->expects(self::once())

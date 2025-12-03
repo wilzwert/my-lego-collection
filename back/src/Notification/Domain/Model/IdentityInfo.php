@@ -9,7 +9,8 @@ final readonly class IdentityInfo
 {
     public function __construct(
         private readonly string $identityId,
-        private readonly string $email
+        private readonly string $email,
+        private readonly string $username
     ) {
     }
 
@@ -21,5 +22,10 @@ final readonly class IdentityInfo
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
     }
 }

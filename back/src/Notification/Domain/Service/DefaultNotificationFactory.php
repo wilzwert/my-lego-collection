@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Notification\Application\Service;
+namespace App\Notification\Domain\Service;
 
 use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\WelcomeNotification;
-use App\Notification\Application\Ports\Driven\RetrieveIdentityInfo;
+use App\Notification\Domain\Ports\Driven\RetrieveIdentityInfo;
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
 use MyLegoCollection\SharedEvent\Message;
@@ -12,10 +12,10 @@ use MyLegoCollection\SharedEvent\Message;
 /**
  * @author Wilhelm Zwertvaegher
  */
-class DefaultNotificationFactory implements NotificationFactory
+readonly class DefaultNotificationFactory implements NotificationFactory
 {
 
-    public function __construct(private readonly RetrieveIdentityInfo $retrieveIdentityInfo)
+    public function __construct(private RetrieveIdentityInfo $retrieveIdentityInfo)
     {
     }
 

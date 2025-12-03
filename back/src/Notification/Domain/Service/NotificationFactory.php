@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Notification\Application\Service;
+namespace App\Notification\Domain\Service;
 
 use App\Notification\Domain\Model\Notification;
-use MyLegoCollection\SharedEvent\Command\Command;
 use MyLegoCollection\SharedEvent\Message;
 
 /**

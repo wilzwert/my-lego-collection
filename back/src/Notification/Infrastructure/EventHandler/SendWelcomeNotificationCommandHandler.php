@@ -18,8 +18,7 @@ readonly class SendWelcomeNotificationCommandHandler implements CommandHandler
 {
     public function __construct(
         private NotificationCommandHandler $notificationCommandHandler
-    )
-    {
+    ) {
     }
 
     public static function getMessageHandled(): string

@@ -20,3 +20,7 @@ services:
         exclude:
             - '../../src/Notification/Infrastructure/Dto'
             - '../../src/Notification/Infrastructure/Persistence/Doctrine/Entity'
+
+    App\Notification\Infrastructure\Sender\EmailSender:
+        arguments:
+            $renderer: '@App\Notification\Infrastructure\Renderer\HtmlNotificationRenderer'
