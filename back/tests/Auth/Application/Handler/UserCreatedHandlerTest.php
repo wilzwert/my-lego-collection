@@ -2,10 +2,15 @@
 
 namespace App\Tests\Auth\Application\Handler;
 
-use App\Auth\Domain\Model\Identity;
-use App\Shared\Domain\Model\EntityId;
+use App\Auth\Application\Handler\UserCreatedHandler;
+use App\Auth\Domain\Repository\IdentityRepository;
+use App\Shared\Domain\Service\EventBus;
+use App\Shared\Domain\Service\TransactionProvider;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
+use App\Tests\Utilities\TestData;
+use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -13,6 +18,26 @@ use PHPUnit\Framework\TestCase;
  */
 class UserCreatedHandlerTest extends TestCase
 {
+
+    private IdentityRepository&MockObject $identityRepository;
+    private TransactionProvider&MockObject $transactionProvider;
+
+    private EventBus&MockObject $eventBus;
+
+    private UserCreatedHandler $underTest;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->identityRepository = $this->createMock(IdentityRepository::class);
+        $this->transactionProvider = $this->createMock(TransactionProvider::class);
+        $this->eventBus = $this->createMock(EventBus::class);
+        $this->underTest = new UserCreatedHandler(
+            $this->identityRepository,
+            $this->transactionProvider,
+            $this->eventBus
+        );
+    }
 
     #[Test]
     public function complete_shouldDoNothingWhenCurrentIdentityAlreadyComplete(): void
@@ -30,14 +55,15 @@ class UserCreatedHandlerTest extends TestCase
             ->expects($this->never())
             ->method('save');
 
-        // simulate TransactionProvider behavior
+        $this->eventBus
+            ->expects($this->never())
+            ->method('dispatchAll');
+
         $this->transactionProvider
             ->expects($this->never())
             ->method('transactional');
 
-        $result = $this->service->completeIdentity(EntityId::fromString($identityIdAsString));
-
-        self::assertSame($result, $identity);
+        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, $identityIdAsString));
     }
 
 
@@ -56,20 +82,31 @@ class UserCreatedHandlerTest extends TestCase
         $this->identityRepository
             ->expects($this->once())
             ->method('save')
-            ->with($this->isInstanceOf(Identity::class));
+            ->with($this->callback(function ($arg) use (&$savedIdentity) {
+                $savedIdentity = $arg;
+                return true;
+            }));
 
         // simulate TransactionProvider behavior
         $this->transactionProvider
             ->expects($this->once())
             ->method('transactional')
             ->willReturnCallback(
-            // simulate transaction -> just execute callback
-                fn(callable $callback) => $callback()
+                // simulate transaction -> just execute callback
+                fn (callable $callback) => $callback()
             );
 
-        $result = $this->service->completeIdentity(EntityId::fromString($identityIdAsString));
+        $this->eventBus
+            ->expects($this->once())
+            ->method('dispatchAll')
+            ->with($this->callback(function ($arg) use (&$eventsIdentity) {
+                $eventsIdentity = $arg;
+                return true;
+            }));
 
-        self::assertSame(true, $result->isComplete());
+        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, $identityIdAsString));
+
+        self::assertSame(true, $savedIdentity->isComplete());
+        self::assertSame($eventsIdentity, $savedIdentity);
     }
-
 }

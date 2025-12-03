@@ -3,6 +3,7 @@
 namespace App\Tests\Traits;
 
 use App\Auth\Domain\Model\Identity;
+use App\Auth\Domain\Repository\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
 use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
@@ -42,8 +43,8 @@ trait WebTestCaseAuthenticateUserTrait
 
     private function getAuthenticatedUserTokens(string $identifier = 'user1@test.com') : array
     {
-        $identityService = self::getContainer()->get(IdentityService::class);
-        $testIdentity = $identityService->getIdentityByIdentifier($identifier);
+        $identityRepository = self::getContainer()->get(IdentityRepository::class);
+        $testIdentity = $identityRepository->findByIdentifier($identifier);
         $authenticatedUser = new AuthenticatedUser($testIdentity);
         $jwtManager = self::getContainer()->get(JWTTokenManagerInterface::class);
         return [$jwtManager->create($authenticatedUser), 'TODO'];

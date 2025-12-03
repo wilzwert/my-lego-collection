@@ -33,6 +33,7 @@ final class RegistrationHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
         $this->identityRepository = $this->createMock(IdentityRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
 
