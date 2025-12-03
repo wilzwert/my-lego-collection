@@ -3,10 +3,9 @@
 namespace App\Tests\Auth\Infrastructure\Security;
 
 use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Auth\Infrastructure\Security\UserProvider;
-use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

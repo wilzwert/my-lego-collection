@@ -5,6 +5,7 @@ namespace App\Tests\User\Domain\Model;
 use App\Auth\Domain\Model\Identity;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
+use App\User\Domain\Event\AvatarUpdatedEvent;
 use App\User\Domain\Model\User;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -40,7 +41,7 @@ final class UserTest extends TestCase
 
 
     #[Test]
-    public function shouldSetAvatarAndUpdatedAt(): void
+    public function shouldSetAvatar(): void
     {
         $fileId = EntityId::generate();
         $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
@@ -53,5 +54,30 @@ final class UserTest extends TestCase
         self::assertEquals($user->getCreatedAt(), $newUser->getCreatedAt());
         self::assertNotEquals($user->getUpdatedAt(), $newUser->getUpdatedAt());
         self::assertEquals($file, $newUser->getAvatar());
+        $events = $newUser->pullEvents();
+        self::assertCount(1, $events);
+        self::assertInstanceOf(AvatarUpdatedEvent::class, $events[0]);
+        self::assertSame($newUser, $events[0]->getUser());
+    }
+
+    #[Test]
+    public function shouldDeleteAvatar(): void
+    {
+        $fileId = EntityId::generate();
+        $createdAt = new \DateTimeImmutable('2025-11-05T12:00:00');
+        $file = new StoredFile($fileId, 'ad123456.png', 'avatar.png', 'image/png', 'png', 'user.avatar', new \DateTimeImmutable('2025-11-07T12:00:00'));
+        $user = new User($this->id, $this->identityId, $createdAt, $createdAt, $file);
+
+        $newUser = $user->setAvatar(null);
+
+        self::assertNotSame($user, $newUser);
+        self::assertEquals($user->getId(), $newUser->getId());
+        self::assertEquals($user->getCreatedAt(), $newUser->getCreatedAt());
+        self::assertNotEquals($user->getUpdatedAt(), $newUser->getUpdatedAt());
+        self::assertNull($newUser->getAvatar());
+        $events = $newUser->pullEvents();
+        self::assertCount(1, $events);
+        self::assertInstanceOf(AvatarUpdatedEvent::class, $events[0]);
+        self::assertSame($newUser, $events[0]->getUser());
     }
 }

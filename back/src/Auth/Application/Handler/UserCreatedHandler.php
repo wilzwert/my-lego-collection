@@ -2,10 +2,7 @@
 
 namespace App\Auth\Application\Handler;
 
-use App\Auth\Application\Command\GetIdentityQuery;
-use App\Auth\Domain\Event\IdentityCreatedEvent;
-use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;

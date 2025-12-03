@@ -49,7 +49,6 @@ class TestContainersStartSubscriber implements ExecutionStartedSubscriber
                     if (isset($container)) {
                         $containerId = $container->getId();
                         fwrite(STDOUT, "Container logs:\n");
-                        passthru("docker logs  --tail 200 $containerId ||true");
                     }
                     exit(1);
                 }

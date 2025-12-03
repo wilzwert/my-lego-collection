@@ -4,7 +4,7 @@ namespace App\Tests\User\Infrastructure\Controller;
 
 use App\Tests\Traits\TestResourcesTrait;
 use App\Tests\Traits\WebTestCaseAuthenticateUserTrait;
-use App\User\Domain\Repository\UserRepository;
+use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;

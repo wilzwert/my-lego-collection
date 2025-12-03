@@ -4,8 +4,7 @@ namespace App\Tests\Auth\Application\Handler;
 
 use App\Auth\Application\Command\ChangeEmailCommand;
 use App\Auth\Application\Handler\ChangeEmailHandler;
-use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Service\EventBus;

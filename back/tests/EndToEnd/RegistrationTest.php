@@ -2,9 +2,9 @@
 
 namespace App\Tests\EndToEnd;
 
-use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Tests\Traits\WebTestCaseAuthenticateUserTrait;
-use App\User\Domain\Repository\UserRepository;
+use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Infrastructure\Dto\UserDto;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -41,7 +41,7 @@ class RegistrationTest extends WebTestCase
         self::assertResponseStatusCodeSame(Response::HTTP_NO_CONTENT);
 
         // at this point, the Identity entity MUST have been created
-        /** @var IdentityRepository $identityRepository */
+        /** @var \App\Auth\Domain\Port\Driven\IdentityRepository $identityRepository */
         $identityRepository = $this->client->getContainer()->get(IdentityRepository::class);
         $identity = $identityRepository->findByIdentifier(self::USER_EMAIL);
         self::assertNotNull($identity);

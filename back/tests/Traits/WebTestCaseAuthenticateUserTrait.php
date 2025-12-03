@@ -3,8 +3,7 @@
 namespace App\Tests\Traits;
 
 use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Repository\IdentityRepository;
-use App\Auth\Domain\Service\IdentityService;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
 use App\Shared\Domain\Model\EntityId;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;

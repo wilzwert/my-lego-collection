@@ -3,7 +3,7 @@
 namespace App\Tests\Auth\Application\Handler;
 
 use App\Auth\Application\Handler\UserCreatedHandler;
-use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
 use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
