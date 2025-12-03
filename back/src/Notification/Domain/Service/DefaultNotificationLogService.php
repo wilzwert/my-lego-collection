@@ -27,7 +27,7 @@ class DefaultNotificationLogService implements NotificationLogService
             $result->getSender(),
             $result->getStatus(),
             $result->getMessage(),
-            $this->clock->now()
+            $this->clock->getNow()
         );
     }
 }

@@ -129,7 +129,7 @@ services:
 
 
       # bad performance when mounting vendor on windows machines
-      # - ../../back/vendor:/app/vendor
+      - ../../back/vendor:/app/vendor:delegated
       # Windows (WSL) / Linux
       # Mounting docker socket is necessary to enable TestContainers to create containers
       # On windows hosts, you may be able to comment this line, expose the docker API via TCP in Docker Desktop

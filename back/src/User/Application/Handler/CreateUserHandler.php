@@ -22,7 +22,7 @@ readonly class CreateUserHandler
     public function __invoke(CreateUserCommand $command): void
     {
         $this->transactionProvider->transactional(function () use ($command) {
-            $user = $this->userService->createUser(EntityId::fromString($command->getId()));
+            $user = $this->userService->createUser(EntityId::fromString($command->getIdentityId()));
             $this->userRepository->save($user);
             $this->eventBus->dispatchAll($user);
         });

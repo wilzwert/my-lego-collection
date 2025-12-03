@@ -13,7 +13,8 @@ class SendWelcomeNotificationCommand extends Command
     public function __construct(
         private readonly string $identityId,
         private readonly string $validationToken,
-        ?array $metadata = null)
+        ?array $metadata = null
+    )
     {
         parent::__construct(self::TYPE, $metadata);
     }

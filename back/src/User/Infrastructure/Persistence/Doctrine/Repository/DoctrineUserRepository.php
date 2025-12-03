@@ -24,7 +24,7 @@ class DoctrineUserRepository extends ServiceEntityRepository implements UserRepo
 
     public function findById(EntityId $userId): ?User
     {
-        $user = parent::find($userId->__toString());
+        $user = $this->find($userId->__toString());
         return $user?->toDomain();
     }
 

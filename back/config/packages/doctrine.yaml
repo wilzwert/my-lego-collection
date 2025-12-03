@@ -42,6 +42,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence/Doctrine/Entity'
                 prefix: 'App\User\Infrastructure\Persistence\Doctrine'
                 alias: User
+            NotificationDoctrine:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Notification/Infrastructure/Persistence/Doctrine/Entity'
+                prefix: 'App\Notification\Infrastructure\Persistence\Doctrine'
+                alias: Notification
 
         controller_resolver:
             auto_mapping: false

@@ -6,7 +6,6 @@ use App\Auth\Application\Handler\UserCreatedHandler;
 use App\Auth\Infrastructure\EventHandler\UserCreatedIntegrationEventHandler;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
 use App\Tests\Utilities\TestData;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
 use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -37,8 +36,8 @@ class UserCreatedIntegrationEventHandlerTest extends TestCase
     #[Test]
     public function shouldHandleSendWelcomeNotificationCommand(): void
     {
-        self::expectNotToPerformAssertions();
         $event = new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, TestData::EXISTING_IDENTITY_ID);
+        $this->userCreatedHandler->expects(self::once())->method('__invoke')->with($event);
         ($this->userCreatedIntegrationEventHandler)($event);
     }
 }

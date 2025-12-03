@@ -26,7 +26,7 @@ class CreateUserCommandHandlerTest extends TestCase
         $handler = $this->createMock(CreateUserHandler::class);
         $handler->expects($this->once())->method('__invoke')->with(
             $this->callback(function (CreateUserCommand $command) {
-                self::assertSame('identityId', $command->getId());
+                self::assertSame('identityId', $command->getIdentityId());
                 return true;
             })
         );

@@ -24,3 +24,4 @@ services:
     App\Notification\Infrastructure\Sender\EmailSender:
         arguments:
             $renderer: '@App\Notification\Infrastructure\Renderer\HtmlNotificationRenderer'
+            $textRenderer: '@App\Notification\Infrastructure\Renderer\TextNotificationRenderer'

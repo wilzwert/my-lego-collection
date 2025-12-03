@@ -61,7 +61,7 @@ final class NotificationLog implements ProducesDomainEvents
         return $this->identityId;
     }
 
-    public function getUserId(): EntityId
+    public function getUserId(): ?EntityId
     {
         return $this->userId;
     }
