@@ -9,6 +9,7 @@ use App\Notification\Domain\Ports\Driven\NotificationLogRepository;
 use App\Notification\Domain\Ports\Driven\NotificationDispatcher;
 use App\Notification\Domain\Service\NotificationFactory;
 use App\Notification\Domain\Service\NotificationLogService;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
 use MyLegoCollection\SharedEvent\Command\Command;
 
 /**
@@ -20,7 +21,8 @@ readonly class NotificationCommandHandler
         private NotificationFactory       $notificationFactory,
         private NotificationDispatcher    $notificationDispatcher,
         private NotificationLogService    $notificationLogService,
-        private NotificationLogRepository $notificationLogRepository
+        private NotificationLogRepository $notificationLogRepository,
+        private TransactionProvider       $transactionProvider
     ) {
     }
     public function __invoke(Command $command): void
@@ -31,14 +33,16 @@ readonly class NotificationCommandHandler
         // pass to dispatcher
         $results = $this->notificationDispatcher->dispatch($notification);
 
-        // save logs for the notification
-        foreach ($results as $result) {
-            $this->notificationLogRepository->save(
-                $this->notificationLogService->createFromNotification(
-                    $notification,
-                    $result
-                )
-            );
-        }
+        $this->transactionProvider->transactional(function () use ($notification, $results) {
+            // save logs for the notification
+            foreach ($results as $result) {
+                $this->notificationLogRepository->save(
+                    $this->notificationLogService->createFromNotification(
+                        $notification,
+                        $result
+                    )
+                );
+            }
+        });
     }
 }
