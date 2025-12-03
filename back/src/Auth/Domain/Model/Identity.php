@@ -117,6 +117,10 @@ final class Identity implements ProducesDomainEvents
 
     public function complete(): self
     {
+        if ($this->isComplete()) {
+            return $this;
+        }
+
         $new = new self(
             id: $this->id,
             email: $this->email,
