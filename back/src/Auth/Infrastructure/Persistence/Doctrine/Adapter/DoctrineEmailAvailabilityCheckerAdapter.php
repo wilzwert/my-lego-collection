@@ -2,9 +2,8 @@
 
 namespace App\Auth\Infrastructure\Persistence\Doctrine\Adapter;
 
-use App\Auth\Domain\Port\EmailAvailabilityChecker;
-use App\Auth\Domain\Port\IdentityAvailabilityChecker;
-use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Port\Driven\EmailAvailabilityChecker;
+use App\Auth\Domain\Port\Driven\IdentityRepository;
 
 /**
  * @author Wilhelm Zwertvaegher

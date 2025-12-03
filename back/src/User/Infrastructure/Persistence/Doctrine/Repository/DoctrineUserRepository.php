@@ -2,11 +2,10 @@
 
 namespace App\User\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
 use App\User\Domain\Model\User;
-use App\User\Domain\Repository\UserRepository;
+use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;

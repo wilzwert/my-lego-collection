@@ -2,7 +2,7 @@
 
 namespace App\Auth\Infrastructure\Service;
 
-use App\Auth\Domain\Port\PasswordHasher;
+use App\Auth\Domain\Port\Driven\PasswordHasher;
 use App\Auth\Infrastructure\Security\User\DummyAuthenticatedUser;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

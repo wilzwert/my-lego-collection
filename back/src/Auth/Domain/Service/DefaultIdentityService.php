@@ -3,9 +3,9 @@
 namespace App\Auth\Domain\Service;
 
 use App\Auth\Domain\Model\Identity;
-use App\Auth\Domain\Port\EmailAvailabilityChecker;
-use App\Auth\Domain\Port\IdentityAvailabilityChecker;
-use App\Auth\Domain\Port\PasswordHasher;
+use App\Auth\Domain\Port\Driven\EmailAvailabilityChecker;
+use App\Auth\Domain\Port\Driven\IdentityAvailabilityChecker;
+use App\Auth\Domain\Port\Driven\PasswordHasher;
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
 use App\Shared\Domain\Model\EntityId;
 

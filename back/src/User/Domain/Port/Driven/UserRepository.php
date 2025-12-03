@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Domain\Repository;
+namespace App\User\Domain\Port\Driven;
 
 use App\Shared\Domain\Model\EntityId;
 use App\User\Domain\Model\User;

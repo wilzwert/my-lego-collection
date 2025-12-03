@@ -9,10 +9,4 @@ use App\User\Domain\Model\User;
 interface UserService
 {
     public function createUser(EntityId $identityId): ?User;
-
-    public function updateAvatar(User $user, ?StoredFile $storedFile = null): User;
-
-    public function getUserByIdentityId(EntityId $identityId): ?User;
-
-    public function getUserById(EntityId $userId): ?User;
 }
