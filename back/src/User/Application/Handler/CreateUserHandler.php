@@ -3,8 +3,8 @@
 namespace App\User\Application\Handler;
 
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Service\EventBus;
-use App\Shared\Domain\Service\TransactionProvider;
+use App\Shared\Domain\Port\Driven\EventBus;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Domain\Service\UserService;
 use MyLegoCollection\SharedEvent\Command\CreateUserCommand;

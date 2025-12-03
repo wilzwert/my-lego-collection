@@ -8,8 +8,8 @@ use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
 use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Service\EventBus;
-use App\Shared\Domain\Service\TransactionProvider;
+use App\Shared\Domain\Port\Driven\EventBus;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
 
 readonly class ChangeEmailHandler
 {

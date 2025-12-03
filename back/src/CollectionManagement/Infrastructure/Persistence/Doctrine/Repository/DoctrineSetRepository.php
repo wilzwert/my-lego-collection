@@ -4,7 +4,7 @@ namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repositor
 
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Domain\Repository\LocalSetRepository;
+use App\CollectionManagement\Domain\Port\Driven\LocalSetRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;

@@ -2,12 +2,11 @@
 
 namespace App\Shared\Infrastructure\Service;
 
-use App\Shared\Domain\Service\TransactionProvider;
 use Doctrine\ORM\EntityManagerInterface;
 use Override;
 use Throwable;
 
-final readonly class DoctrineTransactionProvider implements TransactionProvider
+final readonly class DoctrineTransactionProvider implements \App\Shared\Domain\Port\Driven\TransactionProvider
 {
 
     public function __construct(private EntityManagerInterface $entityManager)

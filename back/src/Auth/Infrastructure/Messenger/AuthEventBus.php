@@ -3,7 +3,7 @@
 namespace App\Auth\Infrastructure\Messenger;
 
 use App\Shared\Domain\Event\DomainEvent;
-use App\Shared\Domain\Service\EventBus;
+use App\Shared\Domain\Port\Driven\EventBus;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**

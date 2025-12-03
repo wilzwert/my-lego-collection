@@ -1,6 +1,6 @@
 <?php
 
-namespace App\CollectionManagement\Domain\Repository;
+namespace App\CollectionManagement\Domain\Port\Driven;
 
 use App\CollectionManagement\Domain\Model\UserSetCollection;
 

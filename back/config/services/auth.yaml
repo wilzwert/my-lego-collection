@@ -22,7 +22,7 @@ services:
             - '../../src/Auth/Infrastructure/Persistence/Doctrine/Entity'
             - '../../src/Auth/Infrastructure/Security/User'
 
-    App\Shared\Domain\Service\EventBus: '@App\Auth\Infrastructure\Messenger\AuthEventBus'
+    App\Shared\Domain\Port\Driven\EventBus: '@App\Auth\Infrastructure\Messenger\AuthEventBus'
 
     _instanceof:
         # All services implementing the DomainEventHandler interface

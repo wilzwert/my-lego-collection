@@ -28,7 +28,6 @@ final class Identity implements ProducesDomainEvents
      * @param list<string> $roles
      * @param boolean $isComplete
      * @param string $validationToken
-     * @var array<DomainEvent> $events
      * @throws ValidationException
     */
     public function __construct(

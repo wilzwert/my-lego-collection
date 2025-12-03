@@ -2,12 +2,11 @@
 
 namespace App\Tests\Shared\Domain\Service;
 
-use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\TempFile;
-use App\Shared\Domain\Repository\StoredFileRepository;
+use App\Shared\Domain\Port\Driven\StoredFileRepository;
 use App\Shared\Domain\Service\DefaultStoredFileService;
-use App\Shared\Domain\Service\FileStorageService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -18,14 +17,14 @@ final class DefaultStoredFileServiceTest extends TestCase
 {
     private EntityId $storedFileId;
     private StoredFileRepository $storedFileRepository;
-    private FileStorageService $fileStorage;
+    private \App\Shared\Domain\Port\Driven\FileStorageService $fileStorage;
 
     protected function setUp(): void
     {
         $this->storedFileId = EntityId::fromString('123e4567-e89b-42d3-a456-426614174000');
 
         $this->storedFileRepository = $this->createMock(StoredFileRepository::class);
-        $this->fileStorage = $this->createMock(FileStorageService::class);
+        $this->fileStorage = $this->createMock(\App\Shared\Domain\Port\Driven\FileStorageService::class);
 
         $this->service = new DefaultStoredFileService(
             $this->storedFileRepository,

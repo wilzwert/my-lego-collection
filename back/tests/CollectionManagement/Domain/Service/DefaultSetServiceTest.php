@@ -10,7 +10,7 @@ use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Model\UserSetCollection;
-use App\CollectionManagement\Domain\Repository\UserSetRepository;
+use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\CollectionManagement\Domain\Service\DefaultSetService;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
 use App\Shared\Domain\Model\EntityId;

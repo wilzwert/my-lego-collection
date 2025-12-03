@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Shared\Domain\Service;
+namespace App\Shared\Domain\Port\Driven;
+
+use App\Shared\Domain\Exception\TransactionProviderException;
 
 interface TransactionProvider
 {

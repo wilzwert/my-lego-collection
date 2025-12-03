@@ -3,16 +3,14 @@
 namespace App\Tests\User\Application\Handler;
 
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Service\EventBus;
-use App\Shared\Domain\Service\TransactionProvider;
-use App\Tests\User\Domain\Model\UserTest;
+use App\Shared\Domain\Port\Driven\EventBus;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\Tests\User\Utilities\UserTestsUtility;
 use App\User\Application\Handler\CreateUserHandler;
 use App\User\Domain\Model\User;
 use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Domain\Service\UserService;
 use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

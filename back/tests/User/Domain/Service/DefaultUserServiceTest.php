@@ -3,14 +3,11 @@
 namespace App\Tests\User\Domain\Service;
 
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Model\StoredFile;
-use App\Shared\Domain\Service\TransactionProvider;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\User\Domain\Model\User;
 use App\User\Domain\Port\Driven\RetrieveUserForIdentity;
 use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Domain\Service\DefaultUserService;
-use App\User\Infrastructure\Messenger\UserEventBus;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -34,7 +31,7 @@ final class DefaultUserServiceTest extends TestCase
 
         $this->retrieveUserForIdentity = $this->createMock(RetrieveUserForIdentity::class);
         $this->userRepository = $this->createMock(UserRepository::class);
-        $this->transactionProvider = $this->createMock(TransactionProvider::class);
+        $this->transactionProvider = $this->createMock(\App\Shared\Domain\Port\Driven\TransactionProvider::class);
 
         $this->underTest = new DefaultUserService(
             $this->retrieveUserForIdentity,

@@ -3,7 +3,7 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repository;
 
 use App\CollectionManagement\Domain\Model\Local\Part;
-use App\CollectionManagement\Domain\Repository\PartRepository;
+use App\CollectionManagement\Domain\Port\Driven\PartRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
