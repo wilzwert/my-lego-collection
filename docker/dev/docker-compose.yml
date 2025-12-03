@@ -19,8 +19,24 @@ x-worker-base: &worker-base
   healthcheck:
     test: ''
     disable: true
+  networks:
+    - app
+    - messenger
+    - db
+    - mail
+    - cache
 
 services:
+  mail:
+    image: mailhog/mailhog:v1.0.1
+    container_name: "${APP_NAME}-mail"
+    restart: unless-stopped
+    networks:
+      - mail
+    ports:
+      - "8025:8025"
+
+
   db:
     image: postgres:16
     container_name: "${APP_NAME}-db"
@@ -43,7 +59,7 @@ services:
     volumes:
       - ./postgresql_data:/var/lib/postgresql/data
     networks:
-      - default
+      - db
 
   redis:
     image: redis:7
@@ -54,7 +70,7 @@ services:
     # ports:
     #  - "6379:6379"
     networks:
-      - default
+      - cache
 
   ampq:
     image: rabbitmq:4-management
@@ -70,7 +86,7 @@ services:
     volumes:
       - ./rabbitmq_data:/var/lib/rabbitmq
     networks:
-      - default
+      - messenger
 
   app:
     # allow linux hosts to resolve host.docker.internal
@@ -141,7 +157,11 @@ services:
       redis:
           condition: service_started
     networks:
-      - default
+      - app
+      - messenger
+      - db
+      - mail
+      - cache
 
   consumer-async:
     container_name: "${APP_NAME}-consumer-async"
@@ -158,5 +178,13 @@ volumes:
   rabbitmq_data:
 
 networks:
-  default:
+  db:
+    driver: bridge
+  app:
+    driver: bridge
+  messenger:
+    driver: bridge
+  mail:
+    driver: bridge
+  cache:
     driver: bridge
