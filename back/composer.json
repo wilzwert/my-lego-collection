@@ -36,6 +36,7 @@
         "symfony/flex": "^2.10.0",
         "symfony/framework-bundle": "7.3.*",
         "symfony/http-client": "7.3.*",
+        "symfony/mailer": "7.3.*",
         "symfony/maker-bundle": "^1.64",
         "symfony/messenger": "7.3.*",
         "symfony/mime": "7.3.*",
