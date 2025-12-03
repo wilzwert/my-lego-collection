@@ -27,14 +27,12 @@ services:
 
 
     _instanceof:
-        # All services implementing the IntegrationEventHandler interface
-        # in the auth slice must use only the auth.bus
+        # All services implementing the IntegrationEventHandler interface must use only the integration.bus
         App\Shared\Infrastructure\EventHandler\IntegrationEventHandler:
             tags:
                 - { name: messenger.message_handler, bus: integration.bus }
 
-        # All services implementing the CommandHandler interface
-        # in the auth slice must use only the auth.bus
+        # All services implementing the CommandHandler interface must use only the command.bus
         App\Shared\Infrastructure\EventHandler\CommandHandler:
             tags:
                 - { name: messenger.message_handler, bus: command.bus }
