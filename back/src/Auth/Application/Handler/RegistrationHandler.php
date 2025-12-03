@@ -24,10 +24,6 @@ readonly class RegistrationHandler
     public function __invoke(RegistrationCommand $command): void
     {
         $this->transactionProvider->transactional(function () use ($command) {
-            $identity = $this->identityRepository->findByEmailOrUsername($command->email, $command->username);
-            if ($identity) {
-                throw new EntityAlreadyExistsException('Identity already exists');
-            }
             $identity = $this->identityService->createIdentity($command->email, $command->username, $command->password);
             $this->identityRepository->save($identity);
             $this->eventBus->dispatchAll($identity);

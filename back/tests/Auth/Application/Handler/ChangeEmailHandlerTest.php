@@ -20,6 +20,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ChangeEmailHandlerTest extends TestCase
 {
+    private IdentityService&MockObject $identityService;
     private IdentityRepository&MockObject $identityRepository;
 
     private TransactionProvider&MockObject $transactionProvider;
@@ -30,56 +31,25 @@ class ChangeEmailHandlerTest extends TestCase
 
     protected function setUp(): void
     {
+        $this->identityService = $this->createMock(IdentityService::class);
         $this->identityRepository = $this->createMock(IdentityRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
         $this->eventBus = $this->createMock(EventBus::class);
         $this->underTest = new ChangeEmailHandler(
+            $this->identityService,
             $this->identityRepository,
             $this->transactionProvider,
             $this->eventBus
         );
     }
 
-    #[Test]
-    public function changeEmail_shouldDoNothingWhenEmailEqualsCurrentEmail(): void
-    {
-        $email = 'john@example.com';
-        $identity = AuthTestsUtility::generateKnownIdentity(email: $email);
-        $identityIdAsString = $identity->getId()->value();
-        $command = new ChangeEmailCommand($identityIdAsString, $email);
-
-        $this->identityRepository
-            ->expects($this->once())
-            ->method('findById')
-            ->with($identityIdAsString)
-            ->willReturn($identity);
-
-        $this->identityRepository
-            ->expects($this->never())
-            ->method('findByIdentifier');
-
-        $this->identityRepository
-            ->expects($this->never())
-            ->method('save');
-
-        // simulate TransactionProvider behavior
-        $this->transactionProvider
-            ->expects($this->never())
-            ->method('transactional');
-
-        $result = ($this->underTest)($command);
-
-        self::assertSame($result, $identity);
-    }
-
 
     #[Test]
     public function shouldChangeEmailWithinTransaction(): void
     {
-        $email = 'john@example.com';
         $identity = AuthTestsUtility::generateKnownIdentity();
         $identityIdAsString = $identity->getId()->value();
-        $command = new ChangeEmailCommand($identityIdAsString, $email);
+        $command = new ChangeEmailCommand($identityIdAsString, 'test@example.com');
 
         $this->identityRepository
             ->expects($this->once())
@@ -93,30 +63,34 @@ class ChangeEmailHandlerTest extends TestCase
             )
             ->willReturn($identity);
 
-        // simulate available email
-        $this->identityRepository
+        $this->identityService
             ->expects($this->once())
-            ->method('findByIdentifier')
-            ->with($email)
-            ->willReturn(null);
+            ->method('changeEmail')
+            ->with($identity)
+            ->willReturn($identity);
 
         $this->identityRepository
             ->expects($this->once())
             ->method('save')
-            ->with($this->isInstanceOf(Identity::class));
+            ->with($identity);
+
+        $this->eventBus
+            ->expects($this->once())
+            ->method('dispatchAll')
+            ->with($identity);
 
         // simulate TransactionProvider behavior
         $this->transactionProvider
             ->expects($this->once())
             ->method('transactional')
             ->willReturnCallback(
-            // simulate transaction -> just execute callback
-                fn(callable $callback) => $callback()
+                // simulate transaction -> just execute callback
+                fn (callable $callback) => $callback()
             );
 
         $result = ($this->underTest)($command);
 
-        self::assertSame($email, $result->getEmail());
+        self::assertSame($identity, $result);
     }
 
 }

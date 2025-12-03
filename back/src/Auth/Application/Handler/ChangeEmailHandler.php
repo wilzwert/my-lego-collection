@@ -18,6 +18,7 @@ use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
 readonly class ChangeEmailHandler
 {
     public function __construct(
+        private IdentityService $identityService,
         private IdentityRepository  $identityRepository,
         private TransactionProvider $transactionProvider,
         private EventBus $eventBus
@@ -33,21 +34,11 @@ readonly class ChangeEmailHandler
             throw new EntityNotFoundException("Identity with identifier could not be found");
         }
 
-        if ($identity->getEmail() === $command->email) {
-            return $identity;
-        }
-
-        $existingIdentity = $this->identityRepository->findByIdentifier($command->email);
-        if (null !== $existingIdentity) {
-            throw new EntityAlreadyExistsException('Email is taken');
-        }
-
         return $this->transactionProvider->transactional(function () use ($identity, $command) {
-            $identity = $identity->changeEmail($command->email);
+            $identity = $this->identityService->changeEmail($identity, $command->email);
             $this->identityRepository->save($identity);
             $this->eventBus->dispatchAll($identity);
             return $identity;
         });
-
     }
 }

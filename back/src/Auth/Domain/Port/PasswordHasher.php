@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Auth\Domain\Service;
+namespace App\Auth\Domain\Port;
 
 interface PasswordHasher
 {

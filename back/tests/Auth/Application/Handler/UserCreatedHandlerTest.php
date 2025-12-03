@@ -4,6 +4,7 @@ namespace App\Tests\Auth\Application\Handler;
 
 use App\Auth\Application\Handler\UserCreatedHandler;
 use App\Auth\Domain\Repository\IdentityRepository;
+use App\Auth\Domain\Service\IdentityService;
 use App\Shared\Domain\Service\EventBus;
 use App\Shared\Domain\Service\TransactionProvider;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
@@ -19,6 +20,7 @@ use PHPUnit\Framework\TestCase;
 class UserCreatedHandlerTest extends TestCase
 {
 
+    private IdentityService&MockObject $identityService;
     private IdentityRepository&MockObject $identityRepository;
     private TransactionProvider&MockObject $transactionProvider;
 
@@ -29,41 +31,16 @@ class UserCreatedHandlerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->identityService = $this->createMock(IdentityService::class);
         $this->identityRepository = $this->createMock(IdentityRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
         $this->eventBus = $this->createMock(EventBus::class);
         $this->underTest = new UserCreatedHandler(
+            $this->identityService,
             $this->identityRepository,
             $this->transactionProvider,
             $this->eventBus
         );
-    }
-
-    #[Test]
-    public function complete_shouldDoNothingWhenCurrentIdentityAlreadyComplete(): void
-    {
-        $identity = AuthTestsUtility::generateKnownIdentity(isComplete: true);
-        $identityIdAsString = $identity->getId()->value();
-
-        $this->identityRepository
-            ->expects($this->once())
-            ->method('findById')
-            ->with($identity->getId())
-            ->willReturn($identity);
-
-        $this->identityRepository
-            ->expects($this->never())
-            ->method('save');
-
-        $this->eventBus
-            ->expects($this->never())
-            ->method('dispatchAll');
-
-        $this->transactionProvider
-            ->expects($this->never())
-            ->method('transactional');
-
-        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, $identityIdAsString));
     }
 
 
@@ -71,6 +48,7 @@ class UserCreatedHandlerTest extends TestCase
     public function shouldCompleteIdentityWithinTransaction(): void
     {
         $identity = AuthTestsUtility::generateKnownIdentity();
+        $completedIdentity = $identity->complete();
         $identityIdAsString = $identity->getId()->value();
 
         $this->identityRepository
@@ -78,6 +56,12 @@ class UserCreatedHandlerTest extends TestCase
             ->method('findById')
             ->with($identityIdAsString)
             ->willReturn($identity);
+
+        $this->identityService
+            ->expects($this->once())
+            ->method('complete')
+            ->with($identity)
+            ->willReturn($completedIdentity);
 
         $this->identityRepository
             ->expects($this->once())
@@ -107,6 +91,7 @@ class UserCreatedHandlerTest extends TestCase
         ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, $identityIdAsString));
 
         self::assertSame(true, $savedIdentity->isComplete());
+        self::assertSame($completedIdentity, $savedIdentity);
         self::assertSame($eventsIdentity, $savedIdentity);
     }
 }

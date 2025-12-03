@@ -16,6 +16,7 @@ use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
 readonly class UserCreatedHandler
 {
     public function __construct(
+        private IdentityService  $identityService,
         private IdentityRepository  $identityRepository,
         private TransactionProvider $transactionProvider,
         private EventBus $eventBus
@@ -31,12 +32,8 @@ readonly class UserCreatedHandler
             throw new EntityNotFoundException("Identity with id $identityId could not be found");
         }
 
-        if ($identity->isComplete()) {
-            return;
-        }
-
         $this->transactionProvider->transactional(function () use ($identity) {
-            $identity = $identity->complete();
+            $identity = $this->identityService->complete($identity);
             $this->identityRepository->save($identity);
             $this->eventBus->dispatchAll($identity);
             return $identity;

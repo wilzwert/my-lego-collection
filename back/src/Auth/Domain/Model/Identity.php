@@ -2,6 +2,7 @@
 
 namespace App\Auth\Domain\Model;
 
+use App\Auth\Domain\Event\EmailChangedEvent;
 use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Exception\AuthErrorCode;
@@ -145,7 +146,7 @@ final class Identity implements ProducesDomainEvents
             isComplete: true,
             validationToken: $this->generateValidationToken()
         );
-        // TODO $new->events = [new IdentityCompletedEvent($new)];
+        $new->events = [new EmailChangedEvent($new)];
         return $new;
     }
 

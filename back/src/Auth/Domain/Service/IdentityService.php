@@ -10,4 +10,8 @@ interface IdentityService
 {
     public function createIdentity(string $email, string $username, string $password): ?Identity;
 
+    public function changeEmail(Identity $identity, string $email): Identity;
+
+    public function complete(Identity $identity): Identity;
+
 }
