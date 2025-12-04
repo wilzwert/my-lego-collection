@@ -17,12 +17,11 @@ final readonly class EmailSender implements NotificationSender
 {
 
     public function __construct(
-        private MailerInterface              $mailer,
+        private MailerInterface             $mailer,
         private NotificationRenderer         $renderer,
         private NotificationRenderer         $textRenderer,
         private NotificationSubjectGenerator $subjectGenerator
-    )
-    {
+    ) {
     }
 
     public function supports(Notification $notification): bool
