@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Infrastructure\Normalizer;
+namespace App\Tests\Shared\Unit\Infrastructure\Normalizer;
 
 use App\Shared\Domain\Exception\EntityAlreadyExistsException;
 use App\Shared\Domain\Exception\EntityNotFoundException;

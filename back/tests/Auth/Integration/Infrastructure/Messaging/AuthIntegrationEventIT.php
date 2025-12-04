@@ -35,9 +35,6 @@ class AuthIntegrationEventIT extends KernelTestCase
     {
         $container = self::getContainer();
 
-        /** @var DummySyncCommandHandler $dummyHandler */
-        $dummyHandler = $container->get(DummySyncCommandHandler::class);
-
         /** @var MessageBusInterface $bus */
         $authBus = $container->get('auth.bus');
 
@@ -62,7 +59,7 @@ class AuthIntegrationEventIT extends KernelTestCase
             $asyncTransport,
             $domainEvent,
             IdentityCreatedIntegrationEvent::class,
-            fn(IdentityCreatedIntegrationEvent $event) => $knownIdentity->getId()->value() === $event->getIdentityId()
+            fn (IdentityCreatedIntegrationEvent $event) => $knownIdentity->getId()->value() === $event->getIdentityId()
         );
         self::assertNotNull($asyncEvent);
 
@@ -71,9 +68,8 @@ class AuthIntegrationEventIT extends KernelTestCase
             $asyncTransport,
             $domainEvent,
             CreateUserCommand::class,
-            fn(CreateUserCommand $command) => $knownIdentity->getId()->value() === $command->getIdentityId()
+            fn (CreateUserCommand $command) => $knownIdentity->getId()->value() === $command->getIdentityId()
         );
         self::assertNotNull($asyncCommand);
-        self::assertTrue($this->handlerContains($dummyHandler, $asyncCommand));
     }
 }

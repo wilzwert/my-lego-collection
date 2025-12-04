@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Infrastructure\Security;
+namespace App\Tests\Shared\Unit\Infrastructure\Security;
 
 /**
  * @author Wilhelm Zwertvaegher

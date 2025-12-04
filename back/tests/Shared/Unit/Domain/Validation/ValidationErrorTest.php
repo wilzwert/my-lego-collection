@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Domain\Validation;
+namespace App\Tests\Shared\Unit\Domain\Validation;
 
 use App\Shared\Domain\Exception\ErrorCode;
 use App\Shared\Domain\Validation\ValidationError;

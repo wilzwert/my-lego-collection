@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Tests\Shared\Infrastructure\Service;
+namespace App\Tests\Shared\Integration\Infrastructure\Service;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
 
 
-use App\Shared\Infrastructure\Service\Base64FileDecoder;
 use App\Shared\Domain\Model\TempFile;
+use App\Shared\Infrastructure\Service\Base64FileDecoder;
 use App\Tests\Traits\TestResourcesTrait;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

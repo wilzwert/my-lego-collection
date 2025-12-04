@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Domain\Model;
+namespace App\Tests\Shared\Unit\Domain\Model;
 
 use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;

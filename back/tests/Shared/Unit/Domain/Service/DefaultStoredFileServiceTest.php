@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Domain\Service;
+namespace App\Tests\Shared\Unit\Domain\Service;
 
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;

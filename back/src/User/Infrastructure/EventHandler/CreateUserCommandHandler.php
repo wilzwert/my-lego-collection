@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * @implements CommandHandler<CreateUserCommand>
  * @author Wilhelm Zwertvaegher
  */
-#[AsMessageHandler(fromTransport: 'sync', priority: 10)]
+#[AsMessageHandler]
 readonly class CreateUserCommandHandler implements CommandHandler
 {
     public function __construct(private CreateUserHandler $createUserHandler)

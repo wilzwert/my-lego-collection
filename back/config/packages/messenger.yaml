@@ -12,8 +12,7 @@ framework:
                     - doctrine_transaction
 
             integration.bus:
-                default_middleware:
-                    enabled: true
+                default_middleware: allow_no_handlers
 
             auth.bus:
                 default_middleware:
@@ -42,16 +41,6 @@ framework:
             # 'App\Message\YourM': async
             'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
             'MyLegoCollection\SharedEvent\Command\Command': async
-
-
-            # it's important the CreateUserCommand is handled synchronously by the User slice
-            'MyLegoCollection\SharedEvent\Command\CreateUserCommand': sync
-
-            # it's important the UserCreatedIntegrationEvent is handled synchronously by the Auth slice
-
-            'MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent': sync
-
-
 
 # when@test:
 #    framework:

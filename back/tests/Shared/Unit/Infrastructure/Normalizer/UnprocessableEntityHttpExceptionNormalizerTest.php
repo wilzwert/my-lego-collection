@@ -1,9 +1,7 @@
 <?php
 
-namespace App\Tests\Shared\Infrastructure\Normalizer;
+namespace App\Tests\Shared\Unit\Infrastructure\Normalizer;
 
-use App\Shared\Domain\Exception\EntityAlreadyExistsException;
-use App\Shared\Infrastructure\Normalizer\DomainExceptionNormalizer;
 use App\Shared\Infrastructure\Normalizer\UnprocessableEntityHttpExceptionNormalizer;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

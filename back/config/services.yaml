@@ -13,6 +13,14 @@ imports:
 parameters:
     public_upload_dir: '%kernel.project_dir%/public/uploads'
     public_upload_base_url: '%env(PUBLIC_UPLOAD_BASE_URL)%'
+    frontends:
+        app: '%env(FRONTEND_APP_URL)%'
+    frontend_routes:
+        app:
+            home: ''
+            confirm_identity: /account/confirm/:token
+            account: /account
+            collection: /collection
 
 services:
     # default configuration for services in *this* file
@@ -24,6 +32,12 @@ services:
     # please note that last definitions always *replace* previous ones
     App\DataFixtures\:
         resource: '../src/DataFixtures/'
+
+
+    App\Shared\Infrastructure\Service\FrontendUrlGenerator:
+        arguments:
+            $frontends: '%frontends%'
+            $routes: '%frontend_routes%'
 
 
     _instanceof:

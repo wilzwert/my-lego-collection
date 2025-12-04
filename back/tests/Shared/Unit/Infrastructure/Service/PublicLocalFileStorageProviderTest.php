@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Shared\Infrastructure\Service;
+namespace App\Tests\Shared\Unit\Infrastructure\Service;
 
 use App\Shared\Domain\Exception\FileStorageException;
 use App\Shared\Domain\Model\EntityId;

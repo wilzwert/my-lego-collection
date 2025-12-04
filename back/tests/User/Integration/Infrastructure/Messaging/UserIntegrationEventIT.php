@@ -2,6 +2,7 @@
 
 namespace App\Tests\User\Integration\Infrastructure\Messaging;
 
+use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;
 use App\Tests\Traits\MessengerTestingTrait;
 use App\Tests\User\Utilities\UserTestsUtility;
@@ -35,9 +36,6 @@ class UserIntegrationEventIT extends KernelTestCase
     {
         $container = self::getContainer();
 
-        /** @var DummySyncIntegrationEventHandler $dummyHandler */
-        $dummyHandler = $container->get(DummySyncIntegrationEventHandler::class);
-
         /** @var MessageBusInterface $bus */
         $userBus = $container->get('user.bus');
 
@@ -46,11 +44,13 @@ class UserIntegrationEventIT extends KernelTestCase
 
         // DomainEvent to dispatch to the local slice bus
         $domainEvent = $this->createTrackableMessage(
-            fn (array $metadata) =>
+        /**
+         * @throws InvalidEntityIdException
+         */ fn (array $metadata) =>
                 new UserCreatedEvent(
                     UserTestsUtility::generateUser(
-                        identityId: EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1'),
-                        userId: EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1')
+                        userId: EntityId::fromString('a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1'),
+                        identityId: EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1')
                     ),
                     $metadata
                 )
@@ -58,7 +58,7 @@ class UserIntegrationEventIT extends KernelTestCase
 
         $userBus->dispatch($domainEvent);
 
-        // UserCreatedIntegrationEvent must be sent on both sync and async transports
+        // UserCreatedIntegrationEvent must be sent on async transport
         $asyncEvent = $this->getTransportMatchingMessage(
             $asyncTransport,
             $domainEvent,
@@ -66,6 +66,5 @@ class UserIntegrationEventIT extends KernelTestCase
             fn (UserCreatedIntegrationEvent $event) => 'a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1' === $event->getId()
         );
         self::assertNotNull($asyncEvent);
-        self::assertTrue($this->handlerContains($dummyHandler, $asyncEvent));
     }
 }

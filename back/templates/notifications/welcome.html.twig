@@ -5,6 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-Welcome {{ username }}
+<p>Welcome {{ username }},</p>
+<p>
+Please follow <a href="{{ frontend_url('app', 'confirm_identity', { token: validationToken }) }}">
+        this link
+    </a> to confirm your account.
+</p>
 </body>
 </html>

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Tests\Shared\Domain\Exception;
+namespace App\Tests\Shared\Unit\Domain\Exception;
 
-use App\Shared\Domain\Exception\ErrorCode;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

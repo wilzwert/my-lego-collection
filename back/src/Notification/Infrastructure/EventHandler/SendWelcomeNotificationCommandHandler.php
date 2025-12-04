@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * @implements CommandHandler<SendWelcomeNotificationCommand>
  * @author Wilhelm Zwertvaegher
  */
-#[AsMessageHandler(fromTransport: "async")]
+#[AsMessageHandler]
 readonly class SendWelcomeNotificationCommandHandler implements CommandHandler
 {
     public function __construct(
