@@ -13,7 +13,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * @implements DomainEventHandler<IdentityCreatedEvent>
  * @author Wilhelm Zwertvaegher
  */
-#[AsMessageHandler(fromTransport: 'sync', priority: 10)]
+#[AsMessageHandler]
 readonly class IdentityCreatedEventHandler implements DomainEventHandler
 {
     public function __construct(private IdentityCreatedOrchestrator $orchestrator)

@@ -14,17 +14,18 @@ framework:
             integration.bus:
                 default_middleware:
                     enabled: true
-                    allow_no_handlers: true
-                    allow_no_senders: true
 
             auth.bus:
-                default_middleware: allow_no_handlers
+                default_middleware:
+                    enabled: true
 
             user.bus:
-                default_middleware: allow_no_handlers
+                default_middleware:
+                    enabled: true
 
             collection-management.bus:
-                default_middleware: allow_no_handlers
+                default_middleware:
+                    enabled: true
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
@@ -40,14 +41,15 @@ framework:
             # Route your messages to the transports
             # 'App\Message\YourM': async
             'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
+            'MyLegoCollection\SharedEvent\Command\Command': async
 
-            # it's important the CreateUserCommand can also be handled immediately by the User slice
+
+            # it's important the CreateUserCommand is handled synchronously by the User slice
             'MyLegoCollection\SharedEvent\Command\CreateUserCommand': sync
 
-            # it's important the UserCreatedIntegrationEvent can also be handled immediately by the Auth slice
-            'MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent': sync
+            # it's important the UserCreatedIntegrationEvent is handled synchronously by the Auth slice
 
-            'MyLegoCollection\SharedEvent\Command\Command': async
+            'MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent': sync
 
 
 

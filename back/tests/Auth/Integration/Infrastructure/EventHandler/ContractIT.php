@@ -18,10 +18,11 @@ class ContractIT extends KernelTestCase
     use SliceInfraHandlersTrait;
 
     #[Test]
-    public function shouldHaveDomainEventHandlers(): void
+    public function shouldHaveMessageHandlers(): void
     {
         self::assertHasMessageHandlers(
-            'Auth', [
+            'Auth',
+            [
                 IdentityCreatedEvent::class,
                 IdentityCreatedEvent::class,
                 UserCreatedIntegrationEvent::class

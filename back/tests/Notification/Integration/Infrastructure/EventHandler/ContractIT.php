@@ -17,7 +17,7 @@ class ContractIT extends KernelTestCase
     use SliceInfraHandlersTrait;
 
     #[Test]
-    public function shouldHaveCommandHandlers(): void
+    public function shouldHaveMessageHandlers(): void
     {
         self::assertHasMessageHandlers('Notification', [SendWelcomeNotificationCommand::class]);
     }

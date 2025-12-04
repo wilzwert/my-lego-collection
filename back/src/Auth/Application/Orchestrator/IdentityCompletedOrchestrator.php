@@ -6,7 +6,6 @@ use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Shared\Infrastructure\Messenger\CommandBus;
 use App\Shared\Infrastructure\Messenger\IntegrationEventBus;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -14,8 +13,7 @@ use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 class IdentityCompletedOrchestrator
 {
     public function __construct(
-        private readonly CommandBus          $commandBus,
-        private readonly IntegrationEventBus $integrationBus,
+        private readonly CommandBus          $commandBus
     ) {
     }
 
