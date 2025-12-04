@@ -20,6 +20,12 @@ class ContractIT extends KernelTestCase
     #[Test]
     public function shouldHaveDomainEventHandlers(): void
     {
-        self::assertHasMessageHandlers('Auth', [IdentityCreatedEvent::class, UserCreatedIntegrationEvent::class]);
+        self::assertHasMessageHandlers(
+            'Auth', [
+                IdentityCreatedEvent::class,
+                IdentityCreatedEvent::class,
+                UserCreatedIntegrationEvent::class
+            ]
+        );
     }
 }
