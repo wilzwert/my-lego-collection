@@ -38,7 +38,7 @@ final class DefaultSetServiceTest extends TestCase
 
         $legoDataProvider = $this->createMock(LegoDataProvider::class);
         $legoDataProvider
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findSets')
             ->with('space')
             ->willReturn($setsCollection);
@@ -75,14 +75,14 @@ final class DefaultSetServiceTest extends TestCase
         // Mocks LegoDataProvider + UserSetRepository
         $legoDataProvider = $this->createMock(LegoDataProvider::class);
         $legoDataProvider
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findSets')
             ->with('castle')
             ->willReturn($externalSetsCollection);
 
         $userSetRepository = $this->createMock(UserSetRepository::class);
         $userSetRepository
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findByUserAndExternalIds')
             ->with($userId, ['externalId1', 'externalId2'])
             ->willReturn($userSetCollection);

@@ -32,7 +32,7 @@ final class SearchSetHandlerTest extends TestCase
 
         $setService = $this->createMock(SetService::class);
         $setService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findSets')
             ->with('set', $userId)
             ->willReturn($expectedResult);
@@ -56,7 +56,7 @@ final class SearchSetHandlerTest extends TestCase
 
         $setService = $this->createMock(SetService::class);
         $setService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findSets')
             ->with('set', null)
             ->willReturn($expectedResult);

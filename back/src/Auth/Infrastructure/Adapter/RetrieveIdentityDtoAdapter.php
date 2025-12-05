@@ -7,7 +7,7 @@ use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Notification\Application\Port\Driven\RetrieveIdentityDto;
 use App\Notification\Domain\Model\IdentityInfo;
 use App\Shared\Domain\Model\EntityId;
-use MyLegoCollection\SharedEvent\Dto\IdentityDto;
+use MyLegoCollection\SharedContracts\Dto\IdentityDto;
 
 /**
  * @author Wilhelm Zwertvaegher

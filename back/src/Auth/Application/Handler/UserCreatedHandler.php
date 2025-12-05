@@ -8,7 +8,7 @@ use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Port\Driven\EventBus;
 use App\Shared\Domain\Port\Driven\TransactionProvider;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 
 readonly class UserCreatedHandler
 {

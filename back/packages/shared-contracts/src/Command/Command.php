@@ -1,7 +1,8 @@
 <?php
-namespace MyLegoCollection\SharedEvent\Command;
 
-use MyLegoCollection\SharedEvent\Message;
+namespace MyLegoCollection\SharedContracts\Command;
+
+use MyLegoCollection\SharedContracts\Message;
 
 /**
  * @author Wilhelm Zwertvaegher

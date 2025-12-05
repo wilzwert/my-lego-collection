@@ -5,7 +5,7 @@ namespace App\Auth\Application\Orchestrator;
 use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Shared\Infrastructure\Messenger\CommandBus;
 use App\Shared\Infrastructure\Messenger\IntegrationEventBus;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 
 /**
  * @author Wilhelm Zwertvaegher

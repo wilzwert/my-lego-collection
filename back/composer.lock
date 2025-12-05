@@ -1636,7 +1636,7 @@
             "dist": {
                 "type": "path",
                 "url": "packages/shared-contracts",
-                "reference": "049a5d435de44d74e3a75a4ff7b50464d566db6c"
+                "reference": "3381bf0152552a228a97bc69cb9da04744b9f6e3"
             },
             "require": {
                 "symfony/uid": "7.3.*"
@@ -1644,7 +1644,7 @@
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "MyLegoCollection\\SharedEvent\\": "src/"
+                    "MyLegoCollection\\SharedContracts\\": "src/"
                 }
             },
             "transport-options": {

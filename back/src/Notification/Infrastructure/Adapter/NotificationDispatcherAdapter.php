@@ -4,8 +4,8 @@ namespace App\Notification\Infrastructure\Adapter;
 
 use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\NotificationDispatchResult;
-use App\Notification\Domain\Ports\Driven\NotificationDispatcher;
-use App\Notification\Domain\Ports\Driven\NotificationLogRepository;
+use App\Notification\Domain\Port\Driven\NotificationDispatcher;
+use App\Notification\Domain\Port\Driven\NotificationLogRepository;
 use App\Notification\Infrastructure\Sender\NotificationSender;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 

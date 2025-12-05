@@ -3,6 +3,9 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
+    App\Notification\Application\Port\Driven\RetrieveIdentityDto: '@App\Auth\Infrastructure\Adapter\RetrieveIdentityDtoAdapter'
+    App\Notification\Application\Port\Driven\RetrieveUserDto: '@App\User\Infrastructure\Adapter\RetrieveUserDtoAdapter'
+
     App\Notification\Domain\:
         resource: '../../src/Notification/Domain/'
         exclude:

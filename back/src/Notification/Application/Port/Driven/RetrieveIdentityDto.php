@@ -2,7 +2,7 @@
 
 namespace App\Notification\Application\Port\Driven;
 
-use MyLegoCollection\SharedEvent\Dto\IdentityDto;
+use MyLegoCollection\SharedContracts\Dto\IdentityDto;
 
 /**
  * @author Wilhelm Zwertvaegher

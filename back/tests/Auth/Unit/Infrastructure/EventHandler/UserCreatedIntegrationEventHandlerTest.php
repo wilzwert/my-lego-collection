@@ -5,7 +5,7 @@ namespace App\Tests\Auth\Unit\Infrastructure\EventHandler;
 use App\Auth\Application\Handler\UserCreatedHandler;
 use App\Auth\Infrastructure\EventHandler\UserCreatedIntegrationEventHandler;
 use App\Tests\Utilities\TestData;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -29,6 +29,7 @@ class UserCreatedIntegrationEventHandlerTest extends TestCase
     #[Test]
     public function shouldHandleMessage(): void
     {
+        $this->userCreatedHandler->expects(self::never())->method('__invoke');
         self::assertEquals(UserCreatedIntegrationEvent::class, UserCreatedIntegrationEventHandler::getMessageHandled());
     }
 
@@ -36,7 +37,7 @@ class UserCreatedIntegrationEventHandlerTest extends TestCase
     public function shouldHandleSendWelcomeNotificationCommand(): void
     {
         $event = new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, TestData::EXISTING_IDENTITY_ID);
-        $this->userCreatedHandler->expects(self::once())->method('__invoke')->with($event);
+        $this->userCreatedHandler->expects($this->once())->method('__invoke')->with($event);
         ($this->userCreatedIntegrationEventHandler)($event);
     }
 }

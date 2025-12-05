@@ -27,7 +27,7 @@ final class DefaultPartServiceTest extends TestCase
 
         $legoDataProvider = $this->createMock(LegoDataProvider::class);
         $legoDataProvider
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findParts')
             ->with($search)
             ->willReturn($expectedCollection);

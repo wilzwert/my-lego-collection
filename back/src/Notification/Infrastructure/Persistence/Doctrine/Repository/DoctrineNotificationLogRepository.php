@@ -4,7 +4,7 @@ namespace App\Notification\Infrastructure\Persistence\Doctrine\Repository;
 
 use App\Notification\Domain\Model\NotificationLog;
 use App\Notification\Domain\Model\NotificationStatus;
-use App\Notification\Domain\Ports\Driven\NotificationLogRepository;
+use App\Notification\Domain\Port\Driven\NotificationLogRepository;
 use App\Notification\Infrastructure\Persistence\Doctrine\Entity\DoctrineNotificationLog;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -43,6 +43,11 @@ class DoctrineNotificationLogRepository extends ServiceEntityRepository implemen
     public function findByMessageIdAndSenderAndStatus(string $messageId, string $sender, NotificationStatus $status): array
     {
         return $this->findBy(['messageId' => $messageId, 'sender' => $sender, 'status' => $status]);
+    }
+
+    public function findByMessageIdAndStatus(string $messageId, NotificationStatus $status): array
+    {
+        return $this->findBy(['messageId' => $messageId, 'status' => $status]);
     }
 
     public function hasSuccess(string $messageId, string $sender): bool

@@ -7,7 +7,7 @@ use App\Shared\Domain\Port\Driven\EventBus;
 use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Domain\Service\UserService;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
+use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
 
 readonly class CreateUserHandler
 {

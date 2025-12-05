@@ -4,7 +4,7 @@ namespace App\Tests\Auth\Integration\Infrastructure\EventHandler;
 
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Tests\Traits\SliceInfraHandlersTrait;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

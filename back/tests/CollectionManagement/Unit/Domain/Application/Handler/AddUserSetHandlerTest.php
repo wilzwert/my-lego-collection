@@ -32,7 +32,7 @@ class AddUserSetHandlerTest extends TestCase
         $userId = EntityId::generate();
 
         $this->retrieveUser
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getUserId')
             ->with($identityId)
             ->willReturn($userId);

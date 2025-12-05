@@ -7,8 +7,8 @@ use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Shared\Infrastructure\Messenger\CommandBus;
 use App\Shared\Infrastructure\Messenger\IntegrationEventBus;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
+use MyLegoCollection\SharedContracts\Event\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,14 +37,14 @@ class IdentityCreatedOrchestratorTest extends TestCase
         $identity = AuthTestsUtility::generateKnownIdentity();
         $identityCreatedEvent = new IdentityCreatedEvent($identity);
 
-        $this->commandBus->expects(self::once())
+        $this->commandBus->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(function (CreateUserCommand $command) use (&$dispatchedCommand) {
                 $dispatchedCommand = $command;
                 return true;
             }));
 
-        $this->integrationBus->expects(self::once())
+        $this->integrationBus->expects($this->once())
             ->method('dispatch')
             ->with($this->callback(function (IdentityCreatedIntegrationEvent $event) use (&$dispatchedEvent) {
                 $dispatchedEvent = $event;

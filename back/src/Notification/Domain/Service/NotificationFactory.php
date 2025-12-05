@@ -3,7 +3,7 @@
 namespace App\Notification\Domain\Service;
 
 use App\Notification\Domain\Model\Notification;
-use MyLegoCollection\SharedEvent\Message;
+use MyLegoCollection\SharedContracts\Message;
 
 /**
  * @author Wilhelm Zwertvaegher

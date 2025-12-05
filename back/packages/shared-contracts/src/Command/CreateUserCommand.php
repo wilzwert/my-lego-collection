@@ -1,6 +1,6 @@
 <?php
 
-namespace MyLegoCollection\SharedEvent\Command;
+namespace MyLegoCollection\SharedContracts\Command;
 
 /**
  * @author Wilhelm Zwertvaegher

@@ -5,7 +5,7 @@ namespace App\Notification\Infrastructure\EventHandler;
 use App\Notification\Application\Handler\NotificationCommandHandler;
 use App\Shared\Infrastructure\EventHandler\CommandHandler;
 use App\Shared\Infrastructure\EventHandler\MessageHandler;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**

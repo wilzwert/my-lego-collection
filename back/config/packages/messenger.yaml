@@ -39,8 +39,8 @@ framework:
         routing:
             # Route your messages to the transports
             # 'App\Message\YourM': async
-            'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
-            'MyLegoCollection\SharedEvent\Command\Command': async
+            'MyLegoCollection\SharedContracts\Event\IntegrationEvent': async
+            'MyLegoCollection\SharedContracts\Command\Command': async
 
 # when@test:
 #    framework:

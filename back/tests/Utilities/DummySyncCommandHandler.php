@@ -2,7 +2,7 @@
 
 namespace App\Tests\Utilities;
 
-use MyLegoCollection\SharedEvent\Command\Command;
+use MyLegoCollection\SharedContracts\Command\Command;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**

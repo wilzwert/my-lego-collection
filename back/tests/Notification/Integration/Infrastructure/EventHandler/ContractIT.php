@@ -3,7 +3,7 @@
 namespace App\Tests\Notification\Integration\Infrastructure\EventHandler;
 
 use App\Tests\Traits\SliceInfraHandlersTrait;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

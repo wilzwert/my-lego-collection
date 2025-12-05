@@ -2,8 +2,8 @@
 
 namespace App\Shared\Infrastructure\Messenger;
 
-use MyLegoCollection\SharedEvent\Command\Command;
-use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
+use MyLegoCollection\SharedContracts\Command\Command;
+use MyLegoCollection\SharedContracts\Event\IntegrationEvent;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**

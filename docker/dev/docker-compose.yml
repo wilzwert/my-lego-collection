@@ -103,7 +103,9 @@ services:
         APP_USER: ${APP_USER:-symfony}
     container_name: "${APP_NAME}-web"
     restart: unless-stopped
-    user: ${APP_USER:-symfony}
+    # FIXME : using a non root user works on windows only after already started the container as root at least once
+    # user: ${APP_USER:-symfony}
+    user: root
     volumes:
       # Mounting files / directories separately for performance on windows hosts
       # Avoid mounting the var directory as it is unreliable

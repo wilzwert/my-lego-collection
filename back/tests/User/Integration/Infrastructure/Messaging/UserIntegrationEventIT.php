@@ -8,7 +8,7 @@ use App\Tests\Traits\MessengerTestingTrait;
 use App\Tests\User\Utilities\UserTestsUtility;
 use App\Tests\Utilities\DummySyncIntegrationEventHandler;
 use App\User\Domain\Event\UserCreatedEvent;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

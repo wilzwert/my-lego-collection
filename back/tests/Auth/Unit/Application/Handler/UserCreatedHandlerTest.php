@@ -9,7 +9,7 @@ use App\Shared\Domain\Port\Driven\EventBus;
 use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
 use App\Tests\Utilities\TestData;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

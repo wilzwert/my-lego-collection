@@ -4,7 +4,7 @@ namespace App\User\Application\Orchestrator;
 
 use App\Shared\Infrastructure\Messenger\IntegrationEventBus;
 use App\User\Domain\Event\UserCreatedEvent;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 
 /**
  * @author Wilhelm Zwertvaegher

@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Messenger;
 
-use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\IntegrationEvent;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 /**

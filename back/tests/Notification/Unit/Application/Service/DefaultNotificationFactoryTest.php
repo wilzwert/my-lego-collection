@@ -6,8 +6,8 @@ use App\Notification\Domain\Model\IdentityInfo;
 use App\Notification\Domain\Model\WelcomeNotification;
 use App\Notification\Domain\Port\Driven\RetrieveIdentityInfo;
 use App\Tests\Utilities\TestData;
-use MyLegoCollection\SharedEvent\Command\Command;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
+use MyLegoCollection\SharedContracts\Command\Command;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -38,7 +38,7 @@ class DefaultNotificationFactoryTest extends TestCase
         );
 
         $this->retrieveIdentityInfoMock
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('getIdentityInfoFromId')
             ->willReturn($info);
 

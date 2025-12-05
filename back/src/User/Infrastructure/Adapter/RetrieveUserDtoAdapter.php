@@ -10,8 +10,8 @@ use App\Notification\Domain\Model\IdentityInfo;
 use App\Shared\Domain\Model\EntityId;
 use App\User\Domain\Model\User;
 use App\User\Domain\Port\Driven\UserRepository;
-use MyLegoCollection\SharedEvent\Dto\IdentityDto;
-use MyLegoCollection\SharedEvent\Dto\UserDto;
+use MyLegoCollection\SharedContracts\Dto\IdentityDto;
+use MyLegoCollection\SharedContracts\Dto\UserDto;
 
 /**
  * @author Wilhelm Zwertvaegher

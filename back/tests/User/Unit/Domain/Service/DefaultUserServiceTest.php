@@ -44,7 +44,7 @@ final class DefaultUserServiceTest extends TestCase
     public function shouldCreateUser(): void
     {
         $this->retrieveUserForIdentity
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveUser')
             ->with($this->identityId)
             ->willReturn(null);
@@ -61,7 +61,7 @@ final class DefaultUserServiceTest extends TestCase
     {
         $expectedUser = $this->createMock(User::class);
         $this->retrieveUserForIdentity
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('retrieveUser')
             ->with($this->identityId)
             ->willReturn($expectedUser);

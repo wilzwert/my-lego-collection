@@ -4,7 +4,7 @@ namespace App\Tests\User\Unit\Infrastructure\EventHandler;
 
 use App\User\Application\Handler\CreateUserHandler;
 use App\User\Infrastructure\EventHandler\CreateUserCommandHandler;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
+use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

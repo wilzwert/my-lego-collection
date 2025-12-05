@@ -39,7 +39,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->security = $this->createMock(Security::class);
+        $this->security = $this->createStub(Security::class);
         $this->registerByIpLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
         $this->apiByUserLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
         $this->registerByIpLimiterFactory->expects($this->never())->method('create');
@@ -68,7 +68,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
     #[Test]
     public function isMainRequest_shouldReturnFalse_whenRequestIsNotMainRequest(): void
     {
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent(
             $kernel,
             fn () => null,
@@ -82,7 +82,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
     #[Test]
     public function isMainRequest_shouldReturnTrue_whenRequestIsMainRequest(): void
     {
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent(
             $kernel,
             fn () => null,
@@ -132,7 +132,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
     #[DataProvider('eventsProvider')]
     public function testLimitShouldBeApplied(int $requestMainOrNot, ?string $route, bool $expected): void
     {
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent(
             $kernel,
             fn () => null,
@@ -162,7 +162,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
     #[Test]
     public function shouldSkipIfNotMainRequest(): void
     {
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent(
             $kernel,
             fn () => null,
@@ -188,7 +188,7 @@ final class AuthRateLimitSubscriberTest extends TestCase
         $request = new Request();
         $request->attributes->set('_route', 'some_other_route');
 
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->subscriber->onKernelController($event);
@@ -207,14 +207,14 @@ final class AuthRateLimitSubscriberTest extends TestCase
     public function shouldUseRegisterByIpLimiter_forRegistrationRoute(): void
     {
         $limiter = $this->createMock(LimiterInterface::class);
-        $limiter->method('consume')->willReturn(new RateLimit(1, new \DateTimeImmutable(), true, 1));
+        $limiter->expects($this->once())->method('consume')->willReturn(new RateLimit(1, new \DateTimeImmutable(), true, 1));
 
         $registerByIpLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
         $registerByIpLimiterFactory->expects($this->once())->method('create')->with('127.0.0.1')->willReturn($limiter);
         $this->setupSubscriber($registerByIpLimiterFactory, null, null);
 
         $request = new Request([], [], ['_route' => 'api_auth_registration'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->subscriber->onKernelController($event);
@@ -225,14 +225,14 @@ final class AuthRateLimitSubscriberTest extends TestCase
     public function shouldThrow_whenRateLimitExceeded_inRegistrationByIpLimiter(): void
     {
         $limiter = $this->createMock(LimiterInterface::class);
-        $limiter->method('consume')->willReturn(new RateLimit(0, new \DateTimeImmutable(), false, 1));
+        $limiter->expects($this->once())->method('consume')->willReturn(new RateLimit(0, new \DateTimeImmutable(), false, 1));
 
         $registerByIpLimiterFactory = $this->createMock(RateLimiterFactoryInterface::class);
         $registerByIpLimiterFactory->expects($this->once())->method('create')->with('127.0.0.1')->willReturn($limiter);
         $this->setupSubscriber($registerByIpLimiterFactory, null, null);
 
         $request = new Request([], [], ['_route' => 'api_auth_registration'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->expectException(TooManyRequestsHttpException::class);
@@ -252,14 +252,14 @@ final class AuthRateLimitSubscriberTest extends TestCase
     {
 
         $limiter = $this->createMock(LimiterInterface::class);
-        $limiter->method('consume')->willReturn(new RateLimit(1, new \DateTimeImmutable(), true, 1));
+        $limiter->expects($this->once())->method('consume')->willReturn(new RateLimit(1, new \DateTimeImmutable(), true, 1));
 
         $apiByUserLimiter = $this->createMock(RateLimiterFactoryInterface::class);
         $apiByUserLimiter->expects($this->once())->method('create')->with('user123')->willReturn($limiter);
         $this->setupSubscriber(null, $apiByUserLimiter, 'user123');
 
         $request = new Request([], [], ['_route' => 'api_auth_me'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->subscriber->onKernelController($event);
@@ -270,14 +270,14 @@ final class AuthRateLimitSubscriberTest extends TestCase
     public function shouldThrow_whenRateLimitExceeded_inApiByUserLimiter(): void
     {
         $limiter = $this->createMock(LimiterInterface::class);
-        $limiter->method('consume')->willReturn(new RateLimit(0, new \DateTimeImmutable(), false, 1));
+        $limiter->expects($this->once())->method('consume')->willReturn(new RateLimit(0, new \DateTimeImmutable(), false, 1));
 
         $apiByUserLimiter = $this->createMock(RateLimiterFactoryInterface::class);
         $apiByUserLimiter->expects($this->once())->method('create')->with('user123')->willReturn($limiter);
         $this->setupSubscriber(null, $apiByUserLimiter, 'user123');
 
         $request = new Request([], [], ['_route' => 'api_auth_me'], [], [], ['REMOTE_ADDR' => '127.0.0.1']);
-        $kernel = $this->createMock(HttpKernelInterface::class);
+        $kernel = $this->createStub(HttpKernelInterface::class);
         $event = new ControllerEvent($kernel, fn () => null, $request, HttpKernelInterface::MAIN_REQUEST);
 
         $this->expectException(TooManyRequestsHttpException::class);

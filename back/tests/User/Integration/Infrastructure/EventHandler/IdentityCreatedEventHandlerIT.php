@@ -5,7 +5,7 @@ namespace App\Tests\User\Integration\Infrastructure\EventHandler;
 use App\Shared\Domain\Model\EntityId;
 use App\User\Infrastructure\EventHandler\CreateUserCommandHandler;
 use App\User\Infrastructure\Persistence\Doctrine\Repository\DoctrineUserRepository;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
+use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 

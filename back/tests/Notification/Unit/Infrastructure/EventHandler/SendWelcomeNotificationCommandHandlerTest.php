@@ -5,7 +5,7 @@ namespace App\Tests\Notification\Unit\Infrastructure\EventHandler;
 use App\Notification\Application\Handler\NotificationCommandHandler;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
 use App\Tests\Utilities\TestData;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;

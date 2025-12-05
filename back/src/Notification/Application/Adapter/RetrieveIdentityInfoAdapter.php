@@ -6,7 +6,7 @@ use App\Notification\Application\Port\Driven\RetrieveIdentityDto;
 use App\Notification\Application\Port\Driven\RetrieveUserDto;
 use App\Notification\Domain\Model\IdentityInfo;
 use App\Notification\Domain\Port\Driven\RetrieveIdentityInfo;
-use MyLegoCollection\SharedEvent\Dto\IdentityDto;
+use MyLegoCollection\SharedContracts\Dto\IdentityDto;
 
 /**
  * @author Wilhelm Zwertvaegher

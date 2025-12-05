@@ -30,7 +30,7 @@ final class SearchPartHandlerTest extends TestCase
 
         $partService = $this->createMock(PartService::class);
         $partService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findParts')
             ->with('brick', $userId)
             ->willReturn($expectedResult);
@@ -53,7 +53,7 @@ final class SearchPartHandlerTest extends TestCase
 
         $partService = $this->createMock(PartService::class);
         $partService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('findParts')
             ->with('plate', null)
             ->willReturn($expectedResult);

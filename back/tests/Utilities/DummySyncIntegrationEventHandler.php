@@ -2,7 +2,7 @@
 
 namespace App\Tests\Utilities;
 
-use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\IntegrationEvent;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace MyLegoCollection\SharedEvent\Dto;
+namespace MyLegoCollection\SharedContracts\Dto;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -9,8 +9,8 @@ final readonly class IdentityDto
 {
     public function __construct(
         private string $id,
-        private string $username,
-        private string $email
+        private string $email,
+        private string $username
     ) {
     }
 
@@ -19,13 +19,13 @@ final readonly class IdentityDto
         return $this->id;
     }
 
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->username;
     }
 }

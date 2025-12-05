@@ -66,13 +66,13 @@ final class PublicLocalFileStorageProviderTest extends TestCase
         $tempFile = new TempFile('temp.png', 'avatar.png', 'image/png', 'png');
 
         $this->slugger
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('slug')
             ->with('avatar')
             ->willReturn(new UnicodeString('avatar'));
 
         $this->filesystem
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('copy')
             ->with(
                 $tempFile->getPath(),
@@ -84,7 +84,7 @@ final class PublicLocalFileStorageProviderTest extends TestCase
             );
 
         $this->filesystem
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->with($tempFile->getPath());
 
@@ -117,7 +117,7 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     public function shouldDeleteStoredFile(): void
     {
         $this->filesystem
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('remove')
             ->with($this->uploadsDir . '/user-avatar/avatar.png');
 

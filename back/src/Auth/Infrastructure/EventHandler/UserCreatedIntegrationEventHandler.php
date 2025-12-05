@@ -6,7 +6,7 @@ use App\Auth\Application\Handler\UserCreatedHandler;
 use App\Auth\Application\Orchestrator\IdentityCreatedOrchestrator;
 use App\Shared\Infrastructure\EventHandler\IntegrationEventHandler;
 use App\Shared\Infrastructure\EventHandler\MessageHandler;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 /**

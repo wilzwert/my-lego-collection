@@ -16,6 +16,8 @@ interface NotificationLogRepository
 
     public function findByMessageIdAndSenderAndStatus(string $messageId, string $sender, NotificationStatus $status): array;
 
+    public function findByMessageIdAndStatus(string $messageId, NotificationStatus $status): array;
+
     public function hasSuccess(string $messageId, string $sender): bool;
 
     public function save(NotificationLog $notificationLog): void;

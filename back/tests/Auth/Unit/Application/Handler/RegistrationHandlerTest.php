@@ -49,7 +49,7 @@ final class RegistrationHandlerTest extends TestCase
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
         $identity = AuthTestsUtility::generateIdentity();
         $this->identityService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createIdentity')
             ->with($command->email, $command->username, $command->password)
             ->willReturn($identity);
@@ -97,8 +97,12 @@ final class RegistrationHandlerTest extends TestCase
     {
         $command = new RegistrationCommand('john@example.com', 'john_doe', 'password');
 
+        $this->identityRepository
+            ->expects($this->never())
+            ->method('save');
+
         $this->identityService
-            ->expects(self::once())
+            ->expects($this->once())
             ->method('createIdentity')
             ->with($command->email, $command->username, $command->password)
             ->willThrowException(new EntityAlreadyExistsException());
@@ -106,6 +110,7 @@ final class RegistrationHandlerTest extends TestCase
         $this->eventBus->expects(self::never())->method('dispatchAll');
 
         $this->transactionProvider
+            ->expects($this->once())
             ->method('transactional')
             ->willReturnCallback(fn (callable $callback) => $callback());
 

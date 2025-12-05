@@ -2,7 +2,7 @@
   "name": "my-lego-collection/shared-contracts",
   "autoload": {
     "psr-4": {
-      "MyLegoCollection\\SharedEvent\\": "src/"
+        "MyLegoCollection\\SharedContracts\\": "src/"
     }
   },
   "type": "library",

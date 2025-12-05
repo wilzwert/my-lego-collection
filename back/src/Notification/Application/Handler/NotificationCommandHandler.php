@@ -7,7 +7,7 @@ use App\Notification\Domain\Service\NotificationFactory;
 use App\Notification\Domain\Port\Driven\NotificationLogRepository;
 use App\Notification\Domain\Service\NotificationLogService;
 use App\Shared\Domain\Port\Driven\TransactionProvider;
-use MyLegoCollection\SharedEvent\Command\Command;
+use MyLegoCollection\SharedContracts\Command\Command;
 
 /**
  * @author Wilhelm Zwertvaegher

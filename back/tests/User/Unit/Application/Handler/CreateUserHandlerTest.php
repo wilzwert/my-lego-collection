@@ -10,7 +10,7 @@ use App\User\Application\Handler\CreateUserHandler;
 use App\User\Domain\Model\User;
 use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Domain\Service\UserService;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
+use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

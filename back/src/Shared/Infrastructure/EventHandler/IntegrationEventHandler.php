@@ -3,7 +3,7 @@
 namespace App\Shared\Infrastructure\EventHandler;
 
 
-use MyLegoCollection\SharedEvent\Event\IntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\IntegrationEvent;
 
 /**
  * @template T of IntegrationEvent

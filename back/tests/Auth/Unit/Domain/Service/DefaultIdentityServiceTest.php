@@ -43,8 +43,8 @@ final class DefaultIdentityServiceTest extends TestCase
 
     public function shouldCreateIdentity(): void
     {
-        $this->passwordHasher->expects(self::once())->method('hash')->willReturn('hashed_password');
-        $this->identityAvailabilityChecker->expects(self::once())->method('isIdentityAvailable')->willReturn(true);
+        $this->passwordHasher->expects($this->once())->method('hash')->willReturn('hashed_password');
+        $this->identityAvailabilityChecker->expects($this->once())->method('isIdentityAvailable')->willReturn(true);
         $identity = $this->underTest->createIdentity('test@example.com', 'username', 'password');
 
         self::assertInstanceOf(Identity::class, $identity);
@@ -62,7 +62,8 @@ final class DefaultIdentityServiceTest extends TestCase
     public function whenIdentityExists_thenShouldThrowEntityExistsException(): void
     {
         $this->passwordHasher->expects(self::never())->method('hash');
-        $this->identityAvailabilityChecker->expects(self::once())->method('isIdentityAvailable')->willReturn(false);
+        $this->identityAvailabilityChecker->expects($this->once())->method('isIdentityAvailable')->willReturn(false);
+        $this->emailAvailabilityChecker->expects(self::never())->method('isEmailAvailable');
 
         self::expectException(EntityAlreadyExistsException::class);
 
@@ -71,8 +72,10 @@ final class DefaultIdentityServiceTest extends TestCase
 
     public function shouldChangeEmail(): void
     {
+        $this->passwordHasher->expects(self::never())->method('hash');
+        $this->identityAvailabilityChecker->expects(self::never())->method('isIdentityAvailable');
         $identity = AuthTestsUtility::generateIdentity(email: 'old@example.com');
-        $this->emailAvailabilityChecker->expects(self::once())->method('isEmailAvailable')->willReturn(true);
+        $this->emailAvailabilityChecker->expects($this->once())->method('isEmailAvailable')->willReturn(true);
         $updatedIdentity = $this->underTest->changeEmail($identity, 'test@email.com');
         self::assertNotSame($identity, $updatedIdentity);
         self::assertEquals('test@email.com', $updatedIdentity->getEmail());
@@ -87,6 +90,8 @@ final class DefaultIdentityServiceTest extends TestCase
     #[Test]
     public function whenSameEmail_thenChangeEmail_shouldDoNothing(): void
     {
+        $this->passwordHasher->expects(self::never())->method('hash');
+        $this->identityAvailabilityChecker->expects(self::never())->method('isIdentityAvailable');
         $identity = AuthTestsUtility::generateIdentity(email: 'test@example.com');
         $this->emailAvailabilityChecker->expects(self::never())->method('isEmailAvailable');
         $updatedIdentity = $this->underTest->changeEmail($identity, 'test@example.com');
