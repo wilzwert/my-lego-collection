@@ -34,7 +34,7 @@ final readonly class EmailSender implements NotificationSender
 
     public function send(Notification $notification): NotificationSenderResult
     {
-        $content = $this->renderer->render($notification);
+        $content = $this->renderer->render($notification, $this);
 
         $email = new Email()
             // TODO : this should be set as a global parameter in services.yaml
@@ -45,7 +45,7 @@ final readonly class EmailSender implements NotificationSender
             //->replyTo('fabien@example.com')
             //->priority(Email::PRIORITY_HIGH)
             ->subject($this->subjectGenerator->generate($notification))
-            ->text($this->textRenderer->render($notification))
+            ->text($this->textRenderer->render($notification, $this))
             ->html($content);
 
         // TODO : actually send the email

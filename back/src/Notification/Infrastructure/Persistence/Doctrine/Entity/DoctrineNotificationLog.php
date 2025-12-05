@@ -2,8 +2,6 @@
 
 namespace App\Notification\Infrastructure\Persistence\Doctrine\Entity;
 
-use App\Auth\Domain\Model\Identity;
-use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Notification\Domain\Model\NotificationLog;
 use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Model\NotificationType;

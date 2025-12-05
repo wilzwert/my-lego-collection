@@ -3,6 +3,7 @@
 namespace App\Notification\Infrastructure\Renderer;
 
 use App\Notification\Domain\Model\Notification;
+use App\Notification\Infrastructure\Sender\NotificationSender;
 use Twig\Environment;
 
 /**
@@ -16,8 +17,8 @@ class HtmlNotificationRenderer implements NotificationRenderer
     ) {
     }
 
-    public function render(Notification $notification): string
+    public function render(Notification $notification, NotificationSender $sender): string
     {
-        return $this->twig->render('notifications/'.$notification->getType()->value.'.html.twig', $notification->getPayload());
+        return $this->twig->render('notifications/'.$sender->getName(). '/'. $notification->getType()->value.'.html.twig', $notification->getPayload());
     }
 }

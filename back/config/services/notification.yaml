@@ -25,3 +25,7 @@ services:
         arguments:
             $renderer: '@App\Notification\Infrastructure\Renderer\HtmlNotificationRenderer'
             $textRenderer: '@App\Notification\Infrastructure\Renderer\TextNotificationRenderer'
+
+    App\Notification\Infrastructure\Sender\SmsSender:
+        arguments:
+            $textRenderer: '@App\Notification\Infrastructure\Renderer\TextNotificationRenderer'

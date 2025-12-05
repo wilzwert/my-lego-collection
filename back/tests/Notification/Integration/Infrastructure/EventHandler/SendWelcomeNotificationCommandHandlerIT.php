@@ -37,9 +37,9 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         self::assertEmailTextBodyContains($email, 'username');
         self::assertEmailAddressContains($email, 'To', 'test@example.com');
 
-        // check a NotificationLog has been saved
+        // check a NotificationLogs have been saved
         $repository = $container->get(NotificationLogRepository::class);
-        self::assertCount(1, $repository->findAll());
+        self::assertCount(2, $repository->findAll());
 
 
     }
@@ -66,9 +66,9 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         self::assertEmailTextBodyContains($email, 'username');
         self::assertEmailAddressContains($email, 'To', 'test@example.com');
 
-        // check a NotificationLog has been saved
+        // check NotificationLogs have been saved
         $repository = $container->get(NotificationLogRepository::class);
-        self::assertCount(1, $repository->findAll());
+        self::assertCount(2, $repository->findAll());
 
 
     }
