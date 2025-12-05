@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notification\Domain\Ports\Driven;
+namespace App\Notification\Domain\Port\Driven;
 
 use App\Notification\Domain\Model\NotificationLog;
 use App\Notification\Domain\Model\NotificationStatus;
