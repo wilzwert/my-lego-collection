@@ -4,8 +4,7 @@ namespace App\Tests\Notification\Unit\Application\Service;
 
 use App\Notification\Domain\Model\IdentityInfo;
 use App\Notification\Domain\Model\WelcomeNotification;
-use App\Notification\Domain\Ports\Driven\RetrieveIdentityInfo;
-use App\Notification\Domain\Service\DefaultNotificationFactory;
+use App\Notification\Domain\Port\Driven\RetrieveIdentityInfo;
 use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedEvent\Command\Command;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
@@ -25,7 +24,7 @@ class DefaultNotificationFactoryTest extends TestCase
     protected function setUp(): void
     {
         $this->retrieveIdentityInfoMock = $this->createMock(RetrieveIdentityInfo::class);
-        $this->factory = new DefaultNotificationFactory($this->retrieveIdentityInfoMock);
+        $this->factory = new \App\Notification\Domain\Service\DefaultNotificationFactory($this->retrieveIdentityInfoMock);
     }
 
     #[Test]

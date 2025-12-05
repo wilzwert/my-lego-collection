@@ -2,7 +2,7 @@
 
 namespace App\Tests\Notification\Integration\Infrastructure\EventHandler;
 
-use App\Notification\Domain\Ports\Driven\NotificationLogRepository;
+use App\Notification\Domain\Port\Driven\NotificationLogRepository;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
 use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
@@ -22,8 +22,7 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         /** @var SendWelcomeNotificationCommandHandler $handler */
         $handler = $container->get(SendWelcomeNotificationCommandHandler::class);
 
-        // as of now, identity retrieval in the Notification module always returns
-        // new IdentityInfo('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1', 'test@example.com', 'username');
+        // TODO : use real data now that the cross modules data retrieval is implemented
         $identityId = TestData::EXISTING_IDENTITY_ID;
         $command = new SendWelcomeNotificationCommand($identityId, 'validation-token');
         $handler($command);

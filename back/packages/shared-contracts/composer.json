@@ -1,5 +1,5 @@
 {
-  "name": "my-lego-collection/shared-events",
+  "name": "my-lego-collection/shared-contracts",
   "autoload": {
     "psr-4": {
       "MyLegoCollection\\SharedEvent\\": "src/"
