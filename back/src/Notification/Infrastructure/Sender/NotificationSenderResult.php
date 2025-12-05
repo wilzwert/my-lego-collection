@@ -1,22 +1,18 @@
 <?php
 
-namespace App\Notification\Domain\Model;
+namespace App\Notification\Infrastructure\Sender;
+
+use App\Notification\Domain\Model\NotificationStatus;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
-readonly class NotificationSendResult
+final readonly class NotificationSenderResult
 {
     public function __construct(
-        private string $sender,
         private NotificationStatus $status,
         private string $message,
     ) {
-    }
-
-    public function getSender(): string
-    {
-        return $this->sender;
     }
 
     public function getStatus(): NotificationStatus
@@ -28,5 +24,4 @@ readonly class NotificationSendResult
     {
         return $this->message;
     }
-
 }

@@ -26,6 +26,9 @@ class DoctrineNotificationLog
     #[ORM\Column(type: "string", length: 36, nullable: true)]
     private ?string $userId;
 
+    #[ORM\Column(type: "string", length: 36)]
+    private string $messageId;
+
     #[ORM\Column(type: "string", enumType: NotificationType::class)]
     private NotificationType $type;
 
@@ -60,6 +63,11 @@ class DoctrineNotificationLog
         return $this->userId;
     }
 
+    public function getMessageId(): string
+    {
+        return $this->messageId;
+    }
+
     public function getType(): NotificationType
     {
         return $this->type;
@@ -90,6 +98,7 @@ class DoctrineNotificationLog
         $this->id = $notificationLog->getId();
         $this->identityId = $notificationLog->getIdentityId();
         $this->userId = $notificationLog->getUserId();
+        $this->messageId = $notificationLog->getMessageId();
         $this->type = $notificationLog->getType();
         $this->sender = $notificationLog->getSender();
         $this->status = $notificationLog->getStatus();
@@ -104,6 +113,7 @@ class DoctrineNotificationLog
             id: EntityId::fromString($this->id),
             identityId: EntityId::fromString($this->identityId),
             userId: EntityId::fromString($this->userId),
+            messageId: EntityId::fromString($this->messageId),
             type: $this->type,
             sender: $this->sender,
             status: $this->status,

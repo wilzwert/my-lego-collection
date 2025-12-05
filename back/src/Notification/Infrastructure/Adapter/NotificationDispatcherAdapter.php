@@ -2,13 +2,11 @@
 
 namespace App\Notification\Infrastructure\Adapter;
 
-use App\Notification\Domain\Exception\NotificationSendException;
 use App\Notification\Domain\Model\Notification;
-use App\Notification\Domain\Model\NotificationSendResult;
-use App\Notification\Domain\Model\NotificationStatus;
+use App\Notification\Domain\Model\NotificationDispatchResult;
 use App\Notification\Domain\Ports\Driven\NotificationDispatcher;
+use App\Notification\Domain\Ports\Driven\NotificationLogRepository;
 use App\Notification\Infrastructure\Sender\NotificationSender;
-use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
@@ -26,22 +24,28 @@ class NotificationDispatcherAdapter implements NotificationDispatcher
      */
     public function __construct(
         #[AutowireIterator('app.notification_sender')]
-        iterable $senders
+        iterable $senders,
+        private readonly NotificationLogRepository $notificationLogRepository
     ) {
         $this->senders = is_array($senders) ? $senders : iterator_to_array($senders);
     }
 
     /**
      * @param Notification $notification
-     * @return array<NotificationSendResult>
+     * @return array<NotificationDispatchResult>
      */
     public function dispatch(Notification $notification): array
     {
         $results = [];
 
         foreach ($this->senders as $sender) {
-            if ($sender->supports($notification)) {
-                $results[] = $sender->send($notification);
+            if ($sender->supports($notification) &&
+                // avoid resending a notification which already succeeded
+                // this may be useful in case a notification previously partially failed, which could result in a global retry
+                !$this->notificationLogRepository->hasSuccess($notification->getMessageId(), $sender->getName())
+            ) {
+                $senderResult = $sender->send($notification);
+                $results[] = new NotificationDispatchResult($sender->getName(), $senderResult->getStatus(), $senderResult->getMessage());
             }
         }
 

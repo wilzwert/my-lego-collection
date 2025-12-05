@@ -4,7 +4,7 @@ namespace App\Notification\Infrastructure\Sender;
 
 use App\Notification\Domain\Exception\NotificationSendException;
 use App\Notification\Domain\Model\Notification;
-use App\Notification\Domain\Model\NotificationSendResult;
+use App\Notification\Domain\Model\NotificationDispatchResult;
 use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
 
 /**
@@ -17,7 +17,9 @@ interface NotificationSender
 
     /**
      * @param Notification $notification
-     * @return NotificationSendResult
+     * @return NotificationDispatchResult
      */
-    public function send(Notification $notification): NotificationSendResult;
+    public function send(Notification $notification): NotificationSenderResult;
+
+    public function getName(): string;
 }

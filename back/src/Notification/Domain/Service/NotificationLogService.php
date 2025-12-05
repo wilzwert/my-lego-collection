@@ -4,7 +4,7 @@ namespace App\Notification\Domain\Service;
 
 use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\NotificationLog;
-use App\Notification\Domain\Model\NotificationSendResult;
+use App\Notification\Domain\Model\NotificationDispatchResult;
 use App\Notification\Domain\Model\NotificationStatus;
 
 /**
@@ -12,5 +12,5 @@ use App\Notification\Domain\Model\NotificationStatus;
  */
 interface NotificationLogService
 {
-    public function createFromNotification(Notification $notification, NotificationSendResult $result): NotificationLog;
+    public function createFromNotification(Notification $notification, NotificationDispatchResult $result): NotificationLog;
 }

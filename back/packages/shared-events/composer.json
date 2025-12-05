@@ -6,5 +6,7 @@
     }
   },
   "type": "library",
-  "require": {}
+  "require": {
+      "symfony/uid": "7.3.*"
+  }
 }

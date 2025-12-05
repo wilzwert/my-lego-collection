@@ -7,9 +7,10 @@ namespace App\Notification\Domain\Model;
  */
 final class WelcomeNotification extends Notification
 {
-    public function __construct(IdentityInfo $identityInfo, string $validationToken)
+    public function __construct(string $messageId, IdentityInfo $identityInfo, string $validationToken)
     {
         parent::__construct(
+            $messageId,
             $identityInfo,
             NotificationType::WELCOME,
             ['username' => $identityInfo->getUsername(), 'validationToken' => $validationToken]

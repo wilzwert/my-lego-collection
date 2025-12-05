@@ -21,6 +21,7 @@ final class NotificationLog implements ProducesDomainEvents
         private readonly EntityId           $id,
         private readonly EntityId           $identityId,
         private readonly ?EntityId          $userId,
+        private readonly EntityId          $messageId,
         private readonly NotificationType   $type,
         private string                      $sender,
         private readonly NotificationStatus $status,
@@ -33,13 +34,14 @@ final class NotificationLog implements ProducesDomainEvents
         EntityId           $id,
         EntityId           $identityId,
         ?EntityId          $userId,
+        EntityId          $messageId,
         NotificationType   $type,
         string             $sender,
         NotificationStatus $status,
         string             $statusMessage,
         \DateTimeImmutable $createdAt,
     ): self {
-        $newNotificationLog = new self($id, $identityId, $userId, $type, $sender, $status, $statusMessage, $createdAt);
+        $newNotificationLog = new self($id, $identityId, $userId, $messageId, $type, $sender, $status, $statusMessage, $createdAt);
         $newNotificationLog->events = [new NotificationLogCreatedEvent($newNotificationLog)];
         return $newNotificationLog;
     }
@@ -64,6 +66,11 @@ final class NotificationLog implements ProducesDomainEvents
     public function getUserId(): ?EntityId
     {
         return $this->userId;
+    }
+
+    public function getMessageId(): EntityId
+    {
+        return $this->messageId;
     }
 
     public function getType(): NotificationType

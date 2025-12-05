@@ -34,7 +34,7 @@ readonly class DefaultNotificationFactory implements NotificationFactory
         if ($identityInfo === null) {
             throw new EntityNotFoundException('Cannot load IdentityInfo');
         }
-        return new WelcomeNotification($identityInfo, $command->getValidationToken());
+        return new WelcomeNotification($command->id(), $identityInfo, $command->getValidationToken());
     }
 
 }
