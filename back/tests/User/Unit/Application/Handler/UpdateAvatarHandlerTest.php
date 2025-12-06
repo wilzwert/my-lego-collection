@@ -61,7 +61,7 @@ class UpdateAvatarHandlerTest extends TestCase
         );
 
         $command = new UpdateAvatarCommand(
-            TestData::EXISTING_IDENTITY_ID,
+            TestData::EXISTING_IDENTITY_USER1_ID,
             new TempFile(
                 'path/to/file',
                 'file.pdf',
@@ -83,7 +83,7 @@ class UpdateAvatarHandlerTest extends TestCase
         $this->userRepository
             ->expects($this->once())
             ->method('findByIdentityId')
-            ->with(TestData::EXISTING_IDENTITY_ID)
+            ->with(TestData::EXISTING_IDENTITY_USER1_ID)
             ->willReturn($user);
 
         $this->transactionProvider

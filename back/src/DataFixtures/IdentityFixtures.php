@@ -22,10 +22,9 @@ class IdentityFixtures extends Fixture
     {
         // create a predictable and usable password
         $password = $this->hasher->hashPassword(new DummyAuthenticatedUser(''), 'Abcd_1234!');
-        $id = EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1');
         $identity = new DoctrineIdentity()->fromDomain(
             new Identity(
-                id: $id,
+                id: EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1'),
                 email:'user1@test.com',
                 username: 'user1',
                 passwordHash: $password,
@@ -34,7 +33,20 @@ class IdentityFixtures extends Fixture
                 validationToken: ''
             )
         );
+
+        $identity2 = new DoctrineIdentity()->fromDomain(
+            new Identity(
+                id: EntityId::fromString('0efa63b0-3291-4da3-9dcc-0c7ea1d538d0'),
+                email: 'user2@test.com',
+                username: 'user2',
+                passwordHash: $password,
+                roles: ['ROLE_USER'],
+                isComplete: false,
+                validationToken: ''
+            )
+        );
         $manager->persist($identity);
+        $manager->persist($identity2);
         $manager->flush();
     }
 }

@@ -30,6 +30,13 @@ class NotificationDispatcherAdapter implements NotificationDispatcher
         $this->senders = is_array($senders) ? $senders : iterator_to_array($senders);
     }
 
+    public function addSender(NotificationSender $notificationSender): void
+    {
+        if (!array_any($this->senders, fn($sender) => $sender->getName() === $notificationSender->getName())) {
+            $this->senders[] = $notificationSender;
+        }
+    }
+
     /**
      * @param Notification $notification
      * @return array<NotificationDispatchResult>

@@ -36,6 +36,6 @@ class SendWelcomeNotificationCommandHandlerTest extends TestCase
     public function shouldHandleSendWelcomeNotificationCommand(): void
     {
         self::expectNotToPerformAssertions();
-        ($this->underTest)(new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_ID, 'validationToken'));
+        ($this->underTest)(new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_USER1_ID, 'validationToken'));
     }
 }

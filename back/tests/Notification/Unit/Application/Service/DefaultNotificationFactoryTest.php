@@ -30,9 +30,9 @@ class DefaultNotificationFactoryTest extends TestCase
     #[Test]
     public function shouldCreateWelcomeNotification(): void
     {
-        $command = new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_ID, 'validationToken');
+        $command = new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_USER1_ID, 'validationToken');
         $info = new IdentityInfo(
-            TestData::EXISTING_IDENTITY_ID,
+            TestData::EXISTING_IDENTITY_USER1_ID,
             'test@example.com',
         'username'
         );
@@ -44,7 +44,7 @@ class DefaultNotificationFactoryTest extends TestCase
 
         $notification = $this->factory->createNotification($command);
         self::assertInstanceOf(WelcomeNotification::class, $notification);
-        self::assertEquals(TestData::EXISTING_IDENTITY_ID, $notification->getIdentityInfo()->getIdentityId());
+        self::assertEquals(TestData::EXISTING_IDENTITY_USER1_ID, $notification->getIdentityInfo()->getIdentityId());
         self::assertEquals('test@example.com', $notification->getIdentityInfo()->getEmail());
         self::assertEquals('validationToken', $notification->getPayload()['validationToken']);
     }

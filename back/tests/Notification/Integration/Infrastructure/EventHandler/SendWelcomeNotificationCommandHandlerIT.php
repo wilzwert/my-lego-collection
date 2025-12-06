@@ -26,7 +26,7 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         $handler = $container->get(SendWelcomeNotificationCommandHandler::class);
 
         // TODO : use real data now that the cross modules data retrieval is implemented
-        $identityId = TestData::EXISTING_IDENTITY_ID;
+        $identityId = TestData::EXISTING_IDENTITY_USER1_ID;
         $command = new SendWelcomeNotificationCommand($identityId, 'validation-token');
         $handler($command);
 

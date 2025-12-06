@@ -8,6 +8,7 @@ use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Model\NotificationType;
 use App\Notification\Infrastructure\Renderer\NotificationRenderer;
 use App\Notification\Infrastructure\Renderer\NotificationSubjectGenerator;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -50,9 +51,12 @@ final readonly class EmailSender implements NotificationSender
 
         // TODO : actually send the email
 
-        $this->mailer->send($email);
-
-        return new NotificationSenderResult(NotificationStatus::SENT, 'Email sent');
+        try {
+            $this->mailer->send($email);
+            return new NotificationSenderResult(NotificationStatus::SENT, 'Email sent');
+        } catch (TransportExceptionInterface $exception) {
+            return new NotificationSenderResult(NotificationStatus::ERROR, 'Email could not be sent ' . $exception->getMessage());
+        }
     }
 
     public function getName(): string

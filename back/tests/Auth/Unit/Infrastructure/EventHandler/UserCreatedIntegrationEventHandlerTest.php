@@ -36,7 +36,7 @@ class UserCreatedIntegrationEventHandlerTest extends TestCase
     #[Test]
     public function shouldHandleSendWelcomeNotificationCommand(): void
     {
-        $event = new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, TestData::EXISTING_IDENTITY_ID);
+        $event = new UserCreatedIntegrationEvent(TestData::EXISTING_USER1_ID, TestData::EXISTING_IDENTITY_USER1_ID);
         $this->userCreatedHandler->expects($this->once())->method('__invoke')->with($event);
         ($this->userCreatedIntegrationEventHandler)($event);
     }

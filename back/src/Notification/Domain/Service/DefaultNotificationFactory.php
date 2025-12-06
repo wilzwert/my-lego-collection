@@ -23,7 +23,7 @@ readonly class DefaultNotificationFactory implements NotificationFactory
     {
         return match ($message::class) {
             SendWelcomeNotificationCommand::class => $this->createWelcomeNotification($message),
-            default => throw new \InvalidArgumentException('Unknown command')
+            default => throw new \InvalidArgumentException('Unknown command type ' . $message->type()),
         };
     }
 
@@ -32,7 +32,7 @@ readonly class DefaultNotificationFactory implements NotificationFactory
     {
         $identityInfo = $this->retrieveIdentityInfo->getIdentityInfoFromId($command->getIdentityId());
         if ($identityInfo === null) {
-            throw new EntityNotFoundException('Cannot load IdentityInfo');
+            throw new EntityNotFoundException('Cannot load IdentityInfo for ' . $command->getIdentityId());
         }
         return new WelcomeNotification($command->id(), $identityInfo, $command->getValidationToken());
     }

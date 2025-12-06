@@ -88,7 +88,7 @@ class UserCreatedHandlerTest extends TestCase
                 return true;
             }));
 
-        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER_ID, $identityIdAsString));
+        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER1_ID, $identityIdAsString));
 
         self::assertSame(true, $savedIdentity->isComplete());
         self::assertSame($completedIdentity, $savedIdentity);
