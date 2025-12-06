@@ -43,7 +43,7 @@ final class DefaultSetServiceTest extends TestCase
             ->with('space')
             ->willReturn($setsCollection);
 
-        $userSetRepository = $this->createMock(UserSetRepository::class);
+        $userSetRepository = $this->createStub(UserSetRepository::class);
 
         $service = new DefaultSetService($legoDataProvider, $userSetRepository);
 

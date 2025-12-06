@@ -5,6 +5,8 @@ namespace App\Tests\Notification\Integration\Infrastructure\EventHandler;
 use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Port\Driven\NotificationLogRepository;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
+use App\Notification\Infrastructure\Sender\SmsSender;
+use App\Tests\Notification\Utilities\NotificationTestsUtility;
 use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
@@ -40,6 +42,9 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         // check a NotificationLogs have been saved
         $repository = $container->get(NotificationLogRepository::class);
         self::assertCount(2, $repository->findByMessageIdAndStatus($command->id(), NotificationStatus::SENT));
+
+        // also, an SMS should have been sent
+        self::assertEquals(1, $container->get(SmsSender::class)->getSmsSentCount());
     }
 
     #[Test]
@@ -49,12 +54,9 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         /** @var SendWelcomeNotificationCommandHandler $handler */
         $handler = $container->get(SendWelcomeNotificationCommandHandler::class);
 
-        // a command sent with a message already handled and sent by sms only
-        $identityId = TestData::EXISTING_IDENTITY_ID;
-        // FIXME : as of now, the only I found to actually create a command
-        $command = unserialize('O:71:"MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand":5:{s:44:" MyLegoCollection\SharedContracts\Message id";s:36:"c1c1c1c1-c1c1-41c1-8c1c-c1c1c1c1c1c1";s:50:" MyLegoCollection\SharedContracts\Message metadata";a:1:{s:11:"occurred_at";s:25:"2025-12-05T18:41:40+01:00";}s:46:" MyLegoCollection\SharedContracts\Message type";s:20:"welcome.notification";s:83:" MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand identityId";s:36:"a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1";s:88:" MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand validationToken";s:16:"validation-token";}');
-        var_dump($command);
-        die();
+        // a command sent with a message already handled and sent by sms only (see fixtures)
+        $command = NotificationTestsUtility::generateSentSendWelcomeNotificationCommand();
+
         $handler($command);
 
         self::assertEmailCount(1);
@@ -69,5 +71,7 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         // check only one NotificationLog has been saved (for the email), but we know there already was one (see fixtures)
         $repository = $container->get(NotificationLogRepository::class);
         self::assertCount(2, $repository->findByMessageIdAndStatus($command->id(), NotificationStatus::SENT));
+        // also, no SMS should have been sent
+        self::assertEquals(0, $container->get(SmsSender::class)->getSmsSentCount());
     }
 }

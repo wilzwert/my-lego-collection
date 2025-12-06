@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\CollectionManagement\Unit\Domain\Application\Handler;
+namespace App\Tests\CollectionManagement\Unit\Application\Handler;
 
 use App\CollectionManagement\Application\Command\SearchSetQuery;
 use App\CollectionManagement\Application\Handler\SearchSetHandler;

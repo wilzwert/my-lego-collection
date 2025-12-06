@@ -8,6 +8,7 @@ use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -15,13 +16,13 @@ use PHPUnit\Framework\TestCase;
  */
 class SendWelcomeNotificationCommandHandlerTest extends TestCase
 {
-    private NotificationCommandHandler&MockObject $notificationCommandHandler;
+    private NotificationCommandHandler&Stub $notificationCommandHandler;
 
     private SendWelcomeNotificationCommandHandler $underTest;
 
     protected function setUp(): void
     {
-        $this->notificationCommandHandler = $this->createMock(NotificationCommandHandler::class);
+        $this->notificationCommandHandler = $this->createStub(NotificationCommandHandler::class);
         $this->underTest = new SendWelcomeNotificationCommandHandler($this->notificationCommandHandler);
     }
 

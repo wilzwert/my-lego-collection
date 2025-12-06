@@ -10,13 +10,15 @@ use App\Notification\Infrastructure\Renderer\NotificationRenderer;
 /**
  * @author Wilhelm Zwertvaegher
  */
-final readonly class SmsSender implements NotificationSender
+final class SmsSender implements NotificationSender
 {
 
     private const string NAME = 'sms';
 
+    private int $smsSentCount = 0;
+
     public function __construct(
-        private NotificationRenderer         $textRenderer
+        private readonly NotificationRenderer $textRenderer
     ) {
     }
 
@@ -29,11 +31,18 @@ final readonly class SmsSender implements NotificationSender
     {
         $content = $this->textRenderer->render($notification, $this);
 
+        $this->smsSentCount++;
+
         return new NotificationSenderResult(NotificationStatus::SENT, 'Sms sent : '.$content);
     }
 
     public function getName(): string
     {
         return self::NAME;
+    }
+
+    public function getSmsSentCount(): int
+    {
+        return $this->smsSentCount;
     }
 }

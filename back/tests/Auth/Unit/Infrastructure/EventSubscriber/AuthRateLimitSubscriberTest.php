@@ -51,9 +51,9 @@ final class AuthRateLimitSubscriberTest extends TestCase
     {
         if ($userIdentifier) {
             $user = $this->createMock(UserInterface::class);
-            $user->method('getUserIdentifier')->willReturn($userIdentifier);
+            $user->expects($this->once())->method('getUserIdentifier')->willReturn($userIdentifier);
             $security = $this->createMock(Security::class);
-            $security->method('getUser')->willReturn($user);
+            $security->expects($this->once())->method('getUser')->willReturn($user);
         } else {
             $security = $this->security;
         }

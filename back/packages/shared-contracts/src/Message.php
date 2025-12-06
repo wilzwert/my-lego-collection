@@ -1,6 +1,6 @@
 <?php
 
-namespace MyLegoCollection\SharedEvent;
+namespace MyLegoCollection\SharedContracts;
 
 use Symfony\Component\Uid\Uuid;
 
@@ -37,5 +37,10 @@ abstract class Message
     public function metadata(): array
     {
         return $this->metadata;
+    }
+
+    final public function getClass(): string
+    {
+        return static::class;
     }
 }

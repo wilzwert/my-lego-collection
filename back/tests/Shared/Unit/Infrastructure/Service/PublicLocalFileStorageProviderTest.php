@@ -51,12 +51,18 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     #[Test]
     public function shouldReturnTrueIfTypeIsSupported(): void
     {
+        $this->slugger->expects($this->never())->method('slug');
+        $this->filesystem->expects($this->never())->method('copy');
+        $this->filesystem->expects($this->never())->method('remove');
         self::assertTrue($this->provider->supports('user.avatar'));
     }
 
     #[Test]
     public function shouldReturnFalseIfTypeIsNotSupported(): void
     {
+        $this->slugger->expects($this->never())->method('slug');
+        $this->filesystem->expects($this->never())->method('copy');
+        $this->filesystem->expects($this->never())->method('remove');
         self::assertFalse($this->provider->supports('unknown.type'));
     }
 
@@ -100,10 +106,12 @@ final class PublicLocalFileStorageProviderTest extends TestCase
         $tempFile = new TempFile('temp.png', 'avatar.png', 'image/png', 'png');
 
         $this->slugger
+            ->expects($this->once())
             ->method('slug')
             ->willReturn(new UnicodeString('avatar'));
 
         $this->filesystem
+            ->expects($this->once())
             ->method('copy')
             ->willThrowException(new FileException('error'));
 
@@ -116,6 +124,7 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     #[Test]
     public function shouldDeleteStoredFile(): void
     {
+        $this->slugger->expects($this->never())->method('slug');
         $this->filesystem
             ->expects($this->once())
             ->method('remove')
@@ -127,7 +136,9 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     #[Test]
     public function shouldThrowFileStorageExceptionWhenDeleteFails(): void
     {
+        $this->slugger->expects($this->never())->method('slug');
         $this->filesystem
+            ->expects($this->once())
             ->method('remove')
             ->willThrowException(new FileException('remove failed'));
 
@@ -140,6 +151,9 @@ final class PublicLocalFileStorageProviderTest extends TestCase
     #[Test]
     public function shouldGenerateUrl(): void
     {
+        $this->slugger->expects($this->never())->method('slug');
+        $this->filesystem->expects($this->never())->method('copy');
+        $this->filesystem->expects($this->never())->method('remove');
 
         $result = $this->provider->generateUrl($this->testStoredFile);
 

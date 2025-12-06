@@ -33,8 +33,8 @@ final class UserProviderTest extends TestCase
         );
 
         $repository = $this->createMock(IdentityRepository::class);
-        $repository->method('findById')->willReturn($domainIdentity);
-        $logger = $this->createMock(LoggerInterface::class);
+        $repository->expects($this->once())->method('findById')->willReturn($domainIdentity);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $provider = new UserProvider($repository, $logger);
 
@@ -60,7 +60,7 @@ final class UserProviderTest extends TestCase
             ->method('findByIdentifier')
             ->with()
             ->willReturn($domainIdentity);
-        $logger = $this->createMock(LoggerInterface::class);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $provider = new UserProvider($repository, $logger);
 
@@ -74,8 +74,8 @@ final class UserProviderTest extends TestCase
     public function loadUserByIdentifier_shouldThrowExceptionWhenUserNotFound(): void
     {
         $repository = $this->createMock(IdentityRepository::class);
-        $repository->method('findById')->willReturn(null);
-        $logger = $this->createMock(LoggerInterface::class);
+        $repository->expects($this->once())->method('findById')->willReturn(null);
+        $logger = $this->createStub(LoggerInterface::class);
 
         $provider = new UserProvider($repository, $logger);
 
@@ -88,11 +88,11 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function refreshUser_shouldReturnSameInstance(): void
     {
-        $repository = $this->createMock(IdentityRepository::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $repository = $this->createStub(IdentityRepository::class);
+        $logger = $this->createStub(LoggerInterface::class);
         $provider = new UserProvider($repository, $logger);
 
-        $user = $this->createMock(UserInterface::class);
+        $user = $this->createStub(UserInterface::class);
 
         $result = $provider->refreshUser($user);
 
@@ -102,8 +102,8 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function supportsClass_shouldReturnTrueForAuthenticatedUserClass(): void
     {
-        $repository = $this->createMock(IdentityRepository::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $repository = $this->createStub(IdentityRepository::class);
+        $logger = $this->createStub(LoggerInterface::class);
         $provider = new UserProvider($repository, $logger);
 
         self::assertTrue($provider->supportsClass(AuthenticatedUser::class));
@@ -112,8 +112,8 @@ final class UserProviderTest extends TestCase
     #[Test]
     public function supportsClass_shouldReturnFalseForDifferentClass(): void
     {
-        $repository = $this->createMock(IdentityRepository::class);
-        $logger = $this->createMock(LoggerInterface::class);
+        $repository = $this->createStub(IdentityRepository::class);
+        $logger = $this->createStub(LoggerInterface::class);
         $provider = new UserProvider($repository, $logger);
 
         self::assertFalse($provider->supportsClass(\stdClass::class));

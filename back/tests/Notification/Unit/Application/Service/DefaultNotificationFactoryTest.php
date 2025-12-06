@@ -59,6 +59,10 @@ class DefaultNotificationFactoryTest extends TestCase
             }
         };
 
+        $this->retrieveIdentityInfoMock
+            ->expects($this->never())
+            ->method('getIdentityInfoFromId');
+
         self::expectException(\InvalidArgumentException::class);
         $notification = $this->factory->createNotification($command);
 

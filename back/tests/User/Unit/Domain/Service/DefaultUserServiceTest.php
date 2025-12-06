@@ -18,11 +18,7 @@ use PHPUnit\Framework\TestCase;
 final class DefaultUserServiceTest extends TestCase
 {
     private EntityId $identityId;
-
     private RetrieveUserForIdentity&MockObject $retrieveUserForIdentity;
-
-    private UserRepository $userRepository;
-    private TransactionProvider $transactionProvider;
     private DefaultUserService $underTest;
 
     protected function setUp(): void
@@ -30,14 +26,8 @@ final class DefaultUserServiceTest extends TestCase
         $this->identityId = EntityId::fromString('87654321-e89b-42d3-a456-426614174000');
 
         $this->retrieveUserForIdentity = $this->createMock(RetrieveUserForIdentity::class);
-        $this->userRepository = $this->createMock(UserRepository::class);
-        $this->transactionProvider = $this->createMock(\App\Shared\Domain\Port\Driven\TransactionProvider::class);
 
-        $this->underTest = new DefaultUserService(
-            $this->retrieveUserForIdentity,
-            $this->userRepository,
-            $this->transactionProvider
-        );
+        $this->underTest = new DefaultUserService($this->retrieveUserForIdentity);
     }
 
     #[Test]
@@ -59,7 +49,7 @@ final class DefaultUserServiceTest extends TestCase
     #[Test]
     public function whenUserExists_thenShouldNotCreateNew(): void
     {
-        $expectedUser = $this->createMock(User::class);
+        $expectedUser = $this->createStub(User::class);
         $this->retrieveUserForIdentity
             ->expects($this->once())
             ->method('retrieveUser')

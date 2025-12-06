@@ -152,6 +152,7 @@ class RebrickableCacheManagerTest extends TestCase
     #[Test]
     public function whenCacheIsAbstractAdapter_thenShouldClear(): void
     {
+        $this->cache->expects($this->never())->method('get');
         $adapter = $this->createMock(AbstractAdapter::class);
         $adapter->expects($this->once())->method('clear');
 
@@ -165,6 +166,7 @@ class RebrickableCacheManagerTest extends TestCase
         $adapter = $this->createMock(MockCacheInterfaceImplementation::class);
         $manager = new ExternalDataCacheManager($adapter);
 
+        $this->cache->expects($this->never())->method('get');
         $adapter->expects($this->never())->method('clear');
         $manager->clear();
     }

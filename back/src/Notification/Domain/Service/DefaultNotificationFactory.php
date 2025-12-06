@@ -6,8 +6,8 @@ use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\WelcomeNotification;
 use App\Notification\Domain\Port\Driven\RetrieveIdentityInfo;
 use App\Shared\Domain\Exception\EntityNotFoundException;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
-use MyLegoCollection\SharedEvent\Message;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
+use MyLegoCollection\SharedContracts\Message;
 
 /**
  * @author Wilhelm Zwertvaegher
