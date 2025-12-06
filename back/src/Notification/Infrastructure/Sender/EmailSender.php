@@ -41,15 +41,10 @@ final readonly class EmailSender implements NotificationSender
             // TODO : this should be set as a global parameter in services.yaml
             ->from('hello@example.com')
             ->to($notification->getIdentityInfo()->getEmail())
-            //->cc('cc@example.com')
-            //->bcc('bcc@example.com')
-            //->replyTo('fabien@example.com')
-            //->priority(Email::PRIORITY_HIGH)
+            ->priority(Email::PRIORITY_HIGH)
             ->subject($this->subjectGenerator->generate($notification))
             ->text($this->textRenderer->render($notification, $this))
             ->html($content);
-
-        // TODO : actually send the email
 
         try {
             $this->mailer->send($email);

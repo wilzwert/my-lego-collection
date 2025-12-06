@@ -6,6 +6,9 @@ use App\Notification\Domain\Model\Notification;
 use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Model\NotificationType;
 use App\Notification\Infrastructure\Renderer\NotificationRenderer;
+use Symfony\Component\Notifier\Exception\TransportExceptionInterface;
+use Symfony\Component\Notifier\Message\SmsMessage;
+use Symfony\Component\Notifier\TexterInterface;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -15,10 +18,9 @@ final class SmsSender implements NotificationSender
 
     private const string NAME = 'sms';
 
-    private int $smsSentCount = 0;
-
     public function __construct(
-        private readonly NotificationRenderer $textRenderer
+        private readonly NotificationRenderer $textRenderer,
+        private readonly TexterInterface      $texter
     ) {
     }
 
@@ -31,18 +33,22 @@ final class SmsSender implements NotificationSender
     {
         $content = $this->textRenderer->render($notification, $this);
 
-        $this->smsSentCount++;
+        $smsNotification = new SmsMessage(
+            '+336123456789',
+            $content,
+            '+336123456789'
+        );
 
-        return new NotificationSenderResult(NotificationStatus::SENT, 'Sms sent : '.$content);
+        try {
+            $this->texter->send($smsNotification);
+            return new NotificationSenderResult(NotificationStatus::SENT, 'Sms sent : ' . $content);
+        } catch (TransportExceptionInterface $e) {
+            return new NotificationSenderResult(NotificationStatus::ERROR, 'Sms could not be send : ' . $e->getMessage());
+        }
     }
 
     public function getName(): string
     {
         return self::NAME;
-    }
-
-    public function getSmsSentCount(): int
-    {
-        return $this->smsSentCount;
     }
 }

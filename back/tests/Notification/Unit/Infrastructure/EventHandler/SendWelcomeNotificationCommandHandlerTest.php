@@ -22,20 +22,21 @@ class SendWelcomeNotificationCommandHandlerTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->notificationCommandHandler = $this->createStub(NotificationCommandHandler::class);
+        $this->notificationCommandHandler = $this->createMock(NotificationCommandHandler::class);
         $this->underTest = new SendWelcomeNotificationCommandHandler($this->notificationCommandHandler);
     }
 
     #[Test]
     public function shouldHandleMessage(): void
     {
+        $this->notificationCommandHandler->expects($this->never())->method('__invoke');
         self::assertEquals(SendWelcomeNotificationCommand::class, SendWelcomeNotificationCommandHandler::getMessageHandled());
     }
 
     #[Test]
     public function shouldHandleSendWelcomeNotificationCommand(): void
     {
-        self::expectNotToPerformAssertions();
+        $this->notificationCommandHandler->expects($this->once())->method('__invoke');
         ($this->underTest)(new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_USER1_ID, 'validationToken'));
     }
 }

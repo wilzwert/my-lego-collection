@@ -2,15 +2,23 @@
 
 namespace App\Tests\Notification\Integration\Infrastructure\EventHandler;
 
+use App\Notification\Application\Handler\NotificationCommandHandler;
+use App\Notification\Domain\Model\NotificationLog;
 use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Port\Driven\NotificationLogRepository;
+use App\Notification\Infrastructure\Adapter\NotificationDispatcherAdapter;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
+use App\Notification\Infrastructure\Persistence\Doctrine\Entity\DoctrineNotificationLog;
+use App\Notification\Infrastructure\Sender\EmailSender;
 use App\Notification\Infrastructure\Sender\SmsSender;
+use App\Shared\Domain\Model\EntityId;
+use App\Tests\Notification\Integration\Infrastructure\Sender\ErrorSender;
 use App\Tests\Notification\Utilities\NotificationTestsUtility;
 use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Notifier\Message\SmsMessage;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -25,7 +33,6 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         /** @var SendWelcomeNotificationCommandHandler $handler */
         $handler = $container->get(SendWelcomeNotificationCommandHandler::class);
 
-        // TODO : use real data now that the cross modules data retrieval is implemented
         $identityId = TestData::EXISTING_IDENTITY_USER1_ID;
         $command = new SendWelcomeNotificationCommand($identityId, 'validation-token');
         $handler($command);
@@ -43,8 +50,9 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         $repository = $container->get(NotificationLogRepository::class);
         self::assertCount(2, $repository->findByMessageIdAndStatus($command->id(), NotificationStatus::SENT));
 
-        // also, an SMS should have been sent
-        self::assertEquals(1, $container->get(SmsSender::class)->getSmsSentCount());
+        self::assertNotificationCount(1);
+        $message = self::getNotifierMessage();
+        self::assertInstanceOf(SmsMessage::class, $message);
     }
 
     #[Test]
@@ -68,10 +76,65 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         self::assertEmailTextBodyContains($email, 'user1');
         self::assertEmailAddressContains($email, 'To', 'user1@test.com');
 
+        // nothing should have been sent by symfony notifier
+        self::assertNotificationCount(0);
+
         // check only one NotificationLog has been saved (for the email), but we know there already was one (see fixtures)
         $repository = $container->get(NotificationLogRepository::class);
         self::assertCount(2, $repository->findByMessageIdAndStatus($command->id(), NotificationStatus::SENT));
-        // also, no SMS should have been sent
-        self::assertEquals(0, $container->get(SmsSender::class)->getSmsSentCount());
+
+    }
+
+    #[Test]
+    public function shouldDispatchWelcomeMessageAndSaveNotificationLogs(): void
+    {
+        $container = self::getContainer();
+
+        // get the real dispatcher to add a test sender
+        /** @var NotificationDispatcherAdapter $dispatcher */
+        $dispatcher = $container->get(NotificationDispatcherAdapter::class);
+        $errorSender = new ErrorSender();
+        $dispatcher->addSender($errorSender);
+        $emailSender = $container->get(EmailSender::class);
+        $smsSender = $container->get(SmsSender::class);
+
+        $command = NotificationTestsUtility::generateSendWelcomeNotificationCommand(
+            EntityId::fromString(TestData::EXISTING_IDENTITY_USER1_ID)
+        );
+
+        /** @var NotificationCommandHandler $handler */
+        $handler = $container->get(NotificationCommandHandler::class);
+        $handler($command);
+
+        self::assertEmailCount(1);
+        self::assertNotificationCount(1);
+        $message = self::getNotifierMessage();
+        self::assertInstanceOf(SmsMessage::class, $message);
+
+        // check 3 NotificationLogs have been saved, including one in error (sms)
+        /** @var NotificationLogRepository $repository */
+        $repository = $container->get(NotificationLogRepository::class);
+        /** @var NotificationLog[] $notificationLogs */
+        $notificationLogs = $repository->findByMessageId($command->id());
+
+        self::assertCount(3, $notificationLogs);
+        self::assertTrue(
+            array_any(
+                $notificationLogs,
+                fn(DoctrineNotificationLog $notificationLog) => $notificationLog->getSender() === $errorSender->getName() && $notificationLog->getStatus() === NotificationStatus::ERROR
+            )
+        );
+        self::assertTrue(
+            array_any(
+                $notificationLogs,
+                fn(DoctrineNotificationLog $notificationLog) => $notificationLog->getSender() === $emailSender->getName() && $notificationLog->getStatus() === NotificationStatus::SENT
+            )
+        );
+        self::assertTrue(
+            array_any(
+                $notificationLogs,
+                fn(DoctrineNotificationLog $notificationLog) => $notificationLog->getSender() === $smsSender->getName() && $notificationLog->getStatus() === NotificationStatus::SENT
+            )
+        );
     }
 }
