@@ -37,7 +37,7 @@ class AuthTestsUtility
         ?bool     $isComplete = false
     ): Identity {
         return static::generateIdentity(
-            entityId: EntityId::fromString(TestData::EXISTING_IDENTITY_ID),
+            entityId: EntityId::fromString(TestData::EXISTING_IDENTITY_USER1_ID),
             email: $email,
             username: $username,
             passwordHash: $passwordHash,

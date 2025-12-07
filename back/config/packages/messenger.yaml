@@ -12,19 +12,19 @@ framework:
                     - doctrine_transaction
 
             integration.bus:
-                default_middleware:
-                    enabled: true
-                    allow_no_handlers: true
-                    allow_no_senders: true
+                default_middleware: allow_no_handlers
 
             auth.bus:
-                default_middleware: allow_no_handlers
+                default_middleware:
+                    enabled: true
 
             user.bus:
-                default_middleware: allow_no_handlers
+                default_middleware:
+                    enabled: true
 
             collection-management.bus:
-                default_middleware: allow_no_handlers
+                default_middleware:
+                    enabled: true
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
@@ -39,17 +39,8 @@ framework:
         routing:
             # Route your messages to the transports
             # 'App\Message\YourM': async
-            'MyLegoCollection\SharedEvent\Event\IntegrationEvent': async
-
-            # it's important the CreateUserCommand can also be handled immediately by the User slice
-            'MyLegoCollection\SharedEvent\Command\CreateUserCommand': sync
-
-            # it's important the UserCreatedIntegrationEvent can also be handled immediately by the Auth slice
-            'MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent': sync
-
-            'MyLegoCollection\SharedEvent\Command\Command': async
-
-
+            'MyLegoCollection\SharedContracts\Event\IntegrationEvent': async
+            'MyLegoCollection\SharedContracts\Command\Command': async
 
 # when@test:
 #    framework:

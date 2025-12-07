@@ -2,12 +2,10 @@
 
 namespace App\Auth\Application\Orchestrator;
 
-use App\Auth\Domain\Event\IdentityCreatedEvent;
+use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Shared\Infrastructure\Messenger\CommandBus;
 use App\Shared\Infrastructure\Messenger\IntegrationEventBus;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
-use MyLegoCollection\SharedEvent\Command\SendWelcomeNotificationCommand;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -15,25 +13,16 @@ use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
 class IdentityCompletedOrchestrator
 {
     public function __construct(
-        private readonly CommandBus          $commandBus,
-        private readonly IntegrationEventBus $integrationBus,
+        private readonly CommandBus          $commandBus
     ) {
     }
 
-    public function __invoke(IdentityCreatedEvent $event): void
+    public function __invoke(IdentityCompletedEvent $event): void
     {
         $this->commandBus->dispatch(
             new SendWelcomeNotificationCommand(
-                $event->getIdentity()->getEmail(),
-                $event->getIdentity()->getEmail(),
+                $event->getIdentity()->getId()->value(),
                 $event->getIdentity()->getValidationToken()
-            ),
-        );
-
-        $this->integrationBus->dispatch(
-            new IdentityCreatedIntegrationEvent(
-                $event->getIdentity()->getId(),
-                $event->metadata()
             )
         );
     }

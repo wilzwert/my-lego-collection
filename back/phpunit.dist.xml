@@ -19,12 +19,8 @@
     </php>
 
     <testsuites>
-        <testsuite name="E2e">
-            <directory>tests/EndToEnd</directory>
-        </testsuite>
         <testsuite name="Unit">
             <directory>tests</directory>
-            <exclude>tests/EndToEnd</exclude>
         </testsuite>
         <testsuite name="Integration">
             <directory suffix="IT.php">tests</directory>

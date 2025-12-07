@@ -5,7 +5,8 @@ namespace App\Shared\Domain\Service;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\TempFile;
-use App\Shared\Domain\Repository\StoredFileRepository;
+use App\Shared\Domain\Port\Driven\FileStorageService;
+use App\Shared\Domain\Port\Driven\StoredFileRepository;
 
 /**
  * @author Wilhelm Zwertvaegher

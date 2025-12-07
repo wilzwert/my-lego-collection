@@ -1,0 +1,12 @@
+{
+  "name": "my-lego-collection/shared-contracts",
+  "autoload": {
+    "psr-4": {
+        "MyLegoCollection\\SharedContracts\\": "src/"
+    }
+  },
+  "type": "library",
+  "require": {
+      "symfony/uid": "7.3.*"
+  }
+}

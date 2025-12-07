@@ -4,9 +4,6 @@ namespace App\Shared\Infrastructure\Service;
 
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Infrastructure\Dto\StoredFileDto;
-use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
-use Doctrine\ORM\Internal\StronglyConnectedComponents;
-use Symfony\Component\ObjectMapper\ObjectMapper;
 use Symfony\Component\ObjectMapper\ObjectMapperInterface;
 use Symfony\Component\ObjectMapper\TransformCallableInterface;
 

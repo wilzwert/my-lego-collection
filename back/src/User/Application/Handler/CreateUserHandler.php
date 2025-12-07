@@ -3,21 +3,28 @@
 namespace App\User\Application\Handler;
 
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Service\EventBus;
+use App\Shared\Domain\Port\Driven\EventBus;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
+use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Domain\Service\UserService;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
+use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
 
 readonly class CreateUserHandler
 {
     public function __construct(
         private UserService $userService,
+        private UserRepository $userRepository,
+        private TransactionProvider $transactionProvider,
         private EventBus    $eventBus
     ) {
     }
 
     public function __invoke(CreateUserCommand $command): void
     {
-        $user = $this->userService->createUser(EntityId::fromString($command->getId()));
-        $this->eventBus->dispatchAll($user);
+        $this->transactionProvider->transactional(function () use ($command) {
+            $user = $this->userService->createUser(EntityId::fromString($command->getIdentityId()));
+            $this->userRepository->save($user);
+            $this->eventBus->dispatchAll($user);
+        });
     }
 }

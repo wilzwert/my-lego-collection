@@ -2,6 +2,7 @@
 
 namespace App\Auth\Domain\Model;
 
+use App\Auth\Domain\Event\EmailChangedEvent;
 use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Exception\AuthErrorCode;
@@ -27,7 +28,6 @@ final class Identity implements ProducesDomainEvents
      * @param list<string> $roles
      * @param boolean $isComplete
      * @param string $validationToken
-     * @var array<DomainEvent> $events
      * @throws ValidationException
     */
     public function __construct(
@@ -50,6 +50,14 @@ final class Identity implements ProducesDomainEvents
             ->validate();
     }
 
+    /**
+     * @param EntityId $id
+     * @param string $email
+     * @param string $username
+     * @param string $passwordHash
+     * @param list<string> $roles
+     * @return self
+     */
     public static function create(
         EntityId $id,
         string    $email,
@@ -117,6 +125,10 @@ final class Identity implements ProducesDomainEvents
 
     public function complete(): self
     {
+        if ($this->isComplete()) {
+            return $this;
+        }
+
         $new = new self(
             id: $this->id,
             email: $this->email,
@@ -141,7 +153,7 @@ final class Identity implements ProducesDomainEvents
             isComplete: true,
             validationToken: $this->generateValidationToken()
         );
-        // TODO $new->events = [new IdentityCompletedEvent($new)];
+        $new->events = [new EmailChangedEvent($new)];
         return $new;
     }
 

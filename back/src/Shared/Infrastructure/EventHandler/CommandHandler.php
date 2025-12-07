@@ -3,7 +3,7 @@
 namespace App\Shared\Infrastructure\EventHandler;
 
 
-use MyLegoCollection\SharedEvent\Command\Command;
+use MyLegoCollection\SharedContracts\Command\Command;
 
 /**
  * @template T of Command

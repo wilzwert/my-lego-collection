@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Tests\Shared\Unit\Infrastructure\Normalizer;
+
+use App\Shared\Domain\Exception\EntityAlreadyExistsException;
+use App\Shared\Domain\Exception\EntityNotFoundException;
+use App\Shared\Domain\Exception\FileStorageException;
+use App\Shared\Infrastructure\Normalizer\DomainExceptionNormalizer;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\DatePoint;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * @author Wilhelm Zwertvaegher
+ */
+class DomainExceptionNormalizerTest extends TestCase
+{
+    use ClockSensitiveTrait;
+
+    #[Test]
+    public function shouldNormalizeEntityAlreadyExistsException(): void
+    {
+        $clock = static::mockTime(new \DateTimeImmutable('2025-11-07 13:10:00'));
+        $expectedNormalizedException = [
+            'timestamp' => new DatePoint('2025-11-07 13:10:00')->format(\DateTimeInterface::RFC3339_EXTENDED),
+            'status' => Response::HTTP_CONFLICT,
+            'error' => 'entity-exists',
+            'message' => 'Identity already exists',
+            'errors' => [],
+        ];
+
+        $exception = new EntityAlreadyExistsException('Identity already exists');
+        $normalizer = new DomainExceptionNormalizer();
+        $normalizer->setClock($clock);
+        $normalized = $normalizer->normalize($exception);
+
+        self::assertEquals($expectedNormalizedException, $normalized);
+    }
+
+    #[Test]
+    public function shouldNormalizeEntityNotFoundException(): void
+    {
+        $clock = static::mockTime(new \DateTimeImmutable('2025-11-07 13:10:00'));
+        $expectedNormalizedException = [
+            'timestamp' => new DatePoint('2025-11-07 13:10:00')->format(\DateTimeInterface::RFC3339_EXTENDED),
+            'status' => Response::HTTP_NOT_FOUND,
+            'error' => 'entity-not-found',
+            'message' => 'Entity not found',
+            'errors' => [],
+        ];
+
+        $exception = new EntityNotFoundException('Entity not found');
+        $normalizer = new DomainExceptionNormalizer();
+        $normalizer->setClock($clock);
+        $normalized = $normalizer->normalize($exception);
+
+        self::assertEquals($expectedNormalizedException, $normalized);
+    }
+
+    #[Test]
+    public function shouldNormalizeFileStorageException(): void
+    {
+        $clock = static::mockTime(new \DateTimeImmutable('2025-11-07 13:10:00'));
+        $expectedNormalizedException = [
+            'timestamp' => new DatePoint('2025-11-07 13:10:00')->format(\DateTimeInterface::RFC3339_EXTENDED),
+            'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+            'error' => 'file-storage',
+            'message' => 'File storage error',
+            'errors' => [],
+        ];
+
+        $exception = new FileStorageException('File storage error');
+        $normalizer = new DomainExceptionNormalizer();
+        $normalizer->setClock($clock);
+        $normalized = $normalizer->normalize($exception);
+
+        self::assertEquals($expectedNormalizedException, $normalized);
+    }
+}

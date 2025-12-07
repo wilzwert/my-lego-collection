@@ -2,13 +2,9 @@
 
 namespace App\User\Application\Orchestrator;
 
-use App\Auth\Domain\Event\IdentityCreatedEvent;
-use App\Shared\Infrastructure\Messenger\CommandBus;
 use App\Shared\Infrastructure\Messenger\IntegrationEventBus;
 use App\User\Domain\Event\UserCreatedEvent;
-use MyLegoCollection\SharedEvent\Command\CreateUserCommand;
-use MyLegoCollection\SharedEvent\Event\IdentityCreatedIntegrationEvent;
-use MyLegoCollection\SharedEvent\Event\UserCreatedIntegrationEvent;
+use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 
 /**
  * @author Wilhelm Zwertvaegher

@@ -14,6 +14,10 @@ class UserCreatedEvent extends DomainEvent
 
     private readonly User $user;
 
+    /**
+     * @param User $user
+     * @param array<string, string|int>|null $metadata
+     */
     public function __construct(User $user, ?array $metadata = null)
     {
         parent::__construct(self::TYPE, $metadata);

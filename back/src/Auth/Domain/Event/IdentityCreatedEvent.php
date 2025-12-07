@@ -14,6 +14,10 @@ class IdentityCreatedEvent extends DomainEvent
 
     private readonly Identity $identity;
 
+    /**
+     * @param Identity $identity
+     * @param array<string, string|int>|null $metadata
+     */
     public function __construct(Identity $identity, ?array $metadata = null)
     {
         parent::__construct(self::TYPE, $metadata);

@@ -2,57 +2,24 @@
 
 namespace App\User\Domain\Service;
 
-use App\User\Domain\Event\UserCreatedEvent;
 use App\Shared\Domain\Model\EntityId;
-use App\Shared\Domain\Model\StoredFile;
-use App\Shared\Domain\Service\EventBus;
-use App\Shared\Domain\Service\TransactionProvider;
-use App\Shared\Domain\Service\TransactionProviderException;
 use App\User\Domain\Model\User;
-use App\User\Domain\Repository\UserRepository;
+use App\User\Domain\Port\Driven\RetrieveUserForIdentity;
 
 readonly class DefaultUserService implements UserService
 {
     public function __construct(
-        private UserRepository      $userRepository,
-        private TransactionProvider $transactionProvider
+        private RetrieveUserForIdentity $retrieveUserForIdentity
     ) {
     }
 
-    /**
-     * @throws TransactionProviderException
-     */
     public function createUser(EntityId $identityId): ?User
     {
-        return $this->transactionProvider->transactional(function () use ($identityId) {
-            $user = $this->userRepository->findByIdentityId(EntityId::fromString($identityId));
-            if ($user) {
-                return $user;
-            }
-            $user = User::create(EntityId::generate(), $identityId, new \DateTimeImmutable(), new \DateTimeImmutable());
-            $this->userRepository->save($user);
-
+        $user = $this->retrieveUserForIdentity->retrieveUser($identityId);
+        if ($user) {
             return $user;
-        });
-    }
+        }
 
-    public function getUserByIdentityId(EntityId $identityId): ?User
-    {
-        return $this->userRepository->findByIdentityId($identityId);
-    }
-
-    public function getUserById(EntityId $userId): ?User
-    {
-        return $this->userRepository->findById($userId);
-    }
-
-    /**
-     * @throws TransactionProviderException
-     */
-    public function updateAvatar(User $user, ?StoredFile $storedFile = null): User
-    {
-        $user = $user->setAvatar($storedFile);
-        $this->userRepository->save($user);
-        return $user;
+        return User::create(EntityId::generate(), $identityId, new \DateTimeImmutable(), new \DateTimeImmutable());
     }
 }

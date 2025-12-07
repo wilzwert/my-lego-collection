@@ -3,7 +3,7 @@
 namespace App\Shared\Infrastructure\EventHandler;
 
 
-use MyLegoCollection\SharedEvent\Message;
+use MyLegoCollection\SharedContracts\Message;
 
 /**
  * @template T of Message

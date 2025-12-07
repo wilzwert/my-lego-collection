@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * @implements DomainEventHandler<UserCreatedEvent>
  * @author Wilhelm Zwertvaegher
  */
-#[AsMessageHandler(fromTransport: 'sync', priority: 10)]
+#[AsMessageHandler]
 readonly class UserCreatedEventHandler implements DomainEventHandler
 {
     public function __construct(private UserCreatedOrchestrator $userCreatedOrchestrator)

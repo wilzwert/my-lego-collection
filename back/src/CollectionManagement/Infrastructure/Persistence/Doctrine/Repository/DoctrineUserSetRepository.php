@@ -5,7 +5,6 @@ namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repositor
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Model\UserSetCollection;
-use App\CollectionManagement\Domain\Repository\UserSetRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineUserSet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,7 +15,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
  * @extends ServiceEntityRepository<Set>
  */
 #[Autoconfigure]
-class DoctrineUserSetRepository extends ServiceEntityRepository implements UserSetRepository
+class DoctrineUserSetRepository extends ServiceEntityRepository implements \App\CollectionManagement\Domain\Port\Driven\UserSetRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {

@@ -3,5 +3,32 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    App\Notification\:
-        resource: '../../src/Notification/'
+    App\Notification\Application\Port\Driven\RetrieveIdentityDto: '@App\Auth\Infrastructure\Adapter\RetrieveIdentityDtoAdapter'
+    App\Notification\Application\Port\Driven\RetrieveUserDto: '@App\User\Infrastructure\Adapter\RetrieveUserDtoAdapter'
+
+    App\Notification\Domain\:
+        resource: '../../src/Notification/Domain/'
+        exclude:
+            - '../../src/Notification/Domain/Event'
+            - '../../src/Notification/Domain/Exception'
+            - '../../src/Notification/Domain/Model'
+
+    App\Notification\Application\:
+        resource: '../../src/Notification/Application/'
+        exclude:
+            - '../../src/Notification/Application/Command'
+
+    App\Notification\Infrastructure\:
+        resource: '../../src/Notification/Infrastructure/'
+        exclude:
+            - '../../src/Notification/Infrastructure/Dto'
+            - '../../src/Notification/Infrastructure/Persistence/Doctrine/Entity'
+
+    App\Notification\Infrastructure\Sender\EmailSender:
+        arguments:
+            $renderer: '@App\Notification\Infrastructure\Renderer\HtmlNotificationRenderer'
+            $textRenderer: '@App\Notification\Infrastructure\Renderer\TextNotificationRenderer'
+
+    App\Notification\Infrastructure\Sender\SmsSender:
+        arguments:
+            $textRenderer: '@App\Notification\Infrastructure\Renderer\TextNotificationRenderer'

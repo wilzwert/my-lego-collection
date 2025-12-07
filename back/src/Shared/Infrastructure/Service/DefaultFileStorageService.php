@@ -5,7 +5,7 @@ namespace App\Shared\Infrastructure\Service;
 use App\Shared\Domain\Exception\FileStorageException;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\TempFile;
-use App\Shared\Domain\Service\FileStorageService;
+use App\Shared\Domain\Port\Driven\FileStorageService;
 use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**

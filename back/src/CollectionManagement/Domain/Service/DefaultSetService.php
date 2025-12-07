@@ -4,7 +4,7 @@ namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
-use App\CollectionManagement\Domain\Repository\UserSetRepository;
+use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\Shared\Domain\Model\EntityId;
 use Override;
 

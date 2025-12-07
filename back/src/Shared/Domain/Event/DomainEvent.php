@@ -2,7 +2,7 @@
 
 namespace App\Shared\Domain\Event;
 
-use MyLegoCollection\SharedEvent\Message;
+use MyLegoCollection\SharedContracts\Message;
 
 /**
  * @author Wilhelm Zwertvaegher

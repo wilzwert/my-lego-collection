@@ -13,6 +13,14 @@ imports:
 parameters:
     public_upload_dir: '%kernel.project_dir%/public/uploads'
     public_upload_base_url: '%env(PUBLIC_UPLOAD_BASE_URL)%'
+    frontends:
+        app: '%env(FRONTEND_APP_URL)%'
+    frontend_routes:
+        app:
+            home: ''
+            confirm_identity: /account/confirm/:token
+            account: /account
+            collection: /collection
 
 services:
     # default configuration for services in *this* file
@@ -26,15 +34,19 @@ services:
         resource: '../src/DataFixtures/'
 
 
+    App\Shared\Infrastructure\Service\FrontendUrlGenerator:
+        arguments:
+            $frontends: '%frontends%'
+            $routes: '%frontend_routes%'
+
+
     _instanceof:
-        # All services implementing the IntegrationEventHandler interface
-        # in the auth slice must use only the auth.bus
+        # All services implementing the IntegrationEventHandler interface must use only the integration.bus
         App\Shared\Infrastructure\EventHandler\IntegrationEventHandler:
             tags:
                 - { name: messenger.message_handler, bus: integration.bus }
 
-        # All services implementing the CommandHandler interface
-        # in the auth slice must use only the auth.bus
+        # All services implementing the CommandHandler interface must use only the command.bus
         App\Shared\Infrastructure\EventHandler\CommandHandler:
             tags:
                 - { name: messenger.message_handler, bus: command.bus }

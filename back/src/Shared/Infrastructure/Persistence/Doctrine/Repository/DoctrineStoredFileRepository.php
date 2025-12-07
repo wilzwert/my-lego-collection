@@ -2,10 +2,9 @@
 
 namespace App\Shared\Infrastructure\Persistence\Doctrine\Repository;
 
-use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
-use App\Shared\Domain\Repository\StoredFileRepository;
+use App\Shared\Domain\Port\Driven\StoredFileRepository;
 use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;

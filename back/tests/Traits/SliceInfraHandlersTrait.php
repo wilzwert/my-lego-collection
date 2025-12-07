@@ -3,7 +3,7 @@
 namespace App\Tests\Traits;
 
 use App\Shared\Infrastructure\EventHandler\MessageHandler;
-use MyLegoCollection\SharedEvent\Message;
+use MyLegoCollection\SharedContracts\Message;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use ReflectionClass;
