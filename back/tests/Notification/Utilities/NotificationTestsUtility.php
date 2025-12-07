@@ -67,7 +67,7 @@ class NotificationTestsUtility
         return self::generateSendWelcomeNotificationCommand(
             $entityId ?? EntityId::fromString(TestData::EXISTING_IDENTITY_USER1_ID),
             $validationToken,
-            TestData::EXISTING_USER1_SENT_SMS_WELCOME_MESSAGE_ID
+                TestData::EXISTING_USER1_SENT_EMAIL_WELCOME_MESSAGE_ID
         );
     }
 

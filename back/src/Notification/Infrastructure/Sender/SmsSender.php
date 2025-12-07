@@ -26,7 +26,7 @@ final class SmsSender implements NotificationSender
 
     public function supports(Notification $notification): bool
     {
-        return in_array($notification->getType(), [NotificationType::WELCOME]);
+        return false;
     }
 
     public function send(Notification $notification): NotificationSenderResult
