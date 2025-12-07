@@ -17,6 +17,17 @@ on:
     branches:
       - main
 
+
+env:
+  APP_ENV: test
+  FRONTEND_APP_URL: https://my-lego.collection
+  SMS_SENDER_DSN: null://null
+  REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
+  JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST }}
+  APP_URL: http://localhost:8080
+  PUBLIC_UPLOAD_BASE_URL: http://localhost:8080/uploads
+
+
 jobs:
   setup:
     name: Setup project
@@ -75,7 +86,6 @@ jobs:
 
       - name: Prepare backend environment
         run: |
-          cp .env.test.dist .env.test
           cp phpunit.dist.xml phpunit.xml
 
       - name: Setup PHP
@@ -100,9 +110,7 @@ jobs:
         # this step may fail if minimum coverage is not reached, but we need do continue anyway
         # because we need to update coverage report and run sonar scan later
         continue-on-error: true
-        env:
-          REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
-          JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST }}
+
 
       # if coverage doesn't exist, something bad happened, and we can't go further
       - name: Verify coverage report existence and stop if missing
