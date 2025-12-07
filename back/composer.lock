@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f1487025f5bfe7a0ed3131c7e69865ed",
+    "content-hash": "cc05d78dc6dabe5a7e761134116eda47",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -1719,16 +1719,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.6.2",
+            "version": "v5.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "3a454ca033b9e06b63282ce19562e892747449bb"
+                "reference": "dca41cd15c2ac9d055ad70dbfd011130757d1f82"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/3a454ca033b9e06b63282ce19562e892747449bb",
-                "reference": "3a454ca033b9e06b63282ce19562e892747449bb",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/dca41cd15c2ac9d055ad70dbfd011130757d1f82",
+                "reference": "dca41cd15c2ac9d055ad70dbfd011130757d1f82",
                 "shasum": ""
             },
             "require": {
@@ -1771,9 +1771,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.6.2"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.7.0"
             },
-            "time": "2025-10-21T19:32:17+00:00"
+            "time": "2025-12-06T11:56:16+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -8753,16 +8753,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v3.91.2",
+            "version": "v3.91.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer.git",
-                "reference": "f171dc216bc8a4192d5a0876a899cce6f9e379d6"
+                "reference": "9f10aa6390cea91da175ea608880e942d7c0226e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/f171dc216bc8a4192d5a0876a899cce6f9e379d6",
-                "reference": "f171dc216bc8a4192d5a0876a899cce6f9e379d6",
+                "url": "https://api.github.com/repos/PHP-CS-Fixer/PHP-CS-Fixer/zipball/9f10aa6390cea91da175ea608880e942d7c0226e",
+                "reference": "9f10aa6390cea91da175ea608880e942d7c0226e",
                 "shasum": ""
             },
             "require": {
@@ -8844,7 +8844,7 @@
             ],
             "support": {
                 "issues": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/issues",
-                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.91.2"
+                "source": "https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/tree/v3.91.3"
             },
             "funding": [
                 {
@@ -8852,29 +8852,29 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-12-01T20:56:13+00:00"
+            "time": "2025-12-05T19:45:37+00:00"
         },
         {
             "name": "jane-php/json-schema-runtime",
-            "version": "v7.9.0",
+            "version": "v7.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janephp/json-schema-runtime.git",
-                "reference": "ddb82546a1fa29456fb9acaa3c1a299beb0b40b1"
+                "reference": "b0ea916ff59afc582d95e737575c6019acdc2f90"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janephp/json-schema-runtime/zipball/ddb82546a1fa29456fb9acaa3c1a299beb0b40b1",
-                "reference": "ddb82546a1fa29456fb9acaa3c1a299beb0b40b1",
+                "url": "https://api.github.com/repos/janephp/json-schema-runtime/zipball/b0ea916ff59afc582d95e737575c6019acdc2f90",
+                "reference": "b0ea916ff59afc582d95e737575c6019acdc2f90",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "league/uri": "^6.7.2 || ^7.4",
-                "php": "^8.0",
+                "php": "^8.1",
                 "php-jsonpointer/php-jsonpointer": "^3.0 || ^4.0",
-                "symfony/serializer": "^5.4 || ^6.4 || ^7.0",
-                "symfony/yaml": "^5.4 || ^6.4 || ^7.0"
+                "symfony/serializer": "^5.4 || ^6.4 || ^7.0 || 8.0",
+                "symfony/yaml": "^5.4 || ^6.4 || ^7.0 || 8.0"
             },
             "conflict": {
                 "symfony/framework-bundle": "5.1.0"
@@ -8912,38 +8912,38 @@
             ],
             "description": "Jane runtime Library",
             "support": {
-                "source": "https://github.com/janephp/json-schema-runtime/tree/v7.9.0"
+                "source": "https://github.com/janephp/json-schema-runtime/tree/v7.10.0"
             },
-            "time": "2025-04-04T09:35:19+00:00"
+            "time": "2025-12-02T21:55:16+00:00"
         },
         {
             "name": "jane-php/open-api-runtime",
-            "version": "v7.9.0",
+            "version": "v7.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/janephp/open-api-runtime.git",
-                "reference": "bf05ecae7096ccb3bd115fadb9b612e26c702d56"
+                "reference": "904d471fad6bc28d2d67969d0ccd768db0662047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/janephp/open-api-runtime/zipball/bf05ecae7096ccb3bd115fadb9b612e26c702d56",
-                "reference": "bf05ecae7096ccb3bd115fadb9b612e26c702d56",
+                "url": "https://api.github.com/repos/janephp/open-api-runtime/zipball/904d471fad6bc28d2d67969d0ccd768db0662047",
+                "reference": "904d471fad6bc28d2d67969d0ccd768db0662047",
                 "shasum": ""
             },
             "require": {
                 "jane-php/json-schema-runtime": "^7.0",
                 "nyholm/psr7": "^1.8",
-                "php": "^8.0",
+                "php": "^8.1",
                 "php-http/client-common": "^2.0",
                 "php-http/discovery": "^1.6",
                 "php-http/multipart-stream-builder": "^1.0",
                 "psr/http-client": "^1.0",
                 "psr/http-factory": "^1.0",
-                "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0"
+                "symfony/options-resolver": "^5.4 || ^6.4 || ^7.0 || 8.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^8.5",
-                "symfony/serializer": "^5.4 || ^6.4 || ^7.0"
+                "symfony/serializer": "^5.4 || ^6.4 || ^7.0 || 8.0"
             },
             "type": "library",
             "extra": {
@@ -8975,9 +8975,9 @@
             ],
             "description": "Jane OpenAPI Runtime Library, dependencies and utility class for a library generated by jane/openapi",
             "support": {
-                "source": "https://github.com/janephp/open-api-runtime/tree/v7.9.0"
+                "source": "https://github.com/janephp/open-api-runtime/tree/v7.10.0"
             },
-            "time": "2025-04-17T14:07:07+00:00"
+            "time": "2025-12-02T21:55:16+00:00"
         },
         {
             "name": "league/uri",
@@ -10105,16 +10105,16 @@
         },
         {
             "name": "phpstan/phpstan-phpunit",
-            "version": "2.0.9",
+            "version": "2.0.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-phpunit.git",
-                "reference": "cda423c709dae0126987fec04a381ec819c9d9a7"
+                "reference": "8d61a5854e7497d95bc85188e13537e99bd7aae7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/cda423c709dae0126987fec04a381ec819c9d9a7",
-                "reference": "cda423c709dae0126987fec04a381ec819c9d9a7",
+                "url": "https://api.github.com/repos/phpstan/phpstan-phpunit/zipball/8d61a5854e7497d95bc85188e13537e99bd7aae7",
+                "reference": "8d61a5854e7497d95bc85188e13537e99bd7aae7",
                 "shasum": ""
             },
             "require": {
@@ -10152,9 +10152,9 @@
             "description": "PHPUnit extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-phpunit/issues",
-                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.9"
+                "source": "https://github.com/phpstan/phpstan-phpunit/tree/2.0.10"
             },
-            "time": "2025-12-05T08:04:44+00:00"
+            "time": "2025-12-06T11:15:39+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -10492,16 +10492,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.0",
+            "version": "12.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "fef037fe50d20ce826cdbd741b7a2afcdec5f45b"
+                "reference": "e33a5132ea24119400f6ce5bce6665922e968bad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/fef037fe50d20ce826cdbd741b7a2afcdec5f45b",
-                "reference": "fef037fe50d20ce826cdbd741b7a2afcdec5f45b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e33a5132ea24119400f6ce5bce6665922e968bad",
+                "reference": "e33a5132ea24119400f6ce5bce6665922e968bad",
                 "shasum": ""
             },
             "require": {
@@ -10569,7 +10569,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.0"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.1"
             },
             "funding": [
                 {
@@ -10593,7 +10593,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-05T04:59:40+00:00"
+            "time": "2025-12-06T12:19:17+00:00"
         },
         {
             "name": "psr/http-client",
