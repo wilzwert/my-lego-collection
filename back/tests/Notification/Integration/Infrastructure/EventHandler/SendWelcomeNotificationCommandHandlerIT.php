@@ -8,7 +8,6 @@ use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Port\Driven\NotificationLogRepository;
 use App\Notification\Infrastructure\Adapter\NotificationDispatcherAdapter;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
-use App\Notification\Infrastructure\Persistence\Doctrine\Entity\DoctrineNotificationLog;
 use App\Notification\Infrastructure\Sender\EmailSender;
 use App\Shared\Domain\Model\EntityId;
 use App\Tests\Notification\Integration\Infrastructure\Sender\ErrorSender;
@@ -101,20 +100,19 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         // check 3 NotificationLogs have been saved, including one in error (sms)
         /** @var NotificationLogRepository $repository */
         $repository = $container->get(NotificationLogRepository::class);
-        /** @var NotificationLog[] $notificationLogs */
         $notificationLogs = $repository->findByMessageId($command->id());
 
         self::assertCount(2, $notificationLogs);
         self::assertTrue(
             array_any(
                 $notificationLogs,
-                fn(DoctrineNotificationLog $notificationLog) => $notificationLog->getSender() === $errorSender->getName() && $notificationLog->getStatus() === NotificationStatus::ERROR
+                fn(NotificationLog $notificationLog) => $notificationLog->getSender() === $errorSender->getName() && $notificationLog->getStatus() === NotificationStatus::ERROR
             )
         );
         self::assertTrue(
             array_any(
                 $notificationLogs,
-                fn(DoctrineNotificationLog $notificationLog) => $notificationLog->getSender() === $emailSender->getName() && $notificationLog->getStatus() === NotificationStatus::SENT
+                fn(NotificationLog $notificationLog) => $notificationLog->getSender() === $emailSender->getName() && $notificationLog->getStatus() === NotificationStatus::SENT
             )
         );
     }
