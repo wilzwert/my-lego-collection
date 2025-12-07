@@ -47,6 +47,9 @@ jobs:
 
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
+        env:
+          APP_ENV: test
+
 
       - name: Upload vendor
         uses: actions/upload-artifact@v4
@@ -100,7 +103,6 @@ jobs:
         env:
           REBRICKABLE_API_KEY: ${{ secrets.REBRICKABLE_API_KEY_TEST }}
           JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY_TEST }}
-          APP_ENV: test
 
       # if coverage doesn't exist, something bad happened, and we can't go further
       - name: Verify coverage report existence and stop if missing
