@@ -46,50 +46,6 @@ class DoctrineNotificationLog
     {
     }
 
-    public function getId(): string
-    {
-        return $this->id;
-    }
-
-    public function getIdentityId(): string
-    {
-        return $this->identityId;
-    }
-
-    public function getUserId(): ?string
-    {
-        return $this->userId;
-    }
-
-    public function getMessageId(): string
-    {
-        return $this->messageId;
-    }
-
-    public function getType(): NotificationType
-    {
-        return $this->type;
-    }
-
-    public function getSender(): string
-    {
-        return $this->sender;
-    }
-
-    public function getStatus(): NotificationStatus
-    {
-        return $this->status;
-    }
-
-    public function getStatusMessage(): string
-    {
-        return $this->statusMessage;
-    }
-
-    public function getCreatedAt(): \DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
 
     public function fromDomain(NotificationLog $notificationLog): DoctrineNotificationLog
     {
