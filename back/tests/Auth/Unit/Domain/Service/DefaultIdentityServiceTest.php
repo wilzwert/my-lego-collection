@@ -3,6 +3,7 @@
 namespace App\Tests\Auth\Unit\Domain\Service;
 
 use App\Auth\Domain\Event\EmailChangedEvent;
+use App\Auth\Domain\Event\IdentityCompletedEvent;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Port\Driven\EmailAvailabilityChecker;
@@ -95,6 +96,45 @@ final class DefaultIdentityServiceTest extends TestCase
         $identity = AuthTestsUtility::generateIdentity(email: 'test@example.com');
         $this->emailAvailabilityChecker->expects(self::never())->method('isEmailAvailable');
         $updatedIdentity = $this->underTest->changeEmail($identity, 'test@example.com');
+        self::assertSame($identity, $updatedIdentity);
+        $events = $updatedIdentity->pullEvents();
+        self::assertCount(0, $events);
+    }
+
+    #[Test]
+    public function whenEmailTaken_thenChangeEmail_shouldThrowEntityAlreadyExistsException(): void
+    {
+        $this->passwordHasher->expects(self::never())->method('hash');
+        $this->identityAvailabilityChecker->expects(self::never())->method('isIdentityAvailable');
+        $identity = AuthTestsUtility::generateIdentity(email: 'test@example.com');
+        $this->emailAvailabilityChecker->expects(self::once())->method('isEmailAvailable')->willReturn(false);
+        self::expectException(EntityAlreadyExistsException::class);
+        $updatedIdentity = $this->underTest->changeEmail($identity, 'changed@example.com');
+    }
+
+    #[Test]
+    public function shouldCompleteIdentity(): void
+    {
+        $this->passwordHasher->expects(self::never())->method('hash');
+        $this->identityAvailabilityChecker->expects(self::never())->method('isIdentityAvailable');
+        $identity = AuthTestsUtility::generateIdentity(email: 'test@example.com', isComplete: false);
+        $this->emailAvailabilityChecker->expects($this->never())->method('isEmailAvailable');
+        $updatedIdentity = $this->underTest->complete($identity);
+        self::assertNotSame($identity, $updatedIdentity);
+        self::assertTrue($updatedIdentity->isComplete());
+        $events = $updatedIdentity->pullEvents();
+        self::assertCount(1, $events);
+        self::assertInstanceOf(IdentityCompletedEvent::class, $events[0]);
+    }
+
+    #[Test]
+    public function whenAlreadyComplete_thenComplete_shouldDoNothing(): void
+    {
+        $this->passwordHasher->expects(self::never())->method('hash');
+        $this->identityAvailabilityChecker->expects(self::never())->method('isIdentityAvailable');
+        $identity = AuthTestsUtility::generateIdentity(email: 'test@example.com', isComplete: true);
+        $this->emailAvailabilityChecker->expects(self::never())->method('isEmailAvailable');
+        $updatedIdentity = $this->underTest->complete($identity);
         self::assertSame($identity, $updatedIdentity);
         $events = $updatedIdentity->pullEvents();
         self::assertCount(0, $events);
