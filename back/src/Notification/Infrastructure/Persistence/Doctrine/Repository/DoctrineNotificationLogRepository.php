@@ -30,24 +30,44 @@ class DoctrineNotificationLogRepository extends ServiceEntityRepository implemen
         $this->entityManager->persist($doctrineEntity);
     }
 
+    /**
+     * @param string $messageId
+     * @return array<NotificationLog>
+     */
     public function findByMessageId(string $messageId): array
     {
-        return $this->findBy(['messageId' => $messageId]);
+        return array_map(fn(DoctrineNotificationLog $log) => $log->toDomain(), $this->findBy(['messageId' => $messageId]));
     }
 
+    /**
+     * @param string $messageId
+     * @param string $sender
+     * @return array<NotificationLog>
+     */
     public function findByMessageIdAndSender(string $messageId, string $sender): array
     {
-        return $this->findBy(['messageId' => $messageId, 'sender' => $sender]);
+        return array_map(fn(DoctrineNotificationLog $log) => $log->toDomain(), $this->findBy(['messageId' => $messageId, 'sender' => $sender]));
     }
 
+    /**
+     * @param string $messageId
+     * @param string $sender
+     * @param NotificationStatus $status
+     * @return array<NotificationLog>
+     */
     public function findByMessageIdAndSenderAndStatus(string $messageId, string $sender, NotificationStatus $status): array
     {
-        return $this->findBy(['messageId' => $messageId, 'sender' => $sender, 'status' => $status]);
+        return array_map(fn(DoctrineNotificationLog $log) => $log->toDomain(), $this->findBy(['messageId' => $messageId, 'sender' => $sender, 'status' => $status]));
     }
 
+    /**
+     * @param string $messageId
+     * @param NotificationStatus $status
+     * @return array<NotificationLog>
+     */
     public function findByMessageIdAndStatus(string $messageId, NotificationStatus $status): array
     {
-        return $this->findBy(['messageId' => $messageId, 'status' => $status]);
+        return array_map(fn(DoctrineNotificationLog $log) => $log->toDomain(), $this->findBy(['messageId' => $messageId, 'status' => $status]));
     }
 
     public function hasSuccess(string $messageId, string $sender): bool

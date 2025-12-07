@@ -87,13 +87,13 @@ class DoctrineIdentity
     public function toDomain(): Identity
     {
         return new Identity(
-            EntityId::fromString($this->id),
-            $this->email,
-            $this->username,
-            $this->passwordHash,
-            $this->roles,
-            $this->validationToken,
-            $this->isComplete
+            id: EntityId::fromString($this->id),
+            email: $this->email,
+            username: $this->username,
+            passwordHash: $this->passwordHash,
+            roles: $this->roles,
+            isComplete: $this->isComplete,
+            validationToken: $this->validationToken
         );
     }
 }

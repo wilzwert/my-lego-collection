@@ -50,6 +50,14 @@ final class Identity implements ProducesDomainEvents
             ->validate();
     }
 
+    /**
+     * @param EntityId $id
+     * @param string $email
+     * @param string $username
+     * @param string $passwordHash
+     * @param list<string> $roles
+     * @return self
+     */
     public static function create(
         EntityId $id,
         string    $email,

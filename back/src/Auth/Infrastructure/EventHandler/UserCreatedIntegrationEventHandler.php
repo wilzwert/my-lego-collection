@@ -20,6 +20,9 @@ readonly class UserCreatedIntegrationEventHandler implements IntegrationEventHan
     {
     }
 
+    /**
+     * @return class-string<UserCreatedIntegrationEvent>
+     */
     public static function getMessageHandled(): string
     {
         return UserCreatedIntegrationEvent::class;

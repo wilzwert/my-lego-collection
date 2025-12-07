@@ -5,12 +5,14 @@ namespace App\Shared\Infrastructure\Service;
 /**
  * @author Wilhelm Zwertvaegher
  */
-
-
-class FrontendUrlGenerator
+readonly class FrontendUrlGenerator
 {
 
-    public function __construct(private readonly array $frontends, private readonly array $routes)
+    /**
+     * @param array<string> $frontends
+     * @param array<string, array<string, string>> $routes
+     */
+    public function __construct(private array $frontends, private array $routes)
     {
     }
 
@@ -19,8 +21,8 @@ class FrontendUrlGenerator
      *
      * @param string $frontend ex: 'app' or 'admin'
      * @param string $routeName ex: 'confirm_identity'
-     * @param array $params ex: ['id' => 123]
-     * @param array $queryParams ex: ['utm' => 'mail']
+     * @param array<string, string|int> $params ex: ['id' => 123]
+     * @param array<string, string|int> $queryParams ex: ['utm' => 'mail']
      */
     public function generate(string $frontend, string $routeName, array $params = [], array $queryParams = []): string
     {

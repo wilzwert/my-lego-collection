@@ -110,7 +110,7 @@ class DoctrineNotificationLog
         return new NotificationLog(
             id: EntityId::fromString($this->id),
             identityId: EntityId::fromString($this->identityId),
-            userId: EntityId::fromString($this->userId),
+            userId: $this->userId ? EntityId::fromString($this->userId) : null,
             messageId: EntityId::fromString($this->messageId),
             type: $this->type,
             sender: $this->sender,

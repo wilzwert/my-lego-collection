@@ -21,7 +21,7 @@ class ExternalDataCacheManager
     ) {
     }
 
-    private function hash($key): string
+    private function hash(string $key): string
     {
         return hash('sha256', strtolower($key));
     }

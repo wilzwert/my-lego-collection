@@ -15,6 +15,10 @@ class NotificationLogCreatedEvent extends DomainEvent
 
     private readonly NotificationLog $notificationLog;
 
+    /**
+     * @param NotificationLog $notificationLog
+     * @param array<string, string|int>|null $metadata
+     */
     public function __construct(NotificationLog $notificationLog, ?array $metadata = null)
     {
         parent::__construct(self::TYPE, $metadata);

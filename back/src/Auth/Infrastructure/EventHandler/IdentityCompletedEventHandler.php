@@ -19,6 +19,9 @@ readonly class IdentityCompletedEventHandler implements DomainEventHandler
     {
     }
 
+    /**
+     * @return class-string<IdentityCompletedEvent>
+     */
     public static function getMessageHandled(): string
     {
         return IdentityCompletedEvent::class;

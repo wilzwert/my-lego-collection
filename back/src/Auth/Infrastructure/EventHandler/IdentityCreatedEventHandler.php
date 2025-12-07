@@ -20,6 +20,9 @@ readonly class IdentityCreatedEventHandler implements DomainEventHandler
     {
     }
 
+    /**
+     * @return class-string<IdentityCreatedEvent>
+     */
     public static function getMessageHandled(): string
     {
         return IdentityCreatedEvent::class;

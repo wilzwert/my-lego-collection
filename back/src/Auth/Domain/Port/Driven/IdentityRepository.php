@@ -13,5 +13,7 @@ interface IdentityRepository
 
     public function findById(EntityId $id): ?Identity;
 
+    public function findByEmail(string $email): ?Identity;
+
     public function save(Identity $identity): void;
 }

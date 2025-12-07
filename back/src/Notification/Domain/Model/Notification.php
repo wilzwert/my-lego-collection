@@ -10,6 +10,12 @@ namespace App\Notification\Domain\Model;
 abstract class Notification
 {
 
+    /**
+     * @param string $messageId
+     * @param IdentityInfo $identityInfo
+     * @param NotificationType $type
+     * @param array<string, string|int> $payload
+     */
     public function __construct(
         private readonly string $messageId,
         private readonly IdentityInfo $identityInfo,
@@ -33,6 +39,9 @@ abstract class Notification
         return $this->type;
     }
 
+    /**
+     * @return array<string, string|int>
+     */
     public function getPayload(): array
     {
         return $this->payload;
