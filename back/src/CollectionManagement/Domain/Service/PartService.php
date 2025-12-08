@@ -2,6 +2,8 @@
 
 namespace App\CollectionManagement\Domain\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalPart;
+use App\CollectionManagement\Domain\Model\Local\Part;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\Shared\Domain\Model\EntityId;
 
@@ -16,5 +18,11 @@ interface PartService
      * @param EntityId|null $userId the user's id if available
      * @return PartCollection
      */
-    function findParts(string $search, ?EntityId $userId = null) : PartCollection;
+    public function findParts(string $search, ?EntityId $userId = null) : PartCollection;
+
+    /**
+     * @param array<string, ExternalPart> $externalParts with their externalId as key
+     * @return array<string, Part> the created Parts with their externalId as key
+     */
+    public function getOrCreateUnknownParts(array $externalParts): array;
 }

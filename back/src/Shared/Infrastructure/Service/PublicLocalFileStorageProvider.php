@@ -29,8 +29,8 @@ final readonly class PublicLocalFileStorageProvider implements FileStorageProvid
      * @param string $uploadsBaseUrl
      */
     public function __construct(
-        private readonly Filesystem $filesystem,
-        private readonly SluggerInterface $slugger,
+        private Filesystem $filesystem,
+        private SluggerInterface $slugger,
         #[Autowire('%public_upload_dir%')] private string $uploadsDirectory,
         #[Autowire('%public_upload_base_url%')] private string $uploadsBaseUrl
     ) {

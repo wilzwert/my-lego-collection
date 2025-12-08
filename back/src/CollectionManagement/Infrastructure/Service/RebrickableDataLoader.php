@@ -2,6 +2,7 @@
 
 namespace App\CollectionManagement\Infrastructure\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalColor;
 use App\CollectionManagement\Domain\Model\External\ExternalElement;
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
@@ -34,12 +35,52 @@ class RebrickableDataLoader implements LegoDataLoader
     ) {
     }
 
+    private function loadExternalPart(array $item): ExternalPart
+    {
+        return $this->cacheManager->getPart(
+            $item['part_num'],
+            fn () => new ExternalPart(
+                $item['part_num'],
+                isset($item['external_ids']['LEGO']) ? $item['external_ids']['LEGO'][0] : '',
+                $item['name'],
+                $item['part_img_url'] ?? ''
+            )
+        );
+    }
+
+    private function loadExternalColor(array $item): ExternalColor
+    {
+        return $this->cacheManager->getColor(
+            $item['id'],
+            fn () => new ExternalColor(
+                $item['id'],
+                isset($item['external_ids']['LEGO']) ? $item['external_ids']['LEGO']['ext_ids'][0] : '',
+                $item['name'],
+                $item['rgb'] ?? ''
+            )
+        );
+    }
+
+    private function loadExternalElement(string $elementId, string $partExternalId, string $elementImagePath, string $externalColorId): ExternalElement
+    {
+        return $this->cacheManager->getElement(
+            $elementId,
+            fn () => new ExternalElement(
+                $elementId,
+                $elementId,
+                $partExternalId,
+                $elementImagePath,
+                $externalColorId
+            )
+        );
+    }
+
     /**
      * @param string $endpointUri
      * @return array<mixed>|null
      *
      * */
-    private function fetchFromExternalApi($endpointUri): ?array
+    private function fetchFromExternalApi(string $endpointUri): ?array
     {
         try {
             $response = $this->httpClient->request(
@@ -116,12 +157,7 @@ class RebrickableDataLoader implements LegoDataLoader
 
         return new PartCollection(
             array_map(
-                fn ($item) => new ExternalPart(
-                    $item['part_num'],
-                    isset($item['external_ids']['LEGO']) ? $item['external_ids']['LEGO'][0] : '',
-                    $item['name'],
-                    $item['part_img_url'] ?? ''
-                ),
+                fn ($item) => $this->loadExternalPart($item),
                 $results['results']
             )
         );
@@ -140,13 +176,11 @@ class RebrickableDataLoader implements LegoDataLoader
 
         return new ExternalElementCollection(
             array_map(
-                fn ($item) => new ExternalElement(
-                    $item['elements'][0],
+                fn ($item) => $this->loadExternalElement(
                     $item['elements'][0],
                     $partExternalId,
                     $item['part_img_url'] ?? '',
-                    $item['color_id'],
-                    $item['color_name']
+                    $item['color_id']
                 ),
                 $results['results']
             )
@@ -159,25 +193,56 @@ class RebrickableDataLoader implements LegoDataLoader
      */
     private function fetchSetElementsFromExternalApi(string $setExternalId): ?ExternalSetElementCollection
     {
-        $results = $this->fetchFromExternalApi(sprintf('sets/%s/parts/?inc_part_details=1', $setExternalId));
-        if ($results === null) {
-            return null;
+
+        // first we get all the elements in a single array
+        $allElements = [];
+        $next = null;
+        do {
+            $page = '';
+            if (!empty($next)) {
+                preg_match('/page=([0-9+])/', $next, $matches);
+                if (!empty($matches[1])) {
+                    $page = 'page=' . $matches[1] .'&';
+                }
+            }
+            $results = $this->fetchFromExternalApi(sprintf('sets/%s/parts/?%sinc_part_details=1', $setExternalId, $page));
+            array_push($allElements, ...$results['results']);
+            $next = $results['next'] ?? null;
+
+        } while (null !== $results && !empty($next));
+
+        // when we get elements from the rebrickable api, a single element may appear twice (spare and non-spare)
+        // we want to return a deduplicated list of ExternalSetElement, each with their own quantity and spareQuantity
+        // therefore we first create a list of spare only elements retrievable by their element_id
+        // this list will be used later on final result construction
+        $spareElements = [];
+        $resultSpareElements = array_filter($allElements, fn ($item) => $item['is_spare'] === true);
+        foreach ($resultSpareElements as $element) {
+            $spareElements[$element['element_id']] = $element;
         }
 
-        return new ExternalSetElementCollection(
-            array_map(
-                fn ($item) => new ExternalSetElement(
-                    $item['element_id'],
-                    $setExternalId,
+        // build the final result with only non-spare elements, adding the spareQuantity if available in the previously
+        // built spare elements list
+        fwrite(STDOUT, json_encode(array_filter($allElements, fn ($item) => $item['is_spare'] === false)).PHP_EOL);
+
+        $finalResults = array_map(
+            fn ($item) => new ExternalSetElement(
+                $setExternalId,
+                $this->loadExternalElement(
+                    $item['element_id'] ?? $item['inv_part_id'],
                     $item['part']['part_num'],
-                    $item['quantity']
+                    'https://cdn.rebrickable.com/media/parts/elements/'.$item['element_id'].'.jpg',
+                    $item['color']['id']
                 ),
-                array_filter(
-                    $results['results'],
-                    fn ($item) => $item['is_spare'] === false
-                )
-            )
+                $this->loadExternalPart($item['part']),
+                $this->loadExternalColor($item['color']),
+                $item['quantity'],
+                isset($spareElements[$item['element_id']]) ? $spareElements[$item['element_id']]['quantity'] : 0
+            ),
+            array_filter($allElements, fn ($item) => $item['is_spare'] === false)
         );
+
+        return new ExternalSetElementCollection($finalResults);
     }
 
     #[Override]
@@ -189,7 +254,7 @@ class RebrickableDataLoader implements LegoDataLoader
     #[Override]
     public function getSet(string $externalSetId): ?ExternalSet
     {
-        return $this->cacheManager->getSet($externalSetId, fn($s) => $this->fetchSetFromExternalApi($s));
+        return $this->cacheManager->getSet($externalSetId, fn ($s) => $this->fetchSetFromExternalApi($s));
     }
 
     #[Override]
@@ -201,8 +266,10 @@ class RebrickableDataLoader implements LegoDataLoader
     #[Override]
     public function getSetParts(string $setExternalId): ?ExternalSetElementCollection
     {
+        // retrieve with pagination
         return new ExternalSetElementCollection([]);
     }
+
 
     #[Override]
     public function getPartElements(string $partExternalId): ?ExternalElementCollection

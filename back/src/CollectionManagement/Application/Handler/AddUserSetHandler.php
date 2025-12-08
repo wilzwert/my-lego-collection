@@ -3,65 +3,53 @@
 namespace App\CollectionManagement\Application\Handler;
 
 use App\CollectionManagement\Application\Command\AddUserSetCommand;
-use App\CollectionManagement\Application\Command\SearchSetQuery;
-use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
-use App\CollectionManagement\Domain\Model\Local\Set;
-use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
-use App\CollectionManagement\Domain\Model\Local\UserSetCreationStatus;
-use App\CollectionManagement\Domain\Model\Local\UserSetStatus;
-use App\CollectionManagement\Domain\Port\Driven\LocalSetRepository;
-use App\CollectionManagement\Domain\Service\RetrieveUserId;
+use App\CollectionManagement\Domain\Port\Driven\RetrieveUserId;
+use App\CollectionManagement\Domain\Port\Driven\SetRepository;
+use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\CollectionManagement\Domain\Service\SetService;
+use App\CollectionManagement\Domain\Service\UserSetService;
+use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Model\EntityId;
-use App\User\Domain\Model\User;
+use App\Shared\Domain\Port\Driven\EventBus;
+use App\Shared\Domain\Port\Driven\TransactionProvider;
 
 final readonly class AddUserSetHandler
 {
     public function __construct(
-        private readonly RetrieveUserId     $retrieveUser,
-        private readonly LocalSetRepository $localSetRepository,
-        private readonly SetService         $setService
-    )
-    {
+        private RetrieveUserId      $retrieveUser,
+        private SetRepository       $localSetRepository,
+        private SetService          $setService,
+        private UserSetService      $userSetService,
+        private UserSetRepository    $userSetRepository,
+        private TransactionProvider $transactionProvider,
+        private EventBus            $eventBus
+    ) {
     }
 
     public function __invoke(AddUserSetCommand $command): UserSet
     {
         // get the user id associated to the command's identityId
-        $userId = $this->retrieveUser->getUserId($command->getIdentityId());
-
-        // retrieve Set or create it from external source if needed
-        $set = $this->localSetRepository->findByExternalId($command->getExternalSetId());
-
-        if (null === $set) {
-            $set = $this->setService->createSet($command->getExternalSetId());
+        $userId = $this->retrieveUser->getUserId(EntityId::fromString($command->getIdentityId()));
+        if (null === $userId) {
+            throw new EntityNotFoundException('User not found');
         }
 
+        return $this->transactionProvider->transactional(function () use ($command, $userId) {
+            // retrieve Set or create it from external source if needed
+            $set = $this->localSetRepository->findByExternalId($command->getExternalSetId());
 
-        // $userSet = UserSet::create
+            // create the set if it does not exist and dispatch the create set event(s)
+            if (null === $set) {
+                $set = $this->setService->createSet($command->getExternalSetId());
+                $this->localSetRepository->save($set);
+                $this->eventBus->dispatchAll($set);
+            }
 
-        // transactional
-
-        // emit events
-
-
-        // TODO
-        return new UserSet(
-            EntityId::generate(),
-            $userId,
-            new Set(
-                EntityId::generate(),
-                'externalId',
-                'legoId',
-                'name',
-                10,
-                '',
-                2005,
-                SetCreationStatus::COMPLETED
-            ),
-            UserSetCreationStatus::CREATED,
-            null
-        );
+            $createdUserSet = $this->userSetService->createUserSet($userId, $set);
+            $this->eventBus->dispatchAll($createdUserSet);
+            // $this->userSetRepository->save($createdUserSet);
+            return $createdUserSet;
+        });
     }
 }

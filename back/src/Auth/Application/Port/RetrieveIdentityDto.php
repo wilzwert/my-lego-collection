@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notification\Application\Port\Driven;
+namespace App\Auth\Application\Port;
 
 use MyLegoCollection\SharedContracts\Dto\IdentityDto;
 

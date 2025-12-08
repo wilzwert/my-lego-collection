@@ -2,10 +2,10 @@
 
 namespace App\Notification\Application\Adapter;
 
-use App\Notification\Application\Port\Driven\RetrieveIdentityDto;
-use App\Notification\Application\Port\Driven\RetrieveUserDto;
+use App\Auth\Application\Port\RetrieveIdentityDto;
 use App\Notification\Domain\Model\IdentityInfo;
 use App\Notification\Domain\Port\Driven\RetrieveIdentityInfo;
+use App\User\Application\Port\RetrieveUserDto;
 use MyLegoCollection\SharedContracts\Dto\IdentityDto;
 
 /**
@@ -17,8 +17,7 @@ readonly class RetrieveIdentityInfoAdapter implements RetrieveIdentityInfo
     public function __construct(
         private RetrieveIdentityDto $retrieveIdentityDto,
         private RetrieveUserDto $retrieveUserDto
-    )
-    {
+    ) {
     }
 
     private function map(?IdentityDto $identityDto): ?IdentityInfo

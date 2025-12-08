@@ -4,11 +4,12 @@ namespace App\CollectionManagement\Domain\Port\Driven;
 
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\SetCollection;
+use App\Shared\Domain\Model\EntityId;
 
 /**
  * @author W.Zwertvaegher
  */
-interface LocalSetRepository
+interface SetRepository
 {
     /**
      * @param Set $localSet
@@ -18,12 +19,14 @@ interface LocalSetRepository
 
 
     /**
-     * @param string $userId
+     * @param EntityId $userId
      * @param list<string> $externalIds
      * @return SetCollection
      */
-    public function findByUserAndExternalIds(string $userId, array $externalIds): SetCollection;
+    public function findByUserAndExternalIds(EntityId $userId, array $externalIds): SetCollection;
 
     public function findByExternalId(string $externalId): ?Set;
+
+    public function findById(EntityId $id): ?Set;
 
 }

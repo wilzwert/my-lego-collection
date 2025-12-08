@@ -2,6 +2,7 @@
 
 namespace App\Tests\CollectionManagement\Unit\Infrastructure\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalColor;
 use App\CollectionManagement\Domain\Model\External\ExternalElement;
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
@@ -204,14 +205,14 @@ final class RebrickableDataLoaderTest extends TestCase
     {
         $search = 'part search';
         $cacheManager = $this->createMock(ExternalDataCacheManager::class);
-        $externalParts = new PartCollection(array(
-            new ExternalPart('1-1', '1', 'Part 1', ''),
-            new ExternalPart('2-1', '2', 'Part 2', '')
-        ));
+        $externalPart1 = new ExternalPart('1-1', '1', 'Part 1', '');
+        $externalPart2 = new ExternalPart('2-1', '2', 'Part 2', '');
+        $externalParts = new PartCollection(array($externalPart1, $externalPart2));
+
         $cacheManager->expects($this->once())
             ->method('getParts')
             ->with($search, $this->callback(function ($callback) use ($search, $externalParts) {
-                // fake cache miss
+                // fake cache miss by calling the callback explicitly
                 $result = $callback($search);
                 self::assertInstanceOf(PartCollection::class, $result);
                 self::assertCount(2, $result);
@@ -219,6 +220,23 @@ final class RebrickableDataLoaderTest extends TestCase
                 return true;
             }))
             ->willReturn($externalParts);
+
+        $externalPartIds = [];
+        $cacheManager->expects($this->exactly(2))
+            ->method('getPart')
+            ->with(
+                $this->callback(function ($externalId) use (&$externalPartIds) {
+                    $externalPartIds[] = $externalId;
+                    return true;
+                }),
+                $this->callback(function ($callback) {
+                    // fake cache miss by calling the callback explicitly
+                    $result = $callback();
+                    self::assertInstanceOf(ExternalPart::class, $result);
+                    return true;
+                })
+            )
+            ->willReturnOnConsecutiveCalls($externalPart1, $externalPart2);
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects($this->once())
@@ -285,14 +303,13 @@ final class RebrickableDataLoaderTest extends TestCase
     {
         $externalPartId = '93061';
         $cacheManager = $this->createMock(ExternalDataCacheManager::class);
-        $externalElements = new ExternalElementCollection([
-            new ExternalElement('legoId1', 'legoId1', '93061', '', '0', 'Black'),
-            new ExternalElement('legoId2', 'legoId2', '93061', '', '4', 'Red'),
-        ]);
+        $externalElement1 = new ExternalElement('legoId1', 'legoId1', '93061', '', '0');
+        $externalElement2 = new ExternalElement('legoId2', 'legoId2', '93061', '', '4');
+        $externalElements = new ExternalElementCollection([$externalElement1, $externalElement2]);
         $cacheManager->expects($this->once())
             ->method('getPartElements')
             ->with($externalPartId, $this->callback(function ($callback) use ($externalPartId, $externalElements) {
-                // fake cache miss
+                // fake cache miss by calling the callback explicitly
                 $result = $callback($externalPartId);
                 self::assertInstanceOf(ExternalElementCollection::class, $result);
                 self::assertCount(2, $result);
@@ -300,6 +317,23 @@ final class RebrickableDataLoaderTest extends TestCase
                 return true;
             }))
             ->willReturn($externalElements);
+
+        $externalElementIds = [];
+        $cacheManager->expects($this->exactly(2))
+            ->method('getElement')
+            ->with(
+                $this->callback(function ($externalId) use (&$externalElementIds) {
+                    $externalElementIds[] = $externalId;
+                    return true;
+                }),
+                $this->callback(function ($callback) {
+                    // fake cache miss by calling the callback explicitly
+                    $result = $callback();
+                    self::assertInstanceOf(ExternalElement::class, $result);
+                    return true;
+                })
+            )
+            ->willReturnOnConsecutiveCalls($externalElement1, $externalElement2);
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects($this->once())
@@ -332,16 +366,16 @@ final class RebrickableDataLoaderTest extends TestCase
 
         $elements = $loader->getPartElements($externalPartId);
         self::assertSame($externalElements, $elements);
+        self::assertEquals([$externalElement1->getExternalId(), $externalElement2->getExternalId()], $externalElementIds);
     }
 
     #[Test]
     public function shouldGetSetElementsFromCache(): void
     {
         $externalSetId = '93061';
-
         $expectedElements = new ExternalSetElementCollection([
-            new ExternalSetElement('externalId1', '93061', 'externalPartId1', 5),
-            new ExternalSetElement('externalId2', '93061', 'externalPartId2', 10),
+            $this->createStub(ExternalSetElement::class),
+            $this->createStub(ExternalSetElement::class)
         ]);
 
         $cacheManager = $this->createMock(ExternalDataCacheManager::class);
@@ -361,26 +395,97 @@ final class RebrickableDataLoaderTest extends TestCase
         self::assertSame($expectedElements, $elements);
     }
 
+    // FIXME : it seems a bit over complicated here
     #[Test]
     public function shouldGetSetElementsWithHttpClient(): void
     {
         $externalSetId = '93061';
         $cacheManager = $this->createMock(ExternalDataCacheManager::class);
-        $externalElements = new ExternalSetElementCollection([
-            new ExternalSetElement('externalId1', '93061', 'externalPartId1', 5),
-            new ExternalSetElement('externalId2', '93061', 'externalPartId2', 10),
-        ]);
+
+        // we cannot stub ExternalSetElement because the cache manager callback actually uses it to build
+        // the ExternalSetElement's ExternalElement
+        $externalSetElement1 = new ExternalSetElement(
+            $externalSetId,
+            new ExternalElement('externalId1', 'externalId1', 'externalPartId1', '', '1'),
+            new ExternalPart('externalPartId1', '', 'Part 1', ''),
+            new ExternalColor('1', '', 'black', ''),
+            10,
+            0
+        );
+
+        $externalSetElement2 = new ExternalSetElement(
+            $externalSetId,
+            new ExternalElement('externalId2', 'externalId2', 'externalPartId2', '', '3'),
+            new ExternalPart('externalPartId2', '', 'Part 2', ''),
+            new ExternalColor('3', '', 'blue', ''),
+            10,
+            2
+        );
+
+        $externalSetElements = new ExternalSetElementCollection([$externalSetElement1, $externalSetElement2]);
+
         $cacheManager->expects($this->once())
             ->method('getSetElements')
-            ->with($externalSetId, $this->callback(function ($callback) use ($externalSetId, $externalElements) {
+            ->with($externalSetId, $this->callback(function ($callback) use ($externalSetId, $externalSetElements) {
                 // fake cache miss
                 $result = $callback($externalSetId);
                 self::assertInstanceOf(ExternalSetElementCollection::class, $result);
                 self::assertCount(2, $result);
-                self::assertEquals($externalElements, $result);
+                self::assertEquals($externalSetElements, $result);
                 return true;
             }))
-            ->willReturn($externalElements);
+            ->willReturn($externalSetElements);
+
+        $externalElementIds = [];
+        $cacheManager->expects($this->exactly(2))
+            ->method('getElement')
+            ->with(
+                $this->callback(function ($externalId) use (&$externalElementIds) {
+                    $externalElementIds[] = $externalId;
+                    return true;
+                }),
+                $this->callback(function ($callback) {
+                    // fake cache miss by calling the callback explicitly
+                    $result = $callback();
+                    self::assertInstanceOf(ExternalElement::class, $result);
+                    return true;
+                })
+            )
+            ->willReturnOnConsecutiveCalls($externalSetElement1->getExternalElement(), $externalSetElement2->getExternalElement());
+
+        $externalPartIds = [];
+        $cacheManager->expects($this->exactly(2))
+            ->method('getPart')
+            ->with(
+                $this->callback(function ($externalId) use (&$externalPartIds) {
+                    $externalPartIds[] = $externalId;
+                    return true;
+                }),
+                $this->callback(function ($callback) {
+                    // fake cache miss by calling the callback explicitly
+                    $result = $callback();
+                    self::assertInstanceOf(ExternalPart::class, $result);
+                    return true;
+                })
+            )
+            ->willReturnOnConsecutiveCalls($externalSetElement1->getExternalPart(), $externalSetElement2->getExternalPart());
+
+        $externalColorIds = [];
+        $cacheManager->expects($this->exactly(2))
+            ->method('getColor')
+            ->with(
+                $this->callback(function ($externalId) use (&$externalColorIds) {
+                    $externalColorIds[] = $externalId;
+                    return true;
+                }),
+                $this->callback(function ($callback) {
+                    // fake cache miss by calling the callback explicitly
+                    $result = $callback();
+                    self::assertInstanceOf(ExternalColor::class, $result);
+                    return true;
+                })
+            )
+            ->willReturnOnConsecutiveCalls($externalSetElement1->getExternalColor(), $externalSetElement2->getExternalColor());
 
         $response = $this->createMock(ResponseInterface::class);
         $response->expects($this->once())
@@ -388,9 +493,9 @@ final class RebrickableDataLoaderTest extends TestCase
             ->willReturn(
                 array(
                     'results' => [
-                        ["part" => ["part_num" => "externalPartId1"], "quantity" => 5, "is_spare" => false, "element_id" => "externalId1"],
-                        ["part" => ["part_num" => "externalPartId2"], "quantity" => 10, "is_spare" => false, "element_id" => "externalId2"],
-                        ["part" => ["part_num" => "externalPartId2"], "quantity" => 2, "is_spare" => true, "element_id" => "externalId2"],
+                        ["part" => ["part_num" => "externalPartId1", 'name' => 'Part 1'], "color" => ["id" => 1, 'name' => 'black'], "quantity" => 10, "is_spare" => false, "element_id" => "externalId1"],
+                        ["part" => ["part_num" => "externalPartId2", 'name' => 'Part 2'], "color" => ["id" => 3, 'name' => 'blue'], "quantity" => 10, "is_spare" => false, "element_id" => "externalId2"],
+                        ["part" => ["part_num" => "externalPartId2", 'name' => 'Part 2'], "color" => ["id" => 3, 'name' => 'blue'], "quantity" => 2, "is_spare" => true, "element_id" => "externalId2"],
                     ]
                 )
             );
@@ -413,6 +518,9 @@ final class RebrickableDataLoaderTest extends TestCase
         $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
 
         $elements = $loader->getSetElements($externalSetId);
-        self::assertSame($externalElements, $elements);
+        self::assertSame($externalSetElements, $elements);
+        self::assertEquals(['externalId1', 'externalId2'], $externalElementIds);
+        self::assertEquals(['externalPartId1', 'externalPartId2'], $externalPartIds);
+        self::assertEquals(['1', '3'], $externalColorIds);
     }
 }

@@ -22,7 +22,7 @@ framework:
                 default_middleware:
                     enabled: true
 
-            collection-management.bus:
+            collection_management.bus:
                 default_middleware:
                     enabled: true
 

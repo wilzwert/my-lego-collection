@@ -9,8 +9,7 @@ final readonly class ExternalElement
         private string $legoId,
         private string $externalPartId,
         private string $imagePath,
-        private string $externalColorId,
-        private string $colorName
+        private string $externalColorId
     ) {
 
     }
@@ -38,10 +37,5 @@ final readonly class ExternalElement
     public function getExternalColorId(): string
     {
         return $this->externalColorId;
-    }
-
-    public function getColorName(): string
-    {
-        return $this->colorName;
     }
 }

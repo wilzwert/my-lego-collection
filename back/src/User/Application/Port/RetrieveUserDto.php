@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notification\Application\Port\Driven;
+namespace App\User\Application\Port;
 
 use MyLegoCollection\SharedContracts\Dto\UserDto;
 
@@ -10,5 +10,6 @@ use MyLegoCollection\SharedContracts\Dto\UserDto;
 interface RetrieveUserDto
 {
     public function getUserDtoFromId(string $userId): ?UserDto;
+    public function getUserDtoFromIdentityId(string $identityId): ?UserDto;
 
 }
