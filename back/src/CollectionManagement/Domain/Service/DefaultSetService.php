@@ -4,6 +4,8 @@ namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
+use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\Shared\Domain\Model\EntityId;
 use Override;
@@ -48,6 +50,20 @@ readonly class DefaultSetService implements SetService
                 ),
                 $externalSets->toArray()
             )
+        );
+    }
+
+    public function createSet(string $externalSetId): Set
+    {
+        $externalSet = $this->legoDataProvider->getSet($externalSetId);
+
+        return Set::create(
+            $externalSet->getExternalId(),
+            $externalSet->getLegoId(),
+            $externalSet->getName(),
+            $externalSet->getPartCount(),
+            $externalSet->getImagePath(),
+            $externalSet->getProductionYear()
         );
     }
 }

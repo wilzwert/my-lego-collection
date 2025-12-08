@@ -15,7 +15,7 @@ final class BaseSetTest extends TestCase
     private function createConcreteSet(): BaseSet
     {
         // Concrete anonymous class used to get a testable instance of the abstract BasePart class
-        return new readonly class('external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011) extends BaseSet {
+        return new class('external-123', 'lego-456', 'Star Wars Superstar Destroyer', 1000, '/images/destroyer.png', 2011) extends BaseSet {
         };
     }
 

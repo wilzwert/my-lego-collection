@@ -3,6 +3,7 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
@@ -15,6 +16,8 @@ interface LegoDataLoader
      * @return SetCollection|null
      */
     public function findSets(string $search): ?SetCollection;
+
+    public function getSet(string $externalSetId): ?ExternalSet;
 
     /**
      * Find parts for a given search string

@@ -14,13 +14,8 @@ interface LocalSetRepository
      * @param Set $localSet
      * @return void
      */
-    public function add(Set $localSet): void;
+    public function save(Set $localSet): void;
 
-    /**
-     * @param Set $localSet
-     * @return void
-     */
-    public function update(Set $localSet): void;
 
     /**
      * @param string $userId
@@ -28,5 +23,7 @@ interface LocalSetRepository
      * @return SetCollection
      */
     public function findByUserAndExternalIds(string $userId, array $externalIds): SetCollection;
+
+    public function findByExternalId(string $externalId): ?Set;
 
 }

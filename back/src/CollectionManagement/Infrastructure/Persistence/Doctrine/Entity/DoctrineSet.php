@@ -3,6 +3,8 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\CollectionManagement\Domain\Model\Local\Set;
+use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
+use App\Notification\Domain\Model\NotificationType;
 use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -34,22 +36,11 @@ class DoctrineSet
     #[ORM\Column]
     private int $productionYear;
 
-    public function __construct(
-        string $id,
-        string $externalId,
-        string $legoId,
-        string $name,
-        int $partCount,
-        string $imagePath,
-        int $productionYear
-    ) {
-        $this->id = $id;
-        $this->externalId = $externalId;
-        $this->legoId = $legoId;
-        $this->name = $name;
-        $this->partCount = $partCount;
-        $this->imagePath = $imagePath;
-        $this->productionYear = $productionYear;
+    #[ORM\Column(type: "string", enumType: SetCreationStatus::class)]
+    private SetCreationStatus $creationStatus;
+
+    public function __construct()
+    {
     }
 
     public function getId(): string
@@ -96,7 +87,21 @@ class DoctrineSet
             $this->name,
             $this->partCount,
             $this->imagePath,
-            $this->productionYear
+            $this->productionYear,
+            $this->creationStatus
         );
+    }
+
+    public function fromDomain(Set $set): self
+    {
+        $this->id = $set->getId();
+        $this->externalId = $set->getExternalId();
+        $this->legoId = $set->getLegoId();
+        $this->name = $set->getName();
+        $this->partCount = $set->getPartCount();
+        $this->imagePath = $set->getImagePath();
+        $this->productionYear = $set->getProductionYear();
+        $this->creationStatus = $set->getCreationStatus();
+        return $this;
     }
 }

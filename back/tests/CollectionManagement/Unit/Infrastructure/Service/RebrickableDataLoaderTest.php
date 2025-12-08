@@ -21,6 +21,74 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 #[Group('Rebrickable')]
 final class RebrickableDataLoaderTest extends TestCase
 {
+    #[Test]
+    public function shouldGetSetFromCache(): void
+    {
+        $externalSetId = '75353-1';
+        $expectedSet = new ExternalSet('externalId1', 'legoId1', 'Cached set 1', 100, '', 2005);
+
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
+        $cacheManager->expects($this->once())
+            ->method('getSet')
+            ->with($externalSetId, $this->anything())
+            ->willReturn($expectedSet);
+
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->never())
+            ->method('request');
+
+        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+
+        $set = $loader->getSet($externalSetId);
+
+        self::assertSame($expectedSet, $set);
+    }
+
+    #[Test]
+    public function shouldGetSetWithHttpClient(): void
+    {
+        $externalSetId = '75353-1';
+        $cacheManager = $this->createMock(ExternalDataCacheManager::class);
+        $externalSet = new ExternalSet('1-1', '1', 'BaseSet 1', 10, '', 2008);
+        $cacheManager->expects($this->once())
+            ->method('getSet')
+            ->with($externalSetId, $this->callback(function ($callback) use ($externalSetId, $externalSet) {
+                // fake cache miss
+                $result = $callback($externalSetId);
+                self::assertInstanceOf(ExternalSet::class, $result);
+                self::assertEquals($externalSet, $result);
+                return true;
+            }))
+            ->willReturn($externalSet);
+
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects($this->once())
+            ->method('toArray')
+            ->willReturn(
+                ['set_num' => '1-1', 'name' => 'BaseSet 1', 'num_parts' => 10, 'year' => 2008]
+            );
+
+        $expectedOptions = [
+            'headers' => [
+                'Authorization' => 'key FAKE_API_KEY',
+            ],
+        ];
+        $httpClient = $this->createMock(HttpClientInterface::class);
+        $httpClient->expects($this->once())
+            ->method('request')
+            ->with(
+                'GET',
+                $this->stringContains('sets/75353-1'),
+                $expectedOptions
+            )
+            ->willReturn($response);
+
+        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+
+        $set = $loader->getSet($externalSetId);
+        self::assertSame($externalSet, $set);
+
+    }
 
     #[Test]
     public function shouldGetSetsFromCache(): void

@@ -2,7 +2,10 @@
 
 namespace App\CollectionManagement\Domain\Model\Local;
 
+use App\CollectionManagement\Domain\Event\UserSetCreatedEvent;
+use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Domain\Model\ProducesDomainEvents;
 
 /**
  * A local user's set which consists of an id and a local set
@@ -10,18 +13,32 @@ use App\Shared\Domain\Model\EntityId;
  *
  * @author Wilhelm Zwertvaegher
  */
-readonly class UserSet
+class UserSet implements ProducesDomainEvents
 {
+    /**
+     * @var array<DomainEvent>
+     */
+    private array $events = [];
+
     public function __construct(
-        private EntityId $id,
-        private EntityId $userId,
-        private Set $localSet
+        private readonly EntityId              $id,
+        private readonly EntityId              $userId,
+        private readonly Set                   $set,
+        private readonly UserSetCreationStatus $creationStatus,
+        private readonly ?UserSetStatus        $status = null
     ) {
     }
 
-    public function getLocalSet(): Set
+    public static function create(EntityId $userId, Set $set): self
     {
-        return $this->localSet;
+        $new = new self(EntityId::generate(), $userId, $set, UserSetCreationStatus::CREATED);
+        $new->events = [new  UserSetCreatedEvent($new)];
+        return $new;
+    }
+
+    public function getSet(): Set
+    {
+        return $this->set;
     }
 
     public function getId(): EntityId
@@ -34,4 +51,23 @@ readonly class UserSet
         return $this->userId;
     }
 
+    public function getCreationStatus(): UserSetCreationStatus
+    {
+        return $this->creationStatus;
+    }
+
+    public function getStatus(): UserSetStatus
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return array<DomainEvent>
+     */
+    public function pullEvents(): array
+    {
+        $events = $this->events;
+        $this->events = [];
+        return $events;
+    }
 }

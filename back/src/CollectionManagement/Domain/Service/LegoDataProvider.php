@@ -2,6 +2,7 @@
 
 namespace App\CollectionManagement\Domain\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 
@@ -14,7 +15,7 @@ use App\CollectionManagement\Domain\Model\SetCollection;
  * As PHP does not allow generics, we rely on custom collections to ensure types are as expected
  *
  */
-readonly class LegoDataProvider
+final readonly class LegoDataProvider
 {
     /**
      * @param LegoDataLoader[] $legoDataLoaders
@@ -22,6 +23,19 @@ readonly class LegoDataProvider
     public function __construct(
         private readonly array $legoDataLoaders,
     ) {
+    }
+
+    public function getSet(string $externalSetId): ?ExternalSet
+    {
+        // loaders may load from cache, from an external source, or any other source
+        // we let the infrastructure set the optimal order
+        foreach ($this->legoDataLoaders as $legoDataLoader) {
+            $set = $legoDataLoader->getSet($externalSetId);
+            if (!empty($set)) {
+                return $set;
+            }
+        }
+        return null;
     }
 
     public function findSets(string $search): SetCollection

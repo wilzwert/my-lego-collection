@@ -52,13 +52,29 @@ class RebrickableDataLoader implements LegoDataLoader
                 )
             );
             // return raw data fetched from external API
-            $data = $response->toArray();
-            return $data['results'] ?? [];
+            return $response->toArray();
         }
         // TODO : properly handle this throwable
         catch (\Throwable $e) {
             return null;
         }
+    }
+
+    private function fetchSetFromExternalApi(string $externalSetId): ?ExternalSet
+    {
+        $result = $this->fetchFromExternalApi(sprintf('sets/%s/', $externalSetId));
+        if ($result === null || empty($result['set_num'])) {
+            return null;
+        }
+
+        return new ExternalSet(
+            $result['set_num'],
+            preg_replace('/-.*$/', '', $result['set_num']),
+            $result['name'],
+            $result['num_parts'],
+            $result['set_img_url'] ?? '',
+            $result['year']
+        );
     }
 
     /**
@@ -68,7 +84,7 @@ class RebrickableDataLoader implements LegoDataLoader
     private function fetchSetsFromExternalApi(string $search): ?SetCollection
     {
         $results = $this->fetchFromExternalApi(sprintf('sets/?search=%s', $search));
-        if ($results === null) {
+        if ($results === null || empty($results['results'])) {
             return null;
         }
 
@@ -82,7 +98,7 @@ class RebrickableDataLoader implements LegoDataLoader
                     $item['set_img_url'] ?? '',
                     $item['year']
                 ),
-                $results
+                $results['results']
             )
         );
     }
@@ -106,7 +122,7 @@ class RebrickableDataLoader implements LegoDataLoader
                     $item['name'],
                     $item['part_img_url'] ?? ''
                 ),
-                $results
+                $results['results']
             )
         );
     }
@@ -132,7 +148,7 @@ class RebrickableDataLoader implements LegoDataLoader
                     $item['color_id'],
                     $item['color_name']
                 ),
-                $results
+                $results['results']
             )
         );
     }
@@ -157,7 +173,7 @@ class RebrickableDataLoader implements LegoDataLoader
                     $item['quantity']
                 ),
                 array_filter(
-                    $results,
+                    $results['results'],
                     fn ($item) => $item['is_spare'] === false
                 )
             )
@@ -168,6 +184,12 @@ class RebrickableDataLoader implements LegoDataLoader
     public function findSets(string $search): ?SetCollection
     {
         return $this->cacheManager->getSets($search, fn ($s) => $this->fetchSetsFromExternalApi($s));
+    }
+
+    #[Override]
+    public function getSet(string $externalSetId): ?ExternalSet
+    {
+        return $this->cacheManager->getSet($externalSetId, fn($s) => $this->fetchSetFromExternalApi($s));
     }
 
     #[Override]
