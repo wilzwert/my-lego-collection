@@ -1,9 +1,8 @@
 <?php
 
-namespace App\CollectionManagement\Domain\Service;
+namespace App\CollectionManagement\Domain\Port\Driven;
 
 use App\Shared\Domain\Model\EntityId;
-use App\User\Domain\Model\User;
 
 /**
  * @author Wilhelm Zwertvaegher

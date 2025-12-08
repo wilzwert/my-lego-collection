@@ -2,7 +2,10 @@
 
 namespace App\CollectionManagement\Infrastructure\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalColor;
+use App\CollectionManagement\Domain\Model\External\ExternalElement;
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
@@ -25,6 +28,30 @@ class ExternalDataCacheManager
     private function hash(string $key): string
     {
         return hash('sha256', strtolower($key));
+    }
+
+    public function getPart(string $partNum, callable $callback): ExternalPart
+    {
+        return $this->cache->get('get_part_'.$this->hash($partNum), function (ItemInterface $item) use ($partNum, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($partNum);
+        });
+    }
+
+    public function getColor(string $colorId, callable $callback): ExternalColor
+    {
+        return $this->cache->get('get_color_'.$this->hash($colorId), function (ItemInterface $item) use ($colorId, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($colorId);
+        });
+    }
+
+    public function getElement(string $elementId, callable $callback): ExternalElement
+    {
+        return $this->cache->get('get_element_'.$this->hash($elementId), function (ItemInterface $item) use ($elementId, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($elementId);
+        });
     }
 
     public function getSets(string $search, callable $callback): ?SetCollection

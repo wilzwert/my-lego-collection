@@ -3,6 +3,7 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
+use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 
@@ -15,7 +16,7 @@ use App\CollectionManagement\Domain\Model\SetCollection;
  * As PHP does not allow generics, we rely on custom collections to ensure types are as expected
  *
  */
-final readonly class LegoDataProvider
+readonly class LegoDataProvider
 {
     /**
      * @param LegoDataLoader[] $legoDataLoaders
@@ -36,6 +37,20 @@ final readonly class LegoDataProvider
             }
         }
         return null;
+    }
+
+    public function getSetElements(string $externalSetId): ExternalSetElementCollection
+    {
+        // loaders may load from cache, from an external source, or any other source
+        // we let the infrastructure set the optimal order
+        foreach ($this->legoDataLoaders as $legoDataLoader) {
+            $elements = $legoDataLoader->getSetElements($externalSetId);
+            if (!empty($elements)) {
+                return $elements;
+            }
+        }
+
+        throw new \RuntimeException('Parts could not be retrieved');
     }
 
     public function findSets(string $search): SetCollection

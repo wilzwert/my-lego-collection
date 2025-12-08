@@ -49,38 +49,67 @@ application `Orchestrator` if external relay is needed
 ```mermaid
 flowchart LR
 R[Auth:controller] --> O[RegistrationHandler] --> A
-A([IdentityCreatedEvent]) -->|AuthBus| B[IdentityCreatedOrchestrator]
+A(IdentityCreatedEvent) -->|AuthBus| B[IdentityCreatedOrchestrator]
 B --> C
-B --> D([IdentityCreatedIntegrationEvent]) -->|IntegrationBus| H[External]
-C([CreateUserCommand]) --> |CommandBus| E[External]
+B --> D(IdentityCreatedIntegrationEvent) -->|IntegrationBus| H([External])
+C(CreateUserCommand) --> |CommandBus| E([External])
 ```
 
 ```mermaid
 flowchart LR
-R([User:UserCreatedIntegrationEvent]) --> |IntegrationBus| O[UserCreatedHandler] --> A
-A([IdentityCompletedEvent]) --> |AuthBus| B[IdentityCompletedOrchestrator]
-B --> C([SendWelcomeNotificationCommand]) --> |CommandBus| E[External]
+R(User:UserCreatedIntegrationEvent) --> |IntegrationBus| O[UserCreatedHandler] --> A
+A(IdentityCompletedEvent) --> |AuthBus| B[IdentityCompletedOrchestrator]
+B --> C(SendWelcomeNotificationCommand) --> |CommandBus| E([External])
 ```
-
-
-
 
 ### User module events
 
 ```mermaid
 flowchart LR
-A([Auth:CreateUserCommand]) --> |CommandBus| E[CreateUserHandler] --> F
-F([UserCreatedEvent]) --> |UserBus| G
-G[UserCreatedOrchestrator] --> H([UserCreatedIntegrationEvent]) --> |IntegrationBus| Z[External]
+A(Auth:CreateUserCommand) --> |CommandBus| E[CreateUserHandler] --> F
+F(UserCreatedEvent) --> |UserBus| G
+G[UserCreatedOrchestrator] --> H(UserCreatedIntegrationEvent) --> |IntegrationBus| Z([External])
 ```
 
 ### Notification module events
 
 ```mermaid
 flowchart LR
-A([Auth:SendWelcomeNotificationCommand]) --> |CommandBus| E[NotificationCommandHandler] --> F[NotificationSender] 
+A(Auth:SendWelcomeNotificationCommand) --> |CommandBus| E[NotificationCommandHandler] --> F[NotificationSender] 
 ```
 
+
+### CollectionManagement module events
+
+Set creation
+```mermaid
+flowchart LR
+A(CollectionManagement:CompleteSetCommand) --> B[CompleteSetHandler] --> C(SetCompletedEvent) --> D([Handlers])
+```
+Note : no orchestrator for the SetCompletedEvent, because this one stays internal only and does not need to generate integration events or commands.
+
+
+
+UserSet creation
+
+```mermaid
+flowchart LR
+A[CollectionManagement:controller] --> B[AddUserSetHandler] --> C(UserSetCreatedEvent) 
+C --> |CollectionManagementBus| D[UserSetCreatedOrchestrator] --> E
+E{Set}
+E --> |Set created| F[Wait for Set completion
+See Set creation above ]
+E --> |Set completed| G(CompleteUserSetCommand)
+G --> |CommandBus| H([Handler])
+```
+
+UserSet completion
+```mermaid
+flowchart LR
+A(CollectionManagement:SetCompletedEvent) --> B[CompleteUserSetHandler] --> C(UserSetCompletedEvent)
+C --> |CollectionManagementBus| D[UserSetCompletedOrchestrator]
+D --> E(SendUserSetCompletedNotificationCommand) --> |CommandBus| F([External])
+```
 
 
 

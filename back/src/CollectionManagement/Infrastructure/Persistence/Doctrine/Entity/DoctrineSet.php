@@ -4,20 +4,16 @@ namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
-use App\Notification\Domain\Model\NotificationType;
 use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="sets")
- */
+#[ORM\Entity]
+#[ORM\Table(name: "sets")]
 class DoctrineSet
 {
-    #[ORM\Id, ORM\Column(type: "string")]
+    #[ORM\Id, ORM\Column(type: "string", length: 36)]
     private string $id;
 
-    // TODO : uniqueness
     #[ORM\Column(unique: true)]
     private string $externalId;
 
@@ -38,6 +34,12 @@ class DoctrineSet
 
     #[ORM\Column(type: "string", enumType: SetCreationStatus::class)]
     private SetCreationStatus $creationStatus;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    private \DateTimeImmutable $updatedAt;
 
     public function __construct()
     {
@@ -78,6 +80,21 @@ class DoctrineSet
         return $this->productionYear;
     }
 
+    public function getCreationStatus(): SetCreationStatus
+    {
+        return $this->creationStatus;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): \DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
     public function toDomain(): Set
     {
         return new Set(
@@ -88,7 +105,9 @@ class DoctrineSet
             $this->partCount,
             $this->imagePath,
             $this->productionYear,
-            $this->creationStatus
+            $this->creationStatus,
+            $this->createdAt,
+            $this->updatedAt
         );
     }
 
@@ -102,6 +121,8 @@ class DoctrineSet
         $this->imagePath = $set->getImagePath();
         $this->productionYear = $set->getProductionYear();
         $this->creationStatus = $set->getCreationStatus();
+        $this->createdAt = $set->getCreatedAt();
+        $this->updatedAt = $set->getUpdatedAt();
         return $this;
     }
 }

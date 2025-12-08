@@ -19,8 +19,7 @@ final class ExternalElementTest extends TestCase
             'lego-1234',
             'part-5678',
             '/images/lego-1234.png',
-            'color-89',
-            'Bright Red'
+            'color-89'
         );
     }
 
@@ -62,13 +61,5 @@ final class ExternalElementTest extends TestCase
         $element = $this->createExternalElement();
 
         self::assertSame('color-89', $element->getExternalColorId());
-    }
-
-    #[Test]
-    public function getColorName_shouldReturnExpectedValue(): void
-    {
-        $element = $this->createExternalElement();
-
-        self::assertSame('Bright Red', $element->getColorName());
     }
 }

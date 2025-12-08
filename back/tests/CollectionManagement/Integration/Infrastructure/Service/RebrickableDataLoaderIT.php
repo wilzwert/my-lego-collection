@@ -2,6 +2,7 @@
 
 namespace App\Tests\CollectionManagement\Integration\Infrastructure\Service;
 
+use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -92,7 +93,6 @@ class RebrickableDataLoaderIT extends KernelTestCase
         self::assertCount(7, $elements);
         self::assertEquals($elements, $this->cacheManager->getPartElements($partExternalId, fn () => $this->fail("Should have been cached")));
         self::assertEquals("6302313", $elements->get(0)->getExternalId());
-        self::assertEquals("Black", $elements->get(0)->getColorName());
         self::assertEquals("0", $elements->get(0)->getExternalColorId());
     }
 
@@ -102,11 +102,35 @@ class RebrickableDataLoaderIT extends KernelTestCase
         $setExternalId = '75353-1';
         $elements = $this->underTest->getSetElements($setExternalId);
 
-        self::assertCount(86, $elements);
+        self::assertCount(123, $elements);
         self::assertEquals($elements, $this->cacheManager->getSetElements($setExternalId, fn () => $this->fail("Should have been cached")));
-        self::assertEquals("6302313", $elements->get(0)->getExternalId());
+        self::assertEquals("6302313", $elements->get(0)->getExternalElement()->getExternalId());
         self::assertEquals("75353-1", $elements->get(0)->getExternalSetId());
-        self::assertEquals("93061", $elements->get(0)->getExternalPartId());
+        self::assertEquals("93061", $elements->get(0)->getExternalPart()->getExternalId());
         self::assertEquals(4, $elements->get(0)->getQuantity());
+
+        /** @var ExternalSetElement $elementWithSpare */
+        $elementWithSpare = array_find($elements->toArray(), fn (ExternalSetElement $element) => $element->getExternalElement()->getExternalId() === '6371584');
+        self::assertEquals(2, $elementWithSpare->getQuantity());
+        self::assertEquals(1, $elementWithSpare->getSpareQuantity());
+    }
+
+    #[Test]
+    public function shouldGetOldSetElementsFromExternalApiThenFromCache(): void
+    {
+        $setExternalId = '082-1';
+        $elements = $this->underTest->getSetElements($setExternalId);
+
+        self::assertCount(123, $elements);
+        self::assertEquals($elements, $this->cacheManager->getSetElements($setExternalId, fn () => $this->fail("Should have been cached")));
+        self::assertEquals("3642984", $elements->get(0)->getExternalElement()->getExternalId());
+        self::assertEquals("082-1", $elements->get(0)->getExternalSetId());
+        self::assertEquals("dupfig0001pr0002", $elements->get(0)->getExternalPart()->getExternalId());
+        self::assertEquals(1, $elements->get(0)->getQuantity());
+
+        /** @var ExternalSetElement $elementWithSpare */
+        $elementWithSpare = array_find($elements->toArray(), fn (ExternalSetElement $element) => $element->getExternalElement()->getExternalId() === '6371584');
+        self::assertEquals(2, $elementWithSpare->getQuantity());
+        self::assertEquals(1, $elementWithSpare->getSpareQuantity());
     }
 }

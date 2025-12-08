@@ -2,7 +2,6 @@
 
 namespace App\Tests\CollectionManagement\Unit\Domain\Service;
 
-
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
@@ -14,6 +13,7 @@ use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\CollectionManagement\Domain\Service\DefaultSetService;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
 use App\Shared\Domain\Model\EntityId;
+use App\Tests\CollectionManagement\Utilities\CollectionManagementTestsUtility;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -59,8 +59,8 @@ final class DefaultSetServiceTest extends TestCase
     public function findSets_shouldReturnEnrichedSetCollectionWithUserData(): void
     {
         $userId = EntityId::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd');
-        $userSetId = EntityId::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd');
-        $localSetId = EntityId::fromString('cbcd1234-abcd-4bcd-abcd-abcd1234abcd');
+        $userSetId = 'bbcd1234-abcd-4bcd-abcd-abcd1234abcd';
+        $localSetId = 'cbcd1234-abcd-4bcd-abcd-abcd1234abcd';
 
         // External sets
         $externalSetsCollection = new SetCollection([
@@ -69,7 +69,12 @@ final class DefaultSetServiceTest extends TestCase
         ]);
 
         // Local user sets collection
-        $userSet = new UserSet($userSetId, $userId, new Set($localSetId, 'externalId2', 'legoId2', 'BaseSet 2', 200, '', 2009));
+        $localSet = CollectionManagementTestsUtility::generateSet($localSetId, 'externalId2');
+        $userSet = CollectionManagementTestsUtility::generateUserSet(
+            $localSet,
+            $userSetId,
+            $userId
+        );
         $userSetCollection = new UserSetCollection([$userSet]);
 
         // Mocks LegoDataProvider + UserSetRepository
@@ -99,8 +104,7 @@ final class DefaultSetServiceTest extends TestCase
         self::assertNull($items[0]->getUserSet());
         self::assertSame('externalId2', $items[1]->getSet()->getExternalId());
         self::assertSame($userSet, $items[1]->getUserSet());
-        self::assertSame($userSetId, $items[1]->getUserSet()->getId());
-        self::assertSame($localSetId, $items[1]->getUserSet()->getLocalSet()->getId());
+        self::assertSame($userSetId, $items[1]->getUserSet()->getId()->value());
+        self::assertSame($localSetId, $items[1]->getUserSet()->getSet()->getId()->value());
     }
 }
-

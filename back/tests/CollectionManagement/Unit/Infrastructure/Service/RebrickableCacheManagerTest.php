@@ -162,8 +162,8 @@ class RebrickableCacheManagerTest extends TestCase
         $expectedKey = 'get_set_elements' . $this->expectedHash($id);
 
         $expectedElements = new ExternalSetElementCollection([
-            new ExternalSetElement('externalId1', '93061', 'externalPartId1', 5),
-            new ExternalSetElement('externalId2', '93061', 'externalPartId2', 10),
+            $this->createStub(ExternalSetElement::class),
+            $this->createStub(ExternalSetElement::class)
         ]);
 
         $this->cache->expects($this->once())

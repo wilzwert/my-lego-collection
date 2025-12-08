@@ -4,6 +4,7 @@ namespace App\Tests\CollectionManagement\Unit\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalPart;
 use App\CollectionManagement\Domain\Model\PartCollection;
+use App\CollectionManagement\Domain\Port\Driven\RetrieveParts;
 use App\CollectionManagement\Domain\Service\DefaultPartService;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
 use PHPUnit\Framework\Attributes\Test;
@@ -32,7 +33,8 @@ final class DefaultPartServiceTest extends TestCase
             ->with($search)
             ->willReturn($expectedCollection);
 
-        $service = new DefaultPartService($legoDataProvider);
+        $retrieveParts = $this->createStub(RetrieveParts::class);
+        $service = new DefaultPartService($legoDataProvider, $retrieveParts);
 
         $result = $service->findParts($search);
 

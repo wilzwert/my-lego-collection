@@ -6,6 +6,7 @@ use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\Local\Set;
+use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\Shared\Domain\Model\EntityId;
 use Override;
@@ -46,7 +47,7 @@ readonly class DefaultSetService implements SetService
             array_map(
                 fn ($set) => new EnrichedSet(
                     $set,
-                    array_find($userSets, fn ($s) => $s->getLocalSet()->getExternalId() === $set->getExternalId())
+                    array_find($userSets, fn (UserSet $s) => $s->getSet()->getExternalId() === $set->getExternalId())
                 ),
                 $externalSets->toArray()
             )
@@ -65,5 +66,12 @@ readonly class DefaultSetService implements SetService
             $externalSet->getImagePath(),
             $externalSet->getProductionYear()
         );
+    }
+
+    #[Override]
+    public function createSetElements(Set $set, array $externalSetElements, array $elements): array
+    {
+
+        // TODO: Implement createSetElements() method.
     }
 }

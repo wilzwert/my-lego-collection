@@ -4,8 +4,9 @@ namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repositor
 
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\SetCollection;
-use App\CollectionManagement\Domain\Port\Driven\LocalSetRepository;
+use App\CollectionManagement\Domain\Port\Driven\SetRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSet;
+use App\Shared\Domain\Model\EntityId;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,7 +19,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
  *
  */
 #[Autoconfigure]
-class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetRepository
+class DoctrineSetRepository extends ServiceEntityRepository implements SetRepository
 {
     public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
     {
@@ -34,7 +35,7 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
     }
 
     #[Override]
-    public function findByUserAndExternalIds(string $userId, array $externalIds): SetCollection
+    public function findByUserAndExternalIds(EntityId $userId, array $externalIds): SetCollection
     {
         return new SetCollection(
             array_map(
@@ -53,7 +54,13 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
 
     public function findByExternalId(string $externalId): ?Set
     {
-        $set = parent::find(['externalId' => $externalId]);
+        $set = parent::findOneBy(['externalId' => $externalId]);
+        return $set?->toDomain();
+    }
+
+    public function findById(EntityId $id): ?Set
+    {
+        $set = parent::find($id->__toString());
         return $set?->toDomain();
     }
 }

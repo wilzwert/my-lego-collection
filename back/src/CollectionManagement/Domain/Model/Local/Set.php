@@ -2,11 +2,13 @@
 
 namespace App\CollectionManagement\Domain\Model\Local;
 
+use App\CollectionManagement\Domain\Event\SetCompletedEvent;
 use App\CollectionManagement\Domain\Event\SetCreatedEvent;
 use App\CollectionManagement\Domain\Model\BaseSet;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\ProducesDomainEvents;
+use DateTimeImmutable;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -24,21 +26,26 @@ final class Set extends BaseSet implements ProducesDomainEvents
      * @param string $externalId
      * @param string $legoId
      * @param string $name
-     * @param int $partCount
+     * @param int $elementCount
      * @param string $imagePath
      * @param int $productionYear
+     * @param SetCreationStatus $creationStatus
+     * @param DateTimeImmutable $createdAt
+     * @param DateTimeImmutable $updatedAt
      */
     public function __construct(
         private readonly EntityId          $id,
         string                             $externalId,
-        string           $legoId,
-        string           $name,
-        int              $partCount,
-        string           $imagePath,
-        int              $productionYear,
-        private readonly SetCreationStatus $creationStatus
+        string                             $legoId,
+        string                             $name,
+        int                                $elementCount,
+        string                             $imagePath,
+        int                                $productionYear,
+        private readonly SetCreationStatus $creationStatus,
+        private readonly DateTimeImmutable $createdAt,
+        private readonly DateTimeImmutable $updatedAt
     ) {
-        parent::__construct($externalId, $legoId, $name, $partCount, $imagePath, $productionYear);
+        parent::__construct($externalId, $legoId, $name, $elementCount, $imagePath, $productionYear);
     }
 
     public static function create(string $externalId, string $legoId, string $name, int $partCount, string $imagePath, int $productionYear): self
@@ -51,7 +58,9 @@ final class Set extends BaseSet implements ProducesDomainEvents
             $partCount,
             $imagePath,
             $productionYear,
-            SetCreationStatus::CREATED
+            SetCreationStatus::CREATED,
+            new DateTimeImmutable(),
+            new DateTimeImmutable()
         );
         $new->events = [new SetCreatedEvent($new)];
         return $new;
@@ -68,6 +77,34 @@ final class Set extends BaseSet implements ProducesDomainEvents
     public function getCreationStatus(): SetCreationStatus
     {
         return $this->creationStatus;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt(): DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function complete(): self
+    {
+        $new = new self(
+            $this->id,
+            $this->getExternalId(),
+            $this->getLegoId(),
+            $this->getName(),
+            $this->getPartCount(),
+            $this->getImagePath(),
+            $this->getProductionYear(),
+            SetCreationStatus::COMPLETED,
+            $this->createdAt,
+            $this->updatedAt
+        );
+        $new->events = [new SetCompletedEvent($new)];
+        return $new;
     }
 
     public function pullEvents(): array

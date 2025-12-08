@@ -11,6 +11,7 @@ use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
 use App\CollectionManagement\Domain\Service\SetService;
 use App\Shared\Domain\Model\EntityId;
+use App\Tests\CollectionManagement\Utilities\CollectionManagementTestsUtility;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
@@ -28,18 +29,7 @@ final class SearchSetHandlerTest extends TestCase
 
         $expectedResult = new EnrichedSetCollection([
             new EnrichedSet(new ExternalSet('externalId1', 'legoId1', 'Set 1', 100, 'image1', 2000)),
-            new EnrichedSet(
-                new Set(
-                    EntityId::fromString('bbcd1234-abcd-4bcd-abcd-abcd1234abcd'),
-                    'externalId2',
-                    'legoId2',
-                    'Set 2',
-                    200,
-                    'image2',
-                    2001,
-                    SetCreationStatus::COMPLETED
-                )
-            )
+            new EnrichedSet(CollectionManagementTestsUtility::generateKnownSet())
         ]);
 
         $setService = $this->createMock(SetService::class);
@@ -61,20 +51,10 @@ final class SearchSetHandlerTest extends TestCase
     {
         $query = new SearchSetQuery('set');
 
+        // result contains external set (fetched from external source) as well a local set
         $expectedResult = new EnrichedSetCollection([
             new EnrichedSet(new ExternalSet('externalId1', 'legoId1', 'Set 1', 100, 'image1', 2000)),
-            new EnrichedSet(
-                new Set(
-                    EntityId::fromString('abcd1234-abcd-4bcd-abcd-abcd1234abcd'),
-                    'externalId2',
-                    'legoId2',
-                    'Set 2',
-                    200,
-                    'image2',
-                    2001,
-                    SetCreationStatus::COMPLETED
-                )
-            )
+            new EnrichedSet(CollectionManagementTestsUtility::generateKnownSet())
         ]);
 
         $setService = $this->createMock(SetService::class);

@@ -8,7 +8,7 @@ final readonly class AddUserSetCommand
 {
     public function __construct(
         private string $externalSetId,
-        private EntityId $identityId
+        private string $identityId
     ) {
     }
 
@@ -17,7 +17,7 @@ final readonly class AddUserSetCommand
         return $this->externalSetId;
     }
 
-    public function getIdentityId(): EntityId
+    public function getIdentityId(): string
     {
         return $this->identityId;
     }

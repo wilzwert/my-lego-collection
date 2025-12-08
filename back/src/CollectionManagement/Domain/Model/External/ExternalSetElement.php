@@ -4,21 +4,18 @@ namespace App\CollectionManagement\Domain\Model\External;
 
 /**
  * @author Wilhelm Zwertvaegher
- * Representation of a Part of a BaseSet retrieved from an external source
+ * Representation of an element of a BaseSet retrieved from an external source
  */
-final readonly class ExternalSetElement
+readonly class ExternalSetElement
 {
     public function __construct(
-        private string $externalId,
         private string $externalSetId,
-        private string $externalPartId,
-        private int $quantity
-    )
-    {}
-
-    public function getExternalId(): string
-    {
-        return $this->externalId;
+        private ExternalElement $externalElement,
+        private ExternalPart $externalPart,
+        private ExternalColor $externalColor,
+        private int $quantity,
+        private int $spareQuantity
+    ) {
     }
 
     public function getExternalSetId(): string
@@ -26,13 +23,28 @@ final readonly class ExternalSetElement
         return $this->externalSetId;
     }
 
-    public function getExternalPartId(): string
+    public function getExternalElement(): ExternalElement
     {
-        return $this->externalPartId;
+        return $this->externalElement;
+    }
+
+    public function getExternalPart(): ExternalPart
+    {
+        return $this->externalPart;
+    }
+
+    public function getExternalColor(): ExternalColor
+    {
+        return $this->externalColor;
     }
 
     public function getQuantity(): int
     {
         return $this->quantity;
+    }
+
+    public function getSpareQuantity(): int
+    {
+        return $this->spareQuantity;
     }
 }
