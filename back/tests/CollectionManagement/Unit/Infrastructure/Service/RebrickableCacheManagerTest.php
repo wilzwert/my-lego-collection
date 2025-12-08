@@ -37,6 +37,31 @@ class RebrickableCacheManagerTest extends TestCase
     }
 
     #[Test]
+    public function getSetShouldCallCacheWithCorrectKeyAndCallback(): void
+    {
+        $externalSetId = '75353-1';
+        $expectedKey = 'get_set_' . $this->expectedHash($externalSetId);
+        $expectedSet = new ExternalSet('externalId1', 'legoId1', 'Cached set 1', 100, '', 2005);
+
+        $this->cache->expects($this->once())
+            ->method('get')
+            ->with(
+                $this->equalTo($expectedKey),
+                $this->callback(function ($callback) use ($expectedSet) {
+                    $item = $this->createMock(ItemInterface::class);
+                    $item->expects($this->once())->method('expiresAfter')->with(86400);
+
+                    $result = $callback($item);
+                    return $result === $expectedSet;
+                })
+            )
+            ->willReturn($expectedSet);
+
+        $result = $this->manager->getSet($externalSetId, fn() => $expectedSet);
+        self::assertSame($expectedSet, $result);
+    }
+
+    #[Test]
     public function getSetsShouldCallCacheWithCorrectKeyAndCallback(): void
     {
         $search = 'Millennium Falcon';

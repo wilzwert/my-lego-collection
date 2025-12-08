@@ -36,17 +36,7 @@ class DoctrineIdentity
     /**
      */
     public function __construct(
-        /*string $id,
-        string $email,
-        string $username,
-        string $passwordHash,
-        array $roles*/
     ) {
-        /*$this->id = $id;
-        $this->email = $email;
-        $this->username = $username;
-        $this->passwordHash = $passwordHash;
-        $this->roles = $roles;*/
     }
 
     public function getId(): string

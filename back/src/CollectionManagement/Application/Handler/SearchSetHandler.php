@@ -10,10 +10,12 @@ final readonly class SearchSetHandler
 {
     public function __construct(
         private SetService $setService
-    ) {}
+    )
+    {
+    }
 
     public function __invoke(SearchSetQuery $query): EnrichedSetCollection
     {
-        return $this->setService->findSets($query->getSearch(),$query->getUserId());
+        return $this->setService->findSets($query->getSearch(), $query->getUserId());
     }
 }

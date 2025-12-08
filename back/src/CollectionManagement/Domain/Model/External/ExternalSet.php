@@ -8,7 +8,7 @@ use App\CollectionManagement\Domain\Model\BaseSet;
  * @author Wilhelm Zwertvaegher
  * A representation of an external set retrieved from an external source
  */
-final readonly class ExternalSet extends BaseSet
+final class ExternalSet extends BaseSet
 {
 
 }

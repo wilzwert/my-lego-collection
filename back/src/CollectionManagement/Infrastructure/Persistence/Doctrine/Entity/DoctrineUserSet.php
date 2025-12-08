@@ -3,6 +3,8 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
 use App\CollectionManagement\Domain\Model\Local\UserSet;
+use App\CollectionManagement\Domain\Model\Local\UserSetCreationStatus;
+use App\CollectionManagement\Domain\Model\Local\UserSetStatus;
 use App\Shared\Domain\Model\EntityId;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -18,13 +20,19 @@ class DoctrineUserSet
     #[ORM\Column(type: "string", length: 36)]
     private string $userId;
 
+    #[ORM\ManyToOne(targetEntity: DoctrineSet::class)]
+    #[ORM\JoinColumn(name: "set_id", referencedColumnName: "id", nullable: true)]
     private DoctrineSet $set;
 
-    public function __construct(string $id, string $userId, DoctrineSet $set)
+    #[ORM\Column(type: "string", enumType: UserSetCreationStatus::class)]
+    private UserSetCreationStatus $creationStatus;
+
+    #[ORM\Column(type: "string", nullable: true, enumType: UserSetStatus::class)]
+    private ?UserSetStatus $status;
+
+
+    public function __construct()
     {
-        $this->id = $id;
-        $this->userId = $userId;
-        $this->set = $set;
     }
 
     public function getId(): string
@@ -32,8 +40,24 @@ class DoctrineUserSet
         return $this->id;
     }
 
+    public function fromDomain(UserSet $userSet): self
+    {
+        $this->id = $userSet->getId();
+        $this->userId = $userSet->getUserId();
+        $this->set = new DoctrineSet()->fromDomain($userSet->getSet());
+        $this->creationStatus = $userSet->getCreationStatus();
+        $this->status = $userSet->getStatus();
+        return $this;
+    }
+
     public function toDomain(): UserSet
     {
-        return new UserSet(EntityId::fromString($this->id), EntityId::fromString($this->userId), $this->set->toDomain());
+        return new UserSet(
+            EntityId::fromString($this->id),
+            EntityId::fromString($this->userId),
+            $this->set->toDomain(),
+            $this->creationStatus,
+            $this->status
+        );
     }
 }

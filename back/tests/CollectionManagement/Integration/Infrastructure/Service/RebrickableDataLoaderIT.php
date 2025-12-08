@@ -28,6 +28,16 @@ class RebrickableDataLoaderIT extends KernelTestCase
     }
 
     #[Test]
+    public function shouldGetSetFromExternalApiThenFromCache(): void
+    {
+        $externalSetId = '75353-1';
+        $set = $this->underTest->getSet($externalSetId);
+
+        self::assertNotNull($set);
+        self::assertEquals($set, $this->cacheManager->getSet('75353-1', fn($s) => $this->fail("Should have been cached for $externalSetId")));
+    }
+
+    #[Test]
     public function shouldGetSetsFromExternalApiThenFromCache(): void
     {
         $search = 'Star Wars';

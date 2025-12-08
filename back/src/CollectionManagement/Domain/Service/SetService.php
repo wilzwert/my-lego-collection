@@ -3,6 +3,8 @@
 namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
+use App\CollectionManagement\Domain\Model\Local\Set;
 use App\Shared\Domain\Model\EntityId;
 
 interface SetService
@@ -16,5 +18,7 @@ interface SetService
      * @param EntityId|null $userId the user's id if available
      * @return EnrichedSetCollection
      */
-    function findSets(string $search, ?EntityId $userId = null) : EnrichedSetCollection;
+    public function findSets(string $search, ?EntityId $userId = null): EnrichedSetCollection;
+
+    public function createSet(string $externalSetId): Set;
 }

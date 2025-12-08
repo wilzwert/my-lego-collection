@@ -26,16 +26,11 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
     }
 
     #[Override]
-    public function add(Set $localSet): void
+    public function save(Set $localSet): void
     {
-        $this->entityManager->persist($localSet);
-    }
-
-    #[Override]
-    public function update(Set $localSet): void
-    {
-        // Nothing to do as we use Doctrine, and all changes to the entity are implicitly handled by doctrine
-        // as long as the Set is handled by doctrine itself which MUST be the case here
+        $doctrineSet = $this->find($localSet->getId()) ?? new DoctrineSet();
+        $doctrineSet->fromDomain($localSet);
+        $this->entityManager->persist($doctrineSet);
     }
 
     #[Override]
@@ -54,5 +49,11 @@ class DoctrineSetRepository extends ServiceEntityRepository implements LocalSetR
                     ->getResult()
             )
         );
+    }
+
+    public function findByExternalId(string $externalId): ?Set
+    {
+        $set = parent::find(['externalId' => $externalId]);
+        return $set?->toDomain();
     }
 }

@@ -3,6 +3,7 @@
 namespace App\CollectionManagement\Infrastructure\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalElementCollection;
+use App\CollectionManagement\Domain\Model\External\ExternalSet;
 use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
@@ -29,9 +30,19 @@ class ExternalDataCacheManager
     public function getSets(string $search, callable $callback): ?SetCollection
     {
         // return cache when present
+        // TODO it could be interesting to find a way to cache found Sets in case we want to retrieve them individually later in getSet
         return $this->cache->get('search_set_'.$this->hash($search), function (ItemInterface $item) use ($search, $callback) {
             $item->expiresAfter(self::TTL);
             return $callback($search);
+        });
+    }
+
+    public function getSet(string $externalSetId, callable $callback): ?ExternalSet
+    {
+        // return cache when present
+        return $this->cache->get('get_set_' . $this->hash($externalSetId), function (ItemInterface $item) use ($externalSetId, $callback) {
+            $item->expiresAfter(self::TTL);
+            return $callback($externalSetId);
         });
     }
 
