@@ -27,10 +27,10 @@ readonly class SetCompletedOrchestrator
     {
         $set = $event->getSet();
 
-        // dispatch CompleteUserSetCommand for each waiting UserSet
-        $userSets = $this->userSetRepository->findIncompleteBySet($set);
+        // dispatch CompleteUserSetCommand for each incomplete owned or built UserSet
+        $userSets = $this->userSetRepository->findIncompleteOwnedBySetId($set->getId());
         foreach ($userSets as $userSet) {
-            $this->commandBus->dispatch(new CompleteUserSetCommand($userSet));
+            $this->commandBus->dispatch(new CompleteUserSetCommand($userSet->getId()));
         }
     }
 }

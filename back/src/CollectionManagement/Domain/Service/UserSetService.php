@@ -4,6 +4,7 @@ namespace App\CollectionManagement\Domain\Service;
 
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
+use App\CollectionManagement\Domain\Model\Local\UserSetStatus;
 use App\Shared\Domain\Model\EntityId;
 
 /**
@@ -12,6 +13,6 @@ use App\Shared\Domain\Model\EntityId;
 interface UserSetService
 {
 
-    public function createUserSet(EntityId $userId, Set $set): UserSet;
+    public function createUserSet(EntityId $userId, Set $set, UserSetStatus $status): UserSet;
 
 }

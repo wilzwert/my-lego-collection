@@ -2,6 +2,7 @@
 
 namespace App\Tests\Notification\Integration\Infrastructure\EventHandler;
 
+use App\DataFixtures\TestData;
 use App\Notification\Application\Handler\NotificationCommandHandler;
 use App\Notification\Domain\Model\NotificationLog;
 use App\Notification\Domain\Model\NotificationStatus;
@@ -12,7 +13,6 @@ use App\Notification\Infrastructure\Sender\EmailSender;
 use App\Shared\Domain\Model\EntityId;
 use App\Tests\Notification\Integration\Infrastructure\Sender\ErrorSender;
 use App\Tests\Notification\Utilities\NotificationTestsUtility;
-use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -31,7 +31,7 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         $handler = $container->get(SendWelcomeNotificationCommandHandler::class);
 
         // user2 has no sent notification yet
-        $identityId = TestData::EXISTING_IDENTITY_USER2_ID;
+        $identityId = TestData::IDENTITY2_ID;
         $command = new SendWelcomeNotificationCommand($identityId, 'validation-token');
         $handler($command);
 
@@ -87,7 +87,7 @@ class SendWelcomeNotificationCommandHandlerIT extends KernelTestCase
         $emailSender = $container->get(EmailSender::class);
 
         $command = NotificationTestsUtility::generateSendWelcomeNotificationCommand(
-            EntityId::fromString(TestData::EXISTING_IDENTITY_USER2_ID)
+            EntityId::fromString(TestData::IDENTITY2_ID)
         );
 
         /** @var NotificationCommandHandler $handler */

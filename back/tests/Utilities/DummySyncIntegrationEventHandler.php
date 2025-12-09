@@ -24,6 +24,7 @@ class DummySyncIntegrationEventHandler implements DummyHandler
      */
     public function __invoke(IntegrationEvent $event): void
     {
+        fwrite(STDERR, serialize($event).PHP_EOL);
         $this->received[] = $event;
     }
 

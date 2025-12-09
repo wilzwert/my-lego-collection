@@ -9,7 +9,6 @@ enum UserSetStatus: string
 {
     case WANTED = 'wanted';
     case OWNED = 'owned';
-
-    case ASSEMBLED = 'assembled';
+    case BUILT = 'built';
 
 }

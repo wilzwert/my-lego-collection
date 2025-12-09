@@ -3,8 +3,8 @@
 namespace App\Tests\Auth\Utilities;
 
 use App\Auth\Domain\Model\Identity;
+use App\DataFixtures\TestData;
 use App\Shared\Domain\Model\EntityId;
-use App\Tests\Utilities\TestData;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -37,7 +37,7 @@ class AuthTestsUtility
         ?bool     $isComplete = false
     ): Identity {
         return static::generateIdentity(
-            entityId: EntityId::fromString(TestData::EXISTING_IDENTITY_USER1_ID),
+            entityId: EntityId::fromString(TestData::IDENTITY1_ID),
             email: $email,
             username: $username,
             passwordHash: $passwordHash,

@@ -3,24 +3,23 @@
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repository;
 
 use App\CollectionManagement\Domain\Model\Local\Color;
-use App\CollectionManagement\Domain\Model\Local\Part;
 use App\CollectionManagement\Domain\Port\Driven\ColorRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineColor;
 use App\Shared\Domain\Model\EntityId;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineColor>
+ * @extends ExtendedServiceEntityRepository<DoctrineColor, Color>
  */
-class DoctrineColorRepository extends ServiceEntityRepository implements ColorRepository
+class DoctrineColorRepository extends ExtendedServiceEntityRepository implements ColorRepository
 {
 
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineColor::class);
+        parent::__construct($managerRegistry, DoctrineColor::class, $entityManager);
     }
 
     public function findById(EntityId $id): ?Color
@@ -31,17 +30,12 @@ class DoctrineColorRepository extends ServiceEntityRepository implements ColorRe
 
     public function findByExternalIds(array $externalIds): array
     {
-        return array_map(
-            fn (DoctrineColor $color) => $color->toDomain(),
-            parent::findBy(['externalId' => $externalIds])
-        );
+        return $this->mapToDomain(parent::findBy(['externalId' => $externalIds]));
     }
 
     public function save(Color $color): void
     {
-        $doctrineColor = $this->find($color->getId()) ?? new DoctrineColor();
-        $doctrineColor->fromDomain($color);
-        $this->entityManager->persist($doctrineColor);
+        parent::attachAndSave($color);
     }
 
     public function saveAll(array $colors): void
@@ -50,7 +44,7 @@ class DoctrineColorRepository extends ServiceEntityRepository implements ColorRe
 
         $qb = $this->createQueryBuilder('c');
         $existingIds = $qb->select('c.id')
-            ->where($qb->expr()->in('j.id', ':ids'))
+            ->where($qb->expr()->in('c.id', ':ids'))
             ->setParameter('ids', $ids)
             ->getQuery()
             ->getScalarResult();

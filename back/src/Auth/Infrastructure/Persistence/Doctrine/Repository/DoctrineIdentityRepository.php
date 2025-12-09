@@ -6,19 +6,20 @@ use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Infrastructure\Persistence\Doctrine\Entity\DoctrineIdentity;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineIdentity>
+ * @extends ExtendedServiceEntityRepository<DoctrineIdentity, Identity>
  */
-class DoctrineIdentityRepository extends ServiceEntityRepository implements IdentityRepository
+class DoctrineIdentityRepository extends ExtendedServiceEntityRepository implements IdentityRepository
 {
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineIdentity::class);
+        parent::__construct($managerRegistry, DoctrineIdentity::class, $entityManager);
     }
 
     public function findByEmail(string $email): ?Identity
@@ -68,8 +69,6 @@ class DoctrineIdentityRepository extends ServiceEntityRepository implements Iden
 
     public function save(Identity $identity): void
     {
-        $doctrineEntity = $this->find($identity->getId()) ?? new DoctrineIdentity();
-        $doctrineEntity->fromDomain($identity);
-        $this->entityManager->persist($doctrineEntity);
+        parent::attachAndSave($identity);
     }
 }

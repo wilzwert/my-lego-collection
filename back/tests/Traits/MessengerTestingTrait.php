@@ -2,11 +2,9 @@
 
 namespace App\Tests\Traits;
 
-use App\Shared\Domain\Event\DomainEvent;
 use App\Tests\Utilities\DummyHandler;
 use App\Tests\Utilities\DummySyncCommandHandler;
 use App\Tests\Utilities\DummySyncIntegrationEventHandler;
-use MyLegoCollection\SharedContracts\Event\IntegrationEvent;
 use MyLegoCollection\SharedContracts\Message;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\InMemory\InMemoryTransport;
@@ -94,8 +92,8 @@ trait MessengerTestingTrait
      */
     protected function getTransportMatchingMessage(
         TransportInterface $transport,
-        Message        $message,
         string             $targetMessageClass,
+        ?Message        $message = null,
         ?callable          $check = null
     ): ?Message {
         // get envelopes
@@ -111,7 +109,7 @@ trait MessengerTestingTrait
             fn (Envelope $env) =>
                 ($e = $env->getMessage()) instanceof $targetMessageClass
                 /** @var TT $e */
-                && $e->metadata()['test_uniqid'] === $message->metadata()['test_uniqid']
+                && (empty($message) || $e->metadata()['test_uniqid'] === $message->metadata()['test_uniqid'])
                 && (null === $check || $check($e))
         );
 
@@ -132,6 +130,23 @@ trait MessengerTestingTrait
                 && $receivedEvent->metadata()['test_uniqid'] === $event->metadata()['test_uniqid']
         );
     }
+
+    /**
+     * @param DummyHandler $handler
+     * @param class-string<Message> $messageClassName
+     * @return bool
+     */
+    protected function handlerHas(DummyHandler $handler, string $messageClassName, ?callable $check = null): bool
+    {
+        return array_any(
+            $handler->getReceivedMessages(),
+            fn ($receivedEvent) =>
+                $receivedEvent instanceof $messageClassName
+                && (null === $check || $check($receivedEvent))
+        );
+    }
+
+
 
     /**
      * Resets the current async transport and the tests handlers

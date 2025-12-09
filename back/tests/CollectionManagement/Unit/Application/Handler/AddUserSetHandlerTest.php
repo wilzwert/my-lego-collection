@@ -8,8 +8,10 @@ use App\CollectionManagement\Domain\Event\SetCreatedEvent;
 use App\CollectionManagement\Domain\Event\UserSetCreatedEvent;
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
+use App\CollectionManagement\Domain\Model\Local\UserSetStatus;
 use App\CollectionManagement\Domain\Port\Driven\RetrieveUserId;
 use App\CollectionManagement\Domain\Port\Driven\SetRepository;
+use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\CollectionManagement\Domain\Service\SetService;
 use App\CollectionManagement\Domain\Service\UserSetService;
 use App\Shared\Domain\Exception\EntityNotFoundException;
@@ -30,6 +32,7 @@ class AddUserSetHandlerTest extends TestCase
     private SetRepository&MockObject $localSetRepository;
     private SetService&MockObject $setService;
     private UserSetService&MockObject $userSetService;
+    private UserSetRepository&MockObject $userSetRepository;
     private TransactionProvider&MockObject $transactionProvider;
     private EventBus&MockObject $eventBus;
 
@@ -43,6 +46,7 @@ class AddUserSetHandlerTest extends TestCase
         $this->localSetRepository = $this->createMock(SetRepository::class);
         $this->setService = $this->createMock(SetService::class);
         $this->userSetService = $this->createMock(UserSetService::class);
+        $this->userSetRepository = $this->createMock(UserSetRepository::class);
         $this->transactionProvider = $this->createMock(TransactionProvider::class);
         $this->eventBus = $this->createMock(EventBus::class);
 
@@ -51,6 +55,7 @@ class AddUserSetHandlerTest extends TestCase
             $this->localSetRepository,
             $this->setService,
             $this->userSetService,
+            $this->userSetRepository,
             $this->transactionProvider,
             $this->eventBus
         );
@@ -67,24 +72,9 @@ class AddUserSetHandlerTest extends TestCase
             ->with($identityId)
             ->willReturn(null);
 
-        $this->localSetRepository
-            ->expects($this->never())
-            ->method('findByExternalId');
-
-        $this->setService
-            ->expects($this->never())
-            ->method('createSet');
-
-        $this->transactionProvider
-            ->expects($this->never())
-            ->method('transactional');
-
-        $this->eventBus
-            ->expects($this->never())
-            ->method('dispatchAll');
 
         self::expectException(EntityNotFoundException::class);
-        $createdUserSet = ($this->addUserSetHandler)(new AddUserSetCommand($externalSetId, $identityId));
+        $createdUserSet = ($this->addUserSetHandler)(new AddUserSetCommand($externalSetId, $identityId, UserSetStatus::BUILT));
     }
 
 
@@ -103,7 +93,7 @@ class AddUserSetHandlerTest extends TestCase
             2005
         );
 
-        $userSet = UserSet::create($userId, $localSet);
+        $userSet = UserSet::create($userId, $localSet->getId(), UserSetStatus::BUILT);
 
         $this->retrieveUser
             ->expects($this->once())
@@ -134,11 +124,16 @@ class AddUserSetHandlerTest extends TestCase
             ->with($userId, $localSet)
             ->willReturn($userSet);
 
+        $this->userSetRepository
+            ->expects($this->once())
+            ->method('save')
+            ->with($userSet);
+
         $this->transactionProvider
             ->expects($this->once())
             ->method('transactional')
             ->willReturnCallback(
-            // simulate transaction -> just execute callback
+                // simulate transaction -> just execute callback
                 fn (callable $callback) => $callback()
             );
 
@@ -152,7 +147,7 @@ class AddUserSetHandlerTest extends TestCase
                 })
             );
 
-        $createdUserSet = ($this->addUserSetHandler)(new AddUserSetCommand($externalSetId, $identityId));
+        $createdUserSet = ($this->addUserSetHandler)(new AddUserSetCommand($externalSetId, $identityId, UserSetStatus::BUILT));
         self::assertNotNull($userSet);
         self::assertSame($createdUserSet, $userSet);
         self::assertSame($localSet, $dispatchedEntities[0]);
@@ -176,7 +171,7 @@ class AddUserSetHandlerTest extends TestCase
         $userId = EntityId::generate();
         $localSet = CollectionManagementTestsUtility::generateKnownSet();
 
-        $userSet = UserSet::create($userId, $localSet);
+        $userSet = UserSet::create($userId, $localSet->getId(), UserSetStatus::OWNED);
 
         $this->retrieveUser
             ->expects($this->once())
@@ -189,10 +184,6 @@ class AddUserSetHandlerTest extends TestCase
             ->method('findByExternalId')
             ->with($externalSetId)
             ->willReturn($localSet);
-
-        $this->setService
-            ->expects($this->never())
-            ->method('createSet');
 
         $this->userSetService
             ->expects($this->once())
@@ -218,7 +209,7 @@ class AddUserSetHandlerTest extends TestCase
                 })
             );
 
-        $createdUserSet = ($this->addUserSetHandler)(new AddUserSetCommand($externalSetId, $identityId));
+        $createdUserSet = ($this->addUserSetHandler)(new AddUserSetCommand($externalSetId, $identityId, UserSetStatus::OWNED));
         self::assertNotNull($userSet);
         self::assertSame($createdUserSet, $userSet);
         self::assertSame($createdUserSet, $dispatchedUserSet);
@@ -227,5 +218,4 @@ class AddUserSetHandlerTest extends TestCase
         self::assertCount(1, $events);
         self::assertInstanceOf(UserSetCreatedEvent::class, $events[0]);
     }
-
 }

@@ -38,7 +38,7 @@ class ExternalSetElementCollectionProperties
         if (!isset($this->externalSetElements)) {
             $this->externalSetElements = [];
             foreach ($this->source->toArray() as $externalSetElement) {
-                $this->externalSetElements[$externalSetElement->getExternalId()] = $externalSetElement;
+                $this->externalSetElements[] = $externalSetElement;
             }
         }
         return $this->externalSetElements;

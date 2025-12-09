@@ -3,10 +3,8 @@
 namespace App\Tests\Notification\Utilities;
 
 use App\Shared\Domain\Model\EntityId;
-use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use MyLegoCollection\SharedContracts\Message;
-use function Clue\StreamFilter\remove;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -65,9 +63,9 @@ class NotificationTestsUtility
     ): SendWelcomeNotificationCommand
     {
         return self::generateSendWelcomeNotificationCommand(
-            $entityId ?? EntityId::fromString(TestData::EXISTING_IDENTITY_USER1_ID),
+            $entityId ?? EntityId::fromString(\App\DataFixtures\TestData::IDENTITY1_ID),
             $validationToken,
-                TestData::EXISTING_USER1_SENT_EMAIL_WELCOME_MESSAGE_ID
+                \App\DataFixtures\TestData::IDENTITY1_SENT_EMAIL_WELCOME_MESSAGE_ID
         );
     }
 

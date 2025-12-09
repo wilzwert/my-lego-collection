@@ -8,14 +8,10 @@ use App\CollectionManagement\Domain\Port\Driven\ColorRepository;
 use App\CollectionManagement\Domain\Port\Driven\ElementRepository;
 use App\CollectionManagement\Domain\Port\Driven\PartRepository;
 use App\CollectionManagement\Domain\Port\Driven\SetElementRepository;
-use App\CollectionManagement\Domain\Port\Driven\SetRepository;
 use App\CollectionManagement\Domain\Service\ColorService;
 use App\CollectionManagement\Domain\Service\ElementService;
-use App\CollectionManagement\Domain\Service\LegoDataProvider;
 use App\CollectionManagement\Domain\Service\PartService;
 use App\CollectionManagement\Domain\Service\SetService;
-use App\Shared\Domain\Port\Driven\EventBus;
-use App\Shared\Domain\Port\Driven\TransactionProvider;
 
 /**
  * @author Wilhelm Zwertvaegher

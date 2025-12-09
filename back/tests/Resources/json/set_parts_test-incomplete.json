@@ -1,0 +1,118 @@
+{
+    "count": 4,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "inv_part_id": 23110034,
+            "part": {
+                "part_num": "3062b",
+                "name": "Brick Round 1 x 1 Open Stud",
+                "part_img_url": "https://cdn.rebrickable.com/media/parts/elements/306226.jpg",
+                "external_ids": {
+                    "LEGO": [
+                        "18860"
+                    ]
+                }
+            },
+            "color": {
+                "id": 0,
+                "name": "Black",
+                "rgb": "05131D",
+                "external_ids": {
+                    "LEGO": {
+                        "ext_ids": [
+                            26
+                        ]
+                    }
+                }
+            },
+            "quantity": 5,
+            "is_spare": false,
+            "element_id": "306226"
+        },
+        {
+            "inv_part_id": 23110034,
+            "part": {
+                "part_num": "3062b",
+                "name": "Brick Round 1 x 1 Open Stud",
+                "part_img_url": "https://cdn.rebrickable.com/media/parts/elements/306226.jpg",
+                "external_ids": {
+                    "LEGO": [
+                        "18860"
+                    ]
+                }
+            },
+            "color": {
+                "id": 0,
+                "name": "Black",
+                "rgb": "05131D",
+                "external_ids": {
+                    "LEGO": {
+                        "ext_ids": [
+                            26
+                        ]
+                    }
+                }
+            },
+            "quantity": 1,
+            "is_spare": true,
+            "element_id": "306226"
+        },
+        {
+            "inv_part_id": 23110053,
+            "part": {
+                "part_num": "22885",
+                "name": "Brick Special 1 x 2 x 1 2/3 with 4 Studs on 1 Side",
+                "part_img_url": "https://cdn.rebrickable.com/media/parts/elements/6275806.jpg",
+                "external_ids": {
+                    "LEGO": [
+                        "22885"
+                    ]
+                }
+            },
+            "color": {
+                "id": 0,
+                "name": "Black",
+                "rgb": "05131D",
+                "external_ids": {
+                    "LEGO": {
+                        "ext_ids": [
+                            26
+                        ]
+                    }
+                }
+            },
+            "quantity": 12,
+            "is_spare": false,
+            "element_id": "6275806"
+        },
+        {
+            "inv_part_id": 23110059,
+            "part": {
+                "part_num": "28802",
+                "name": "Bracket 1 x 2 - 1 x 4 [Rounded Corners at Bottom, Square Corners at Top]",
+                "part_img_url": "https://cdn.rebrickable.com/media/parts/elements/6168618.jpg",
+                "external_ids": {
+                    "LEGO": [
+                        "28802"
+                    ]
+                }
+            },
+            "color": {
+                "id": 15,
+                "name": "White",
+                "rgb": "FFFFFF",
+                "external_ids": {
+                    "LEGO": {
+                        "ext_ids": [
+                            1
+                        ]
+                    }
+                }
+            },
+            "quantity": 2,
+            "is_spare": false
+        }
+    ]
+}

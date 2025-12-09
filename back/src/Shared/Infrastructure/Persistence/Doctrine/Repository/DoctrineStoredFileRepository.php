@@ -12,13 +12,13 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineStoredFile>
+ * @extends ExtendedServiceEntityRepository<DoctrineStoredFile, StoredFile>
  */
-class DoctrineStoredFileRepository extends ServiceEntityRepository implements StoredFileRepository
+class DoctrineStoredFileRepository extends ExtendedServiceEntityRepository implements StoredFileRepository
 {
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineStoredFile::class);
+        parent::__construct($managerRegistry, DoctrineStoredFile::class, $entityManager);
     }
 
     public function findById(EntityId $id): ?StoredFile
@@ -29,9 +29,7 @@ class DoctrineStoredFileRepository extends ServiceEntityRepository implements St
 
     public function save(StoredFile $storedFile): void
     {
-        $doctrineStoredFile = $this->find($storedFile->getId()) ?? new DoctrineStoredFile();
-        $doctrineStoredFile->fromDomain($storedFile);
-        $this->entityManager->persist($doctrineStoredFile);
+        parent::attachAndSave($storedFile);
     }
 
     public function delete(StoredFile $storedFile): void

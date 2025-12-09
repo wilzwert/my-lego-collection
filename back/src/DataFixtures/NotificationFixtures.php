@@ -13,21 +13,18 @@ use Doctrine\Persistence\ObjectManager;
 /**
  * @codeCoverageIgnore
  */
-class NotificationLogFixtures extends Fixture
+class NotificationFixtures extends Fixture
 {
 
     public function load(ObjectManager $manager): void
     {
-        $id = EntityId::fromString('b2b2b2b2-a2b2-42b2-8b2b-b2b2b2b2b2b2');
-        $entityId = EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1');
-
         // successful email notification log
         $notificationLog = new DoctrineNotificationLog()->fromDomain(
             new NotificationLog(
-                id: $id,
-                identityId: $entityId,
+                id: EntityId::fromString(TestData::IDENTITY1_SENT_EMAIL_WELCOME_NOTIFICATION_LOG_ID),
+                identityId: EntityId::fromString(TestData::IDENTITY1_ID),
                 userId: null,
-                messageId: EntityId::fromString('c1c1c1c1-c1c1-41c1-8c1c-c1c1c1c1c1c1'),
+                messageId: EntityId::fromString(TestData::IDENTITY1_SENT_EMAIL_WELCOME_MESSAGE_ID),
                 type: NotificationType::WELCOME,
                 sender: 'email',
                 status: NotificationStatus::SENT,

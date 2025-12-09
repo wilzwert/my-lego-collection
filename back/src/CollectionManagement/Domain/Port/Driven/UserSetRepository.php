@@ -9,18 +9,24 @@ use App\Shared\Domain\Model\EntityId;
 
 interface UserSetRepository
 {
+
+    /**
+     * @param EntityId $id
+     * @return ?UserSet
+     */
+    public function findById(EntityId $id): ?UserSet;
+
     /**
      * @param EntityId $userId
-     * @param list<string> $externalIds
      * @return UserSetCollection
      */
-    public function findByUserAndExternalIds(EntityId $userId, array $externalIds): UserSetCollection;
+    public function findByUserId(EntityId $userId): UserSetCollection;
 
     /**
      * @param Set $set
      * @return UserSetCollection
      */
-    public function findIncompleteBySet(Set $set): UserSetCollection;
+    public function findIncompleteOwnedBySetId(EntityId $setId): UserSetCollection;
 
     public function save(UserSet $userSet): void;
 }

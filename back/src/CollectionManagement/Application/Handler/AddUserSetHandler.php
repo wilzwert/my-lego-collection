@@ -46,9 +46,9 @@ final readonly class AddUserSetHandler
                 $this->eventBus->dispatchAll($set);
             }
 
-            $createdUserSet = $this->userSetService->createUserSet($userId, $set);
+            $createdUserSet = $this->userSetService->createUserSet($userId, $set,$command->getStatus());
             $this->eventBus->dispatchAll($createdUserSet);
-            // $this->userSetRepository->save($createdUserSet);
+            $this->userSetRepository->save($createdUserSet);
             return $createdUserSet;
         });
     }

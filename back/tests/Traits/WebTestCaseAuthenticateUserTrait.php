@@ -5,6 +5,7 @@ namespace App\Tests\Traits;
 use App\Auth\Domain\Model\Identity;
 use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Infrastructure\Security\User\AuthenticatedUser;
+use App\DataFixtures\TestData;
 use App\Shared\Domain\Model\EntityId;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\BrowserKit\Cookie;
@@ -40,7 +41,7 @@ trait WebTestCaseAuthenticateUserTrait
     }
 
 
-    private function getAuthenticatedUserTokens(string $identifier = 'user1@test.com') : array
+    private function getAuthenticatedUserTokens(string $identifier = TestData::IDENTITY1_EMAIL) : array
     {
         $identityRepository = self::getContainer()->get(IdentityRepository::class);
         $testIdentity = $identityRepository->findByIdentifier($identifier);

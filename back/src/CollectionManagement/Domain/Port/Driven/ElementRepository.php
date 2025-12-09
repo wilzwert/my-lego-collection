@@ -13,6 +13,12 @@ interface ElementRepository
     public function findById(EntityId $id): ?Element;
 
     /**
+     * @param array<EntityId> $externalIds
+     * @return array<Element>
+     */
+    public function findByIds(array $ids): array;
+
+    /**
      * @param array<string> $externalIds
      * @return array<Element>
      */

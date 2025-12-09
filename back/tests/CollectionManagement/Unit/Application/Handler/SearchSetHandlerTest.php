@@ -4,6 +4,7 @@ namespace App\Tests\CollectionManagement\Unit\Application\Handler;
 
 use App\CollectionManagement\Application\Command\SearchSetQuery;
 use App\CollectionManagement\Application\Handler\SearchSetHandler;
+use App\CollectionManagement\Application\Service\FindSetsService;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
@@ -32,14 +33,14 @@ final class SearchSetHandlerTest extends TestCase
             new EnrichedSet(CollectionManagementTestsUtility::generateKnownSet())
         ]);
 
-        $setService = $this->createMock(SetService::class);
-        $setService
+        $findSetsService = $this->createMock(FindSetsService::class);
+        $findSetsService
             ->expects($this->once())
             ->method('findSets')
             ->with('set', $userId)
             ->willReturn($expectedResult);
 
-        $handler = new SearchSetHandler($setService);
+        $handler = new SearchSetHandler($findSetsService);
 
         $result = $handler($query);
 
@@ -57,14 +58,14 @@ final class SearchSetHandlerTest extends TestCase
             new EnrichedSet(CollectionManagementTestsUtility::generateKnownSet())
         ]);
 
-        $setService = $this->createMock(SetService::class);
-        $setService
+        $findSetsService = $this->createMock(FindSetsService::class);
+        $findSetsService
             ->expects($this->once())
             ->method('findSets')
             ->with('set', null)
             ->willReturn($expectedResult);
 
-        $handler = new SearchSetHandler($setService);
+        $handler = new SearchSetHandler($findSetsService);
 
         $result = $handler($query);
 

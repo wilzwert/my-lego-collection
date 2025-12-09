@@ -2,6 +2,7 @@
 
 namespace App\Tests\User\Unit\Application\Handler;
 
+use App\DataFixtures\TestData;
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Domain\Model\StoredFile;
 use App\Shared\Domain\Model\TempFile;
@@ -9,7 +10,6 @@ use App\Shared\Domain\Port\Driven\EventBus;
 use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\Shared\Domain\Service\StoredFileService;
 use App\Tests\User\Utilities\UserTestsUtility;
-use App\Tests\Utilities\TestData;
 use App\User\Application\Command\UpdateAvatarCommand;
 use App\User\Application\Handler\UpdateAvatarHandler;
 use App\User\Domain\Model\User;
@@ -61,7 +61,7 @@ class UpdateAvatarHandlerTest extends TestCase
         );
 
         $command = new UpdateAvatarCommand(
-            TestData::EXISTING_IDENTITY_USER1_ID,
+            TestData::IDENTITY1_ID,
             new TempFile(
                 'path/to/file',
                 'file.pdf',
@@ -83,7 +83,7 @@ class UpdateAvatarHandlerTest extends TestCase
         $this->userRepository
             ->expects($this->once())
             ->method('findByIdentityId')
-            ->with(TestData::EXISTING_IDENTITY_USER1_ID)
+            ->with(TestData::IDENTITY1_ID)
             ->willReturn($user);
 
         $this->transactionProvider

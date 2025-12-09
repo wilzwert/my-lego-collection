@@ -10,23 +10,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints\Date;
 
 #[ORM\Entity]
-#[ORM\Table(
-    name: "user_sets",
-    uniqueConstraints: [
-        new ORM\UniqueConstraint(name: "uniq_user_set", columns: ["user_id", "set_id"])
-    ]
-)]
+#[ORM\Table(name: "user_sets")]
+#[ORM\UniqueConstraint(name: "uniq_user_set", columns: ["user_id", "set_id"])]
 class DoctrineUserSet
 {
     #[ORM\Id, ORM\Column(type: "string", length: 36)]
     private string $id;
 
-    #[ORM\Column(type: "string", length: 36)]
+    #[ORM\Column(type: "string", length: 36, index: true)]
     private string $userId;
 
-    #[ORM\ManyToOne(targetEntity: DoctrineSet::class)]
-    #[ORM\JoinColumn(name: "set_id", referencedColumnName: "id", nullable: true)]
-    private DoctrineSet $set;
+    #[ORM\Column(type: "string", length: 36, index: true)]
+    private string $setId;
 
     #[ORM\Column(type: "datetime_immutable", index: true)]
     private \DateTimeImmutable $createdAt;
@@ -49,11 +44,11 @@ class DoctrineUserSet
         return $this->id;
     }
 
-    public function fromDomain(UserSet $userSet, DoctrineSet $doctrineSet): self
+    public function fromDomain(UserSet $userSet): self
     {
         $this->id = $userSet->getId();
         $this->userId = $userSet->getUserId();
-        $this->set = $doctrineSet;
+        $this->setId = $userSet->getSetId();
         $this->createdAt = $userSet->getCreatedAt();
         $this->creationStatus = $userSet->getCreationStatus();
         $this->status = $userSet->getStatus();
@@ -66,7 +61,7 @@ class DoctrineUserSet
         return new UserSet(
             EntityId::fromString($this->id),
             EntityId::fromString($this->userId),
-            $this->set->toDomain(),
+            EntityId::fromString($this->setId),
             $this->createdAt,
             $this->creationStatus,
             $this->status,

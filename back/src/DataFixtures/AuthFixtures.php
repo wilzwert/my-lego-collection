@@ -13,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 /**
  * @codeCoverageIgnore
  */
-class IdentityFixtures extends Fixture
+class AuthFixtures extends Fixture
 {
     public function __construct(private UserPasswordHasherInterface $hasher)
     {}
@@ -24,9 +24,9 @@ class IdentityFixtures extends Fixture
         $password = $this->hasher->hashPassword(new DummyAuthenticatedUser(''), 'Abcd_1234!');
         $identity = new DoctrineIdentity()->fromDomain(
             new Identity(
-                id: EntityId::fromString('a1a1a1a1-a1a1-41a1-8a1a-a1a1a1a1a1a1'),
-                email:'user1@test.com',
-                username: 'user1',
+                id: EntityId::fromString(TestData::IDENTITY1_ID),
+                email:TestData::IDENTITY1_EMAIL,
+                username: TestData::IDENTITY1_USERNAME,
                 passwordHash: $password,
                 roles: ['ROLE_USER'],
                 isComplete: false,
@@ -36,15 +36,18 @@ class IdentityFixtures extends Fixture
 
         $identity2 = new DoctrineIdentity()->fromDomain(
             new Identity(
-                id: EntityId::fromString('0efa63b0-3291-4da3-9dcc-0c7ea1d538d0'),
-                email: 'user2@test.com',
-                username: 'user2',
+                id: EntityId::fromString(TestData::IDENTITY2_ID),
+                email: TestData::IDENTITY2_EMAIL,
+                username: TestData::IDENTITY2_USERNAME,
                 passwordHash: $password,
                 roles: ['ROLE_USER'],
                 isComplete: false,
                 validationToken: ''
             )
         );
+
+        fwrite(STDOUT, "persist ".$identity->getEmail().PHP_EOL);
+
         $manager->persist($identity);
         $manager->persist($identity2);
         $manager->flush();

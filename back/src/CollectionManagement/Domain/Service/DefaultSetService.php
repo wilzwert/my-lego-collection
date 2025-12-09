@@ -5,8 +5,12 @@ namespace App\CollectionManagement\Domain\Service;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
+use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
+use App\CollectionManagement\Domain\Model\Local\Element;
 use App\CollectionManagement\Domain\Model\Local\Set;
+use App\CollectionManagement\Domain\Model\Local\SetElement;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
+use App\CollectionManagement\Domain\Port\Driven\SetRepository;
 use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\Shared\Domain\Model\EntityId;
 use Override;
@@ -15,43 +19,8 @@ readonly class DefaultSetService implements SetService
 {
 
     public function __construct(
-        private LegoDataProvider $legoDataProvider,
-        private UserSetRepository $userSetRepository
+        private LegoDataProvider $legoDataProvider
     ) {
-    }
-
-    /**
-     * @inheritDoc
-     */
-    #[Override]
-    public function findSets(string $search, ?EntityId $userId = null): EnrichedSetCollection
-    {
-        // get sets from external data provider
-        $externalSets = $this->legoDataProvider->findSets($search);
-        // if current user is not set, then we can return found data as is
-        if ($userId === null) {
-            return new EnrichedSetCollection(
-                array_map(fn ($set) => new EnrichedSet($set, null), $externalSets->toArray())
-            );
-        }
-
-        // enrich with available user data
-        // get user's UserSets as an array
-        $userSets = $this->userSetRepository->findByUserAndExternalIds(
-            $userId,
-            array_values(array_map(fn ($set) => $set->getExternalId(), $externalSets->toArray())),
-        )->toArray();
-
-        // merge external sets and user sets in a EnrichedSetCollection
-        return new EnrichedSetCollection(
-            array_map(
-                fn ($set) => new EnrichedSet(
-                    $set,
-                    array_find($userSets, fn (UserSet $s) => $s->getSet()->getExternalId() === $set->getExternalId())
-                ),
-                $externalSets->toArray()
-            )
-        );
     }
 
     public function createSet(string $externalSetId): Set
@@ -68,10 +37,26 @@ readonly class DefaultSetService implements SetService
         );
     }
 
+    /**
+     * @param Set $set the related set
+     * @param array<ExternalSetElement> $externalSetElements the external data
+     * @param array<Element> $elements the local Elements
+     * @return array<SetElement>
+     */
     #[Override]
     public function createSetElements(Set $set, array $externalSetElements, array $elements): array
     {
+        $setElements = [];
 
-        // TODO: Implement createSetElements() method.
+        foreach($externalSetElements as $key => $externalSetElement) {
+            $setElements[] = SetElement::create(
+                $set->getId(),
+                $elements[$externalSetElement->getExternalElement()->getExternalId()]->getId(),
+                $externalSetElement->getQuantity(),
+                $externalSetElement->getSpareQuantity()
+            );
+        }
+        return $setElements;
+
     }
 }

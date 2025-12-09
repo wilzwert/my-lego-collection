@@ -4,6 +4,7 @@ namespace App\User\Infrastructure\Persistence\Doctrine\Repository;
 
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Infrastructure\Persistence\Doctrine\Entity\DoctrineStoredFile;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use App\User\Domain\Model\User;
 use App\User\Domain\Port\Driven\UserRepository;
 use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
@@ -13,13 +14,13 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineUser>
+ * @extends ExtendedServiceEntityRepository<DoctrineUser, User>
  */
-class DoctrineUserRepository extends ServiceEntityRepository implements UserRepository
+class DoctrineUserRepository extends ExtendedServiceEntityRepository implements UserRepository
 {
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineUser::class);
+        parent::__construct($managerRegistry, DoctrineUser::class, $entityManager);
     }
 
     public function findById(EntityId $userId): ?User
