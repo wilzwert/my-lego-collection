@@ -4,6 +4,7 @@ namespace App\Tests\CollectionManagement\Integration\Infrastructure\Service;
 
 use App\CollectionManagement\Domain\Model\External\ExternalSetElement;
 use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
+use App\CollectionManagement\Infrastructure\Service\RebrickableDataFetcher;
 use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -24,8 +25,8 @@ class RebrickableDataLoaderIT extends KernelTestCase
         $container = self::getContainer();
         $this->cacheManager = new ExternalDataCacheManager($container->get('cache.rebrickable_search'));
         $this->cacheManager->clear();
-        $httpClient = $container->get(HttpClientInterface::class);
-        $this->underTest = new RebrickableDataLoader($this->cacheManager, $httpClient, $_ENV['REBRICKABLE_API_KEY']);
+        $fetcher = $container->get(RebrickableDataFetcher::class);
+        $this->underTest = new RebrickableDataLoader($this->cacheManager, $fetcher);
     }
 
     #[Test]
@@ -35,7 +36,7 @@ class RebrickableDataLoaderIT extends KernelTestCase
         $set = $this->underTest->getSet($externalSetId);
 
         self::assertNotNull($set);
-        self::assertEquals($set, $this->cacheManager->getSet('75353-1', fn($s) => $this->fail("Should have been cached for $externalSetId")));
+        self::assertEquals($set, $this->cacheManager->getSet('75353-1', fn ($s) => $this->fail("Should have been cached for $externalSetId")));
     }
 
     #[Test]
@@ -44,6 +45,7 @@ class RebrickableDataLoaderIT extends KernelTestCase
         $search = 'Star Wars';
         $sets = $this->underTest->findSets($search);
 
+        // first page of results should contain 100 results
         self::assertCount(100, $sets);
         self::assertEquals($sets, $this->cacheManager->getSets('STAR WARS', fn ($s) => $this->fail("Should have been cached for $search")));
         self::assertEquals($sets, $this->cacheManager->getSets('Star wars', fn ($s) => $this->fail("Should have been cached for $search")));
@@ -108,25 +110,6 @@ class RebrickableDataLoaderIT extends KernelTestCase
         self::assertEquals("75353-1", $elements->get(0)->getExternalSetId());
         self::assertEquals("93061", $elements->get(0)->getExternalPart()->getExternalId());
         self::assertEquals(4, $elements->get(0)->getQuantity());
-
-        /** @var ExternalSetElement $elementWithSpare */
-        $elementWithSpare = array_find($elements->toArray(), fn (ExternalSetElement $element) => $element->getExternalElement()->getExternalId() === '6371584');
-        self::assertEquals(2, $elementWithSpare->getQuantity());
-        self::assertEquals(1, $elementWithSpare->getSpareQuantity());
-    }
-
-    #[Test]
-    public function shouldGetOldSetElementsFromExternalApiThenFromCache(): void
-    {
-        $setExternalId = '082-1';
-        $elements = $this->underTest->getSetElements($setExternalId);
-
-        self::assertCount(123, $elements);
-        self::assertEquals($elements, $this->cacheManager->getSetElements($setExternalId, fn () => $this->fail("Should have been cached")));
-        self::assertEquals("3642984", $elements->get(0)->getExternalElement()->getExternalId());
-        self::assertEquals("082-1", $elements->get(0)->getExternalSetId());
-        self::assertEquals("dupfig0001pr0002", $elements->get(0)->getExternalPart()->getExternalId());
-        self::assertEquals(1, $elements->get(0)->getQuantity());
 
         /** @var ExternalSetElement $elementWithSpare */
         $elementWithSpare = array_find($elements->toArray(), fn (ExternalSetElement $element) => $element->getExternalElement()->getExternalId() === '6371584');

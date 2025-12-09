@@ -6,20 +6,20 @@ use App\CollectionManagement\Domain\Model\Local\Element;
 use App\CollectionManagement\Domain\Port\Driven\ElementRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineElement;
 use App\Shared\Domain\Model\EntityId;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<DoctrineElement>
+ * @extends ExtendedServiceEntityRepository<DoctrineElement, Element>
  * @author Wilhelm Zwertvaegher
  */
-class DoctrineElementRepository extends ServiceEntityRepository implements ElementRepository
+class DoctrineElementRepository extends ExtendedServiceEntityRepository implements ElementRepository
 {
 
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineElement::class);
+        parent::__construct($managerRegistry, DoctrineElement::class, $entityManager);
     }
 
     public function findById(EntityId $id): ?Element
@@ -30,17 +30,12 @@ class DoctrineElementRepository extends ServiceEntityRepository implements Eleme
 
     public function findByExternalIds(array $externalIds): array
     {
-        return array_map(
-            fn (DoctrineElement $element) => $element->toDomain(),
-            parent::findBy(['externalId' => $externalIds])
-        );
+        return $this->mapToDomain(parent::findBy(['externalId' => $externalIds]));
     }
 
     public function save(Element $element): void
     {
-        $doctrineElement = $this->find($element->getId()) ?? new DoctrineElement();
-        $doctrineElement->fromDomain($element);
-        $this->entityManager->persist($doctrineElement);
+        parent::attachAndSave($element);
     }
 
     public function saveAll(array $elements): void
@@ -67,5 +62,10 @@ class DoctrineElementRepository extends ServiceEntityRepository implements Eleme
                 $this->entityManager->persist($entity);
             }
         }
+    }
+
+    public function findByIds(array $ids): array
+    {
+        return $this->mapToDomain(parent::findBy(['id' => $ids]));
     }
 }

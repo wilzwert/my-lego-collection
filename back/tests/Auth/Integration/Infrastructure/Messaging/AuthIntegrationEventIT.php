@@ -5,7 +5,6 @@ namespace App\Tests\Auth\Integration\Infrastructure\Messaging;
 use App\Auth\Domain\Event\IdentityCreatedEvent;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
 use App\Tests\Traits\MessengerTestingTrait;
-use App\Tests\Utilities\DummySyncCommandHandler;
 use MyLegoCollection\SharedContracts\Command\CreateUserCommand;
 use MyLegoCollection\SharedContracts\Event\IdentityCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Group;
@@ -46,10 +45,10 @@ class AuthIntegrationEventIT extends KernelTestCase
         // build a trackable DomainEvent to dispatch to the local slice bus
         $domainEvent = $this->createTrackableMessage(
             fn (array $metadata) =>
-            new IdentityCreatedEvent(
-                $knownIdentity,
-                $metadata
-            )
+                new IdentityCreatedEvent(
+                    $knownIdentity,
+                    $metadata
+                )
         );
 
         $authBus->dispatch($domainEvent);
@@ -57,8 +56,8 @@ class AuthIntegrationEventIT extends KernelTestCase
         // IdentityCreatedIntegrationEvent must have be sent on async transports
         $asyncEvent = $this->getTransportMatchingMessage(
             $asyncTransport,
-            $domainEvent,
             IdentityCreatedIntegrationEvent::class,
+            $domainEvent,
             fn (IdentityCreatedIntegrationEvent $event) => $knownIdentity->getId()->value() === $event->getIdentityId()
         );
         self::assertNotNull($asyncEvent);
@@ -66,8 +65,8 @@ class AuthIntegrationEventIT extends KernelTestCase
         // a CreateUserCommand must have been sent on both sync and async transports
         $asyncCommand = $this->getTransportMatchingMessage(
             $asyncTransport,
-            $domainEvent,
             CreateUserCommand::class,
+            $domainEvent,
             fn (CreateUserCommand $command) => $knownIdentity->getId()->value() === $command->getIdentityId()
         );
         self::assertNotNull($asyncCommand);

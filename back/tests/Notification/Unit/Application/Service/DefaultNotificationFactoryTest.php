@@ -2,10 +2,10 @@
 
 namespace App\Tests\Notification\Unit\Application\Service;
 
+use App\DataFixtures\TestData;
 use App\Notification\Domain\Model\IdentityInfo;
 use App\Notification\Domain\Model\WelcomeNotification;
 use App\Notification\Domain\Port\Driven\RetrieveIdentityInfo;
-use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\Command;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
@@ -30,9 +30,9 @@ class DefaultNotificationFactoryTest extends TestCase
     #[Test]
     public function shouldCreateWelcomeNotification(): void
     {
-        $command = new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_USER1_ID, 'validationToken');
+        $command = new SendWelcomeNotificationCommand(TestData::IDENTITY1_ID, 'validationToken');
         $info = new IdentityInfo(
-            TestData::EXISTING_IDENTITY_USER1_ID,
+            TestData::IDENTITY1_ID,
             'test@example.com',
         'username'
         );
@@ -44,7 +44,7 @@ class DefaultNotificationFactoryTest extends TestCase
 
         $notification = $this->factory->createNotification($command);
         self::assertInstanceOf(WelcomeNotification::class, $notification);
-        self::assertEquals(TestData::EXISTING_IDENTITY_USER1_ID, $notification->getIdentityInfo()->getIdentityId());
+        self::assertEquals(TestData::IDENTITY1_ID, $notification->getIdentityInfo()->getIdentityId());
         self::assertEquals('test@example.com', $notification->getIdentityInfo()->getEmail());
         self::assertEquals('validationToken', $notification->getPayload()['validationToken']);
     }

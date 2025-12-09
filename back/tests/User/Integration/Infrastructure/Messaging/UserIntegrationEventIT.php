@@ -59,12 +59,14 @@ class UserIntegrationEventIT extends KernelTestCase
         $userBus->dispatch($domainEvent);
 
         // UserCreatedIntegrationEvent must be sent on async transport
+
         $asyncEvent = $this->getTransportMatchingMessage(
             $asyncTransport,
-            $domainEvent,
             UserCreatedIntegrationEvent::class,
+            $domainEvent,
             fn (UserCreatedIntegrationEvent $event) => 'a1a1a1a1-a1a1-41a1-91a1-a1a1a1a1a1a1' === $event->getId()
         );
+
         self::assertNotNull($asyncEvent);
     }
 }

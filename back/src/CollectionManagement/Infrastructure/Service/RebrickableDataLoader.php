@@ -14,7 +14,6 @@ use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Service\LegoDataLoader;
 use Override;
 use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @author Wilhelm Zwertvaegher
@@ -26,12 +25,10 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[Autoconfigure]
 class RebrickableDataLoader implements LegoDataLoader
 {
-    private const API_BASE_URL = 'https://rebrickable.com/api/v3/lego/';
 
     public function __construct(
         private readonly ExternalDataCacheManager $cacheManager,
-        private readonly HttpClientInterface      $httpClient,
-        private readonly string                   $apiKey
+        private readonly RebrickableDataFetcher $fetcher
     ) {
     }
 
@@ -75,35 +72,9 @@ class RebrickableDataLoader implements LegoDataLoader
         );
     }
 
-    /**
-     * @param string $endpointUri
-     * @return array<mixed>|null
-     *
-     * */
-    private function fetchFromExternalApi(string $endpointUri): ?array
+    private function fetchSet(string $externalSetId): ?ExternalSet
     {
-        try {
-            $response = $this->httpClient->request(
-                'GET',
-                sprintf('%s%s', self::API_BASE_URL, $endpointUri),
-                array(
-                    'headers' => [
-                        'Authorization' => sprintf('key %s', $this->apiKey),
-                    ]
-                )
-            );
-            // return raw data fetched from external API
-            return $response->toArray();
-        }
-        // TODO : properly handle this throwable
-        catch (\Throwable $e) {
-            return null;
-        }
-    }
-
-    private function fetchSetFromExternalApi(string $externalSetId): ?ExternalSet
-    {
-        $result = $this->fetchFromExternalApi(sprintf('sets/%s/', $externalSetId));
+        $result = $this->fetcher->fetchFromApi(sprintf('sets/%s/', $externalSetId));
         if ($result === null || empty($result['set_num'])) {
             return null;
         }
@@ -122,9 +93,9 @@ class RebrickableDataLoader implements LegoDataLoader
      * @param string $search
      * @return SetCollection|null
      */
-    private function fetchSetsFromExternalApi(string $search): ?SetCollection
+    private function fetchSets(string $search): ?SetCollection
     {
-        $results = $this->fetchFromExternalApi(sprintf('sets/?search=%s', $search));
+        $results = $this->fetcher->fetchFromApi(sprintf('sets/?search=%s', $search));
         if ($results === null || empty($results['results'])) {
             return null;
         }
@@ -148,9 +119,9 @@ class RebrickableDataLoader implements LegoDataLoader
      * @param string $search
      * @return PartCollection|null
      */
-    private function fetchPartsFromExternalApi(string $search): ?PartCollection
+    private function fetchParts(string $search): ?PartCollection
     {
-        $results = $this->fetchFromExternalApi(sprintf('parts/?search=%s', $search));
+        $results = $this->fetcher->fetchFromApi(sprintf('parts/?search=%s', $search));
         if ($results === null) {
             return null;
         }
@@ -167,9 +138,9 @@ class RebrickableDataLoader implements LegoDataLoader
      * @param string $partExternalId
      * @return ExternalElementCollection|null
      */
-    private function fetchPartElementsFromExternalApi(string $partExternalId): ?ExternalElementCollection
+    private function fetchPartElements(string $partExternalId): ?ExternalElementCollection
     {
-        $results = $this->fetchFromExternalApi(sprintf('parts/%s/colors/', $partExternalId));
+        $results = $this->fetcher->fetchFromApi(sprintf('parts/%s/colors/', $partExternalId));
         if ($results === null) {
             return null;
         }
@@ -191,7 +162,7 @@ class RebrickableDataLoader implements LegoDataLoader
      * @param string $setExternalId
      * @return ExternalSetElementCollection|null
      */
-    private function fetchSetElementsFromExternalApi(string $setExternalId): ?ExternalSetElementCollection
+    private function fetchSetElements(string $setExternalId): ?ExternalSetElementCollection
     {
 
         // first we get all the elements in a single array
@@ -205,7 +176,7 @@ class RebrickableDataLoader implements LegoDataLoader
                     $page = 'page=' . $matches[1] .'&';
                 }
             }
-            $results = $this->fetchFromExternalApi(sprintf('sets/%s/parts/?%sinc_part_details=1', $setExternalId, $page));
+            $results = $this->fetcher->fetchFromApi(sprintf('sets/%s/parts/?%sinc_part_details=1', $setExternalId, $page));
             array_push($allElements, ...$results['results']);
             $next = $results['next'] ?? null;
 
@@ -223,7 +194,6 @@ class RebrickableDataLoader implements LegoDataLoader
 
         // build the final result with only non-spare elements, adding the spareQuantity if available in the previously
         // built spare elements list
-        fwrite(STDOUT, json_encode(array_filter($allElements, fn ($item) => $item['is_spare'] === false)).PHP_EOL);
 
         $finalResults = array_map(
             fn ($item) => new ExternalSetElement(
@@ -248,19 +218,19 @@ class RebrickableDataLoader implements LegoDataLoader
     #[Override]
     public function findSets(string $search): ?SetCollection
     {
-        return $this->cacheManager->getSets($search, fn ($s) => $this->fetchSetsFromExternalApi($s));
+        return $this->cacheManager->getSets($search, fn ($s) => $this->fetchSets($s));
     }
 
     #[Override]
     public function getSet(string $externalSetId): ?ExternalSet
     {
-        return $this->cacheManager->getSet($externalSetId, fn ($s) => $this->fetchSetFromExternalApi($s));
+        return $this->cacheManager->getSet($externalSetId, fn ($s) => $this->fetchSet($s));
     }
 
     #[Override]
     public function findParts(string $search): ?PartCollection
     {
-        return $this->cacheManager->getParts($search, fn ($s) => $this->fetchPartsFromExternalApi($s));
+        return $this->cacheManager->getParts($search, fn ($s) => $this->fetchParts($s));
     }
 
     #[Override]
@@ -274,12 +244,12 @@ class RebrickableDataLoader implements LegoDataLoader
     #[Override]
     public function getPartElements(string $partExternalId): ?ExternalElementCollection
     {
-        return $this->cacheManager->getPartElements($partExternalId, fn ($s) => $this->fetchPartElementsFromExternalApi($partExternalId));
+        return $this->cacheManager->getPartElements($partExternalId, fn ($s) => $this->fetchPartElements($partExternalId));
     }
 
     #[Override]
     public function getSetElements(string $setExternalId): ?ExternalSetElementCollection
     {
-        return $this->cacheManager->getSetElements($setExternalId, fn ($s) => $this->fetchSetElementsFromExternalApi($setExternalId));
+        return $this->cacheManager->getSetElements($setExternalId, fn ($s) => $this->fetchSetElements($setExternalId));
     }
 }

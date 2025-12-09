@@ -65,7 +65,7 @@ class CollectionManagementTestsUtility
         return new UserSet(
             $userSetId ? EntityId::fromString($userSetId) : EntityId::generate(),
             $userId ? EntityId::fromString($userId) : EntityId::generate(),
-            $set,
+            $set->getId(),
             new \DateTimeImmutable(),
             UserSetCreationStatus::COMPLETED,
             UserSetStatus::WANTED,

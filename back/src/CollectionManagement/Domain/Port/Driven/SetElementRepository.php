@@ -19,4 +19,10 @@ interface SetElementRepository
      */
     public function saveAll(array $setElements): void;
 
+    /**
+     * @param EntityId $setId
+     * @return array<SetElement>
+     */
+    public function findBySetId(EntityId $setId): array;
+
 }

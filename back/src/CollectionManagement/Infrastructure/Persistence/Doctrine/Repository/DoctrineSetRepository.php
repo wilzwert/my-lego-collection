@@ -7,6 +7,8 @@ use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Port\Driven\SetRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSet;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\Traits\DoctrineMapToDomainTrait;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -15,41 +17,23 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrineSet>
+ * @extends ExtendedServiceEntityRepository<DoctrineSet, Set>
  *
  */
 #[Autoconfigure]
-class DoctrineSetRepository extends ServiceEntityRepository implements SetRepository
+class DoctrineSetRepository extends ExtendedServiceEntityRepository implements SetRepository
 {
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    use DoctrineMapToDomainTrait;
+
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineSet::class);
+        parent::__construct($managerRegistry, DoctrineSet::class, $entityManager);
     }
 
     #[Override]
     public function save(Set $localSet): void
     {
-        $doctrineSet = $this->find($localSet->getId()) ?? new DoctrineSet();
-        $doctrineSet->fromDomain($localSet);
-        $this->entityManager->persist($doctrineSet);
-    }
-
-    #[Override]
-    public function findByUserAndExternalIds(EntityId $userId, array $externalIds): SetCollection
-    {
-        return new SetCollection(
-            array_map(
-                fn (DoctrineSet $s) => $s->toDomain(),
-                $this->createQueryBuilder('s')
-                    ->join('s.userSets', 'us')
-                    ->where('us.user = :userId')
-                    ->andWhere('s.externalId IN (:externalIds)')
-                    ->setParameter('userId', $userId)
-                    ->setParameter('externalIds', $externalIds)
-                    ->getQuery()
-                    ->getResult()
-            )
-        );
+        parent::attachAndSave($localSet);
     }
 
     public function findByExternalId(string $externalId): ?Set
@@ -62,5 +46,16 @@ class DoctrineSetRepository extends ServiceEntityRepository implements SetReposi
     {
         $set = parent::find($id->__toString());
         return $set?->toDomain();
+    }
+
+    public function findByIdsAndExternalIds(array $setIds, array $externalIds): SetCollection
+    {
+        return new SetCollection(
+            $this->mapToDomain(
+                parent::findBy(
+                    ['id' => array_map(fn (EntityId $id) => $id->value(), $setIds)],
+                    ['externalId' => $externalIds]
+            ))
+        );
     }
 }

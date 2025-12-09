@@ -12,12 +12,11 @@ use App\CollectionManagement\Domain\Model\External\ExternalSetElementCollection;
 use App\CollectionManagement\Domain\Model\PartCollection;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Infrastructure\Service\ExternalDataCacheManager;
+use App\CollectionManagement\Infrastructure\Service\RebrickableDataFetcher;
 use App\CollectionManagement\Infrastructure\Service\RebrickableDataLoader;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 
 #[Group('Rebrickable')]
 final class RebrickableDataLoaderTest extends TestCase
@@ -34,11 +33,11 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($externalSetId, $this->anything())
             ->willReturn($expectedSet);
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->never())
-            ->method('request');
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->never())
+            ->method('fetchFromApi');
 
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $set = $loader->getSet($externalSetId);
 
@@ -62,29 +61,12 @@ final class RebrickableDataLoaderTest extends TestCase
             }))
             ->willReturn($externalSet);
 
-        $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())
-            ->method('toArray')
-            ->willReturn(
-                ['set_num' => '1-1', 'name' => 'BaseSet 1', 'num_parts' => 10, 'year' => 2008]
-            );
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->once())
+            ->method('fetchFromApi')
+            ->willreturn(['set_num' => '1-1', 'name' => 'BaseSet 1', 'num_parts' => 10, 'year' => 2008]);
 
-        $expectedOptions = [
-            'headers' => [
-                'Authorization' => 'key FAKE_API_KEY',
-            ],
-        ];
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                $this->stringContains('sets/75353-1'),
-                $expectedOptions
-            )
-            ->willReturn($response);
-
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $set = $loader->getSet($externalSetId);
         self::assertSame($externalSet, $set);
@@ -107,11 +89,11 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($search, $this->anything())
             ->willReturn($expectedSets);
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->never())
-        ->method('request');
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->never())
+            ->method('fetchFromApi');
 
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $sets = $loader->findSets($search);
 
@@ -139,34 +121,17 @@ final class RebrickableDataLoaderTest extends TestCase
             }))
             ->willReturn($externalSets);
 
-        $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())
-            ->method('toArray')
-            ->willReturn(
-                array(
-                    'results' => [
-                        ['set_num' => '1-1', 'name' => 'BaseSet 1', 'num_parts' => 10, 'year' => 2008],
-                        ['set_num' => '2-1', 'name' => 'BaseSet 2', 'num_parts' => 20, 'year' => 2007]
-                    ]
-                )
-            );
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->once())
+            ->method('fetchFromApi')
+            ->willReturn(array(
+                'results' => [
+                    ['set_num' => '1-1', 'name' => 'BaseSet 1', 'num_parts' => 10, 'year' => 2008],
+                    ['set_num' => '2-1', 'name' => 'BaseSet 2', 'num_parts' => 20, 'year' => 2007]
+                ]
+            ));
 
-        $expectedOptions = [
-            'headers' => [
-                'Authorization' => 'key FAKE_API_KEY',
-            ],
-        ];
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                $this->stringContains('sets/'),
-                $expectedOptions
-            )
-            ->willReturn($response);
-
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $sets = $loader->findSets($search);
         self::assertSame($externalSets, $sets);
@@ -189,11 +154,11 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($search, $this->anything())
             ->willReturn($expectedParts);
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->never())
-            ->method('request');
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->never())
+            ->method('fetchFromApi');
 
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $parts = $loader->findParts($search);
 
@@ -238,34 +203,17 @@ final class RebrickableDataLoaderTest extends TestCase
             )
             ->willReturnOnConsecutiveCalls($externalPart1, $externalPart2);
 
-        $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())
-            ->method('toArray')
-            ->willReturn(
-                array(
-                    'results' => [
-                        ['part_num' => '1-1', 'name' => 'Part 1', 'part_img_url' => '', 'external_ids' => ['LEGO' => ['1']]],
-                        ['part_num' => '2-1', 'name' => 'Part 2', 'part_img_url' => '', 'external_ids' => ['LEGO' => ['2']]],
-                    ]
-                )
-            );
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->once())
+            ->method('fetchFromApi')
+            ->willReturn(array(
+                'results' => [
+                    ['part_num' => '1-1', 'name' => 'Part 1', 'part_img_url' => '', 'external_ids' => ['LEGO' => ['1']]],
+                    ['part_num' => '2-1', 'name' => 'Part 2', 'part_img_url' => '', 'external_ids' => ['LEGO' => ['2']]],
+                ]
+            ));
 
-        $expectedOptions = [
-            'headers' => [
-                'Authorization' => 'key FAKE_API_KEY',
-            ],
-        ];
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                $this->stringContains('parts/'),
-                $expectedOptions
-            )
-            ->willReturn($response);
-
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $parts = $loader->findParts($search);
         self::assertSame($externalParts, $parts);
@@ -287,11 +235,11 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($externalPartId, $this->anything())
             ->willReturn($expectedElements);
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->never())
-            ->method('request');
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->never())
+            ->method('fetchFromApi');
 
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $elements = $loader->getPartElements($externalPartId);
 
@@ -335,34 +283,17 @@ final class RebrickableDataLoaderTest extends TestCase
             )
             ->willReturnOnConsecutiveCalls($externalElement1, $externalElement2);
 
-        $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())
-            ->method('toArray')
-            ->willReturn(
-                array(
-                    'results' => [
-                        ["color_id" => 0, "color_name" => "Black", "num_sets" => 26, "num_set_parts" => 56, "part_img_url" => "", "elements" => ["legoId1"]],
-                        ["color_id" => 4, "color_name" => "Red", "num_sets" => 1, "num_set_parts" => 2, "part_img_url" => "", "elements" =>["legoId2"]]
-                    ]
-                )
-            );
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->once())
+            ->method('fetchFromApi')
+            ->willReturn(array(
+                'results' => [
+                    ["color_id" => 0, "color_name" => "Black", "num_sets" => 26, "num_set_parts" => 56, "part_img_url" => "", "elements" => ["legoId1"]],
+                    ["color_id" => 4, "color_name" => "Red", "num_sets" => 1, "num_set_parts" => 2, "part_img_url" => "", "elements" =>["legoId2"]]
+                ]
+            ));
 
-        $expectedOptions = [
-            'headers' => [
-                'Authorization' => 'key FAKE_API_KEY',
-            ],
-        ];
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                $this->stringContains('parts/'),
-                $expectedOptions
-            )
-            ->willReturn($response);
-
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $elements = $loader->getPartElements($externalPartId);
         self::assertSame($externalElements, $elements);
@@ -384,11 +315,11 @@ final class RebrickableDataLoaderTest extends TestCase
             ->with($externalSetId, $this->anything())
             ->willReturn($expectedElements);
 
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->never())
-            ->method('request');
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->never())
+            ->method('fetchFromApi');
 
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $elements = $loader->getSetElements($externalSetId);
 
@@ -487,9 +418,10 @@ final class RebrickableDataLoaderTest extends TestCase
             )
             ->willReturnOnConsecutiveCalls($externalSetElement1->getExternalColor(), $externalSetElement2->getExternalColor());
 
-        $response = $this->createMock(ResponseInterface::class);
-        $response->expects($this->once())
-            ->method('toArray')
+
+        $fetcher = $this->createMock(RebrickableDataFetcher::class);
+        $fetcher->expects($this->once())
+            ->method('fetchFromApi')
             ->willReturn(
                 array(
                     'results' => [
@@ -500,22 +432,9 @@ final class RebrickableDataLoaderTest extends TestCase
                 )
             );
 
-        $expectedOptions = [
-            'headers' => [
-                'Authorization' => 'key FAKE_API_KEY',
-            ],
-        ];
-        $httpClient = $this->createMock(HttpClientInterface::class);
-        $httpClient->expects($this->once())
-            ->method('request')
-            ->with(
-                'GET',
-                $this->stringContains('parts/'),
-                $expectedOptions
-            )
-            ->willReturn($response);
 
-        $loader = new RebrickableDataLoader($cacheManager, $httpClient, 'FAKE_API_KEY');
+
+        $loader = new RebrickableDataLoader($cacheManager, $fetcher);
 
         $elements = $loader->getSetElements($externalSetId);
         self::assertSame($externalSetElements, $elements);

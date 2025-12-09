@@ -19,11 +19,11 @@ interface SetRepository
 
 
     /**
-     * @param EntityId $userId
+     * @param list<EntityId> $setIds
      * @param list<string> $externalIds
      * @return SetCollection
      */
-    public function findByUserAndExternalIds(EntityId $userId, array $externalIds): SetCollection;
+    public function findByIdsAndExternalIds(array $setIds, array $externalIds): SetCollection;
 
     public function findByExternalId(string $externalId): ?Set;
 

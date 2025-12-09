@@ -30,7 +30,7 @@ class DoctrineElement
     #[ORM\Column(type: "string")]
     private readonly string $name;
 
-    #[ORM\Column(type: "string", length: 36)]
+    #[ORM\Column(type: "string")]
     private string $imagePath;
     public function __construct()
     {

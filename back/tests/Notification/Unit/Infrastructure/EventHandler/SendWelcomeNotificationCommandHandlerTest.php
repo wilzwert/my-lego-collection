@@ -2,12 +2,11 @@
 
 namespace App\Tests\Notification\Unit\Infrastructure\EventHandler;
 
+use App\DataFixtures\TestData;
 use App\Notification\Application\Handler\NotificationCommandHandler;
 use App\Notification\Infrastructure\EventHandler\SendWelcomeNotificationCommandHandler;
-use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\SendWelcomeNotificationCommand;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
@@ -37,6 +36,6 @@ class SendWelcomeNotificationCommandHandlerTest extends TestCase
     public function shouldHandleSendWelcomeNotificationCommand(): void
     {
         $this->notificationCommandHandler->expects($this->once())->method('__invoke');
-        ($this->underTest)(new SendWelcomeNotificationCommand(TestData::EXISTING_IDENTITY_USER1_ID, 'validationToken'));
+        ($this->underTest)(new SendWelcomeNotificationCommand(TestData::IDENTITY1_ID, 'validationToken'));
     }
 }

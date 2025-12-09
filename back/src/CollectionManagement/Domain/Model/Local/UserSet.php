@@ -2,6 +2,8 @@
 
 namespace App\CollectionManagement\Domain\Model\Local;
 
+use App\CollectionManagement\Domain\Event\SetCompletedEvent;
+use App\CollectionManagement\Domain\Event\UserSetCompletedEvent;
 use App\CollectionManagement\Domain\Event\UserSetCreatedEvent;
 use App\Shared\Domain\Event\DomainEvent;
 use App\Shared\Domain\Model\EntityId;
@@ -26,30 +28,32 @@ class UserSet implements ProducesDomainEvents
     public function __construct(
         private readonly EntityId              $id,
         private readonly EntityId              $userId,
-        private readonly Set                   $set,
+        private readonly EntityId                   $setId,
         private readonly \DateTimeImmutable $createdAt,
         private readonly UserSetCreationStatus $creationStatus,
-        private readonly ?UserSetStatus        $status = null,
-        private readonly ?\DateTimeImmutable $statusDate = null
+        private readonly UserSetStatus        $status,
+        private readonly \DateTimeImmutable $statusDate
     ) {
     }
 
-    public static function create(EntityId $userId, Set $set): self
+    public static function create(EntityId $userId, EntityId $setId, UserSetStatus $status): self
     {
         $new = new self(
             EntityId::generate(),
             $userId,
-            $set,
+            $setId,
             new \DateTimeImmutable(),
-            UserSetCreationStatus::CREATED
+            UserSetCreationStatus::CREATED,
+            $status,
+            new \DateTimeImmutable()
         );
         $new->events = [new  UserSetCreatedEvent($new)];
         return $new;
     }
 
-    public function getSet(): Set
+    public function getSetId(): EntityId
     {
-        return $this->set;
+        return $this->setId;
     }
 
     public function getId(): EntityId
@@ -80,6 +84,21 @@ class UserSet implements ProducesDomainEvents
     public function getStatusDate(): ?\DateTimeImmutable
     {
         return $this->statusDate;
+    }
+
+    public function complete(): self
+    {
+        $new = new self(
+            $this->id,
+            $this->userId,
+            $this->setId,
+            $this->createdAt,
+            UserSetCreationStatus::COMPLETED,
+            $this->status,
+            $this->statusDate
+        );
+        $new->events = [new UserSetCompletedEvent($new)];
+        return $new;
     }
 
     /**

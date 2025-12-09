@@ -5,10 +5,10 @@ namespace App\Tests\Auth\Unit\Application\Handler;
 use App\Auth\Application\Handler\UserCreatedHandler;
 use App\Auth\Domain\Port\Driven\IdentityRepository;
 use App\Auth\Domain\Service\IdentityService;
+use App\DataFixtures\TestData;
 use App\Shared\Domain\Port\Driven\EventBus;
 use App\Shared\Domain\Port\Driven\TransactionProvider;
 use App\Tests\Auth\Utilities\AuthTestsUtility;
-use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Event\UserCreatedIntegrationEvent;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -88,7 +88,7 @@ class UserCreatedHandlerTest extends TestCase
                 return true;
             }));
 
-        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::EXISTING_USER1_ID, $identityIdAsString));
+        ($this->underTest)(new UserCreatedIntegrationEvent(TestData::USER1_ID, $identityIdAsString));
 
         self::assertSame(true, $savedIdentity->isComplete());
         self::assertSame($completedIdentity, $savedIdentity);

@@ -4,21 +4,12 @@ namespace App\Tests\Notification\Integration\Application;
 
 use App\Notification\Application\Handler\NotificationCommandHandler;
 use App\Notification\Domain\Model\NotificationLog;
-use App\Notification\Domain\Model\NotificationStatus;
 use App\Notification\Domain\Port\Driven\NotificationLogRepository;
-use App\Notification\Infrastructure\Adapter\NotificationDispatcherAdapter;
-use App\Notification\Infrastructure\Persistence\Doctrine\Entity\DoctrineNotificationLog;
-use App\Notification\Infrastructure\Sender\EmailSender;
-use App\Notification\Infrastructure\Sender\SmsSender;
 use App\Shared\Domain\Exception\EntityNotFoundException;
-use App\Shared\Domain\Model\EntityId;
-use App\Tests\Notification\Integration\Infrastructure\Sender\ErrorSender;
 use App\Tests\Notification\Utilities\NotificationTestsUtility;
-use App\Tests\Utilities\TestData;
 use MyLegoCollection\SharedContracts\Command\Command;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Notifier\Message\SmsMessage;
 
 /**
  * @author Wilhelm Zwertvaegher

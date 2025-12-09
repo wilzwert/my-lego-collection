@@ -2,15 +2,14 @@
 
 namespace App\Tests\CollectionManagement\Unit\Domain\Service;
 
+use App\CollectionManagement\Application\Service\FindSetsService;
 use App\CollectionManagement\Domain\Model\EnrichedSet;
 use App\CollectionManagement\Domain\Model\EnrichedSetCollection;
 use App\CollectionManagement\Domain\Model\External\ExternalSet;
-use App\CollectionManagement\Domain\Model\Local\Set;
-use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Model\SetCollection;
 use App\CollectionManagement\Domain\Model\UserSetCollection;
+use App\CollectionManagement\Domain\Port\Driven\SetRepository;
 use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
-use App\CollectionManagement\Domain\Service\DefaultSetService;
 use App\CollectionManagement\Domain\Service\LegoDataProvider;
 use App\Shared\Domain\Model\EntityId;
 use App\Tests\CollectionManagement\Utilities\CollectionManagementTestsUtility;
@@ -44,8 +43,11 @@ final class DefaultSetServiceTest extends TestCase
             ->willReturn($setsCollection);
 
         $userSetRepository = $this->createStub(UserSetRepository::class);
+        $setRepository = $this->createStub(SetRepository::class);
 
-        $service = new DefaultSetService($legoDataProvider, $userSetRepository);
+
+
+        $service = new FindSetsService($legoDataProvider, $setRepository, $userSetRepository);
 
         $result = $service->findSets('space', null);
 
@@ -88,11 +90,17 @@ final class DefaultSetServiceTest extends TestCase
         $userSetRepository = $this->createMock(UserSetRepository::class);
         $userSetRepository
             ->expects($this->once())
-            ->method('findByUserAndExternalIds')
-            ->with($userId, ['externalId1', 'externalId2'])
+            ->method('findByUserId')
+            ->with($userId)
             ->willReturn($userSetCollection);
 
-        $service = new DefaultSetService($legoDataProvider, $userSetRepository);
+        $setRepository = $this->createMock(SetRepository::class);
+        $setRepository->expects($this->once())
+            ->method('findByIdsAndExternalIds')
+            ->with([$localSetId], ['externalId1', 'externalId2'])
+            ->willReturn(new SetCollection([$localSet]));
+
+        $service = new FindSetsService($legoDataProvider, $setRepository, $userSetRepository);
 
         $result = $service->findSets('castle', $userId);
 
@@ -105,6 +113,6 @@ final class DefaultSetServiceTest extends TestCase
         self::assertSame('externalId2', $items[1]->getSet()->getExternalId());
         self::assertSame($userSet, $items[1]->getUserSet());
         self::assertSame($userSetId, $items[1]->getUserSet()->getId()->value());
-        self::assertSame($localSetId, $items[1]->getUserSet()->getSet()->getId()->value());
+        self::assertSame($localSetId, $items[1]->getUserSet()->getSetId()->value());
     }
 }

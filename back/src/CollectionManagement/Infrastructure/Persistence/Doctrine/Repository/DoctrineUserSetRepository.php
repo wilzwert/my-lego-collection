@@ -5,11 +5,13 @@ namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Repositor
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Model\Local\UserSetCreationStatus;
+use App\CollectionManagement\Domain\Model\Local\UserSetStatus;
 use App\CollectionManagement\Domain\Model\UserSetCollection;
 use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSet;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineUserSet;
 use App\Shared\Domain\Model\EntityId;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
@@ -17,47 +19,55 @@ use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
 /**
  * @author W.Zwertvaegher
- * @extends ServiceEntityRepository<UserSet>
+ * @extends ExtendedServiceEntityRepository<DoctrineUserSet, UserSet>
  */
 #[Autoconfigure]
-class DoctrineUserSetRepository extends ServiceEntityRepository implements UserSetRepository
+class DoctrineUserSetRepository extends ExtendedServiceEntityRepository implements UserSetRepository
 {
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrineUserSet::class);
+        parent::__construct($managerRegistry, DoctrineUserSet::class, $entityManager);
     }
 
-    public function findByUserAndExternalIds(EntityId $userId, array $externalIds): UserSetCollection
+    /**
+     * @param EntityId $id
+     * @return UserSet|null
+     */
+    #[\Override]
+    public function findById(EntityId $id): ?UserSet
     {
-        return new UserSetCollection(
-            array_map(
-                fn (DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
-                $this->createQueryBuilder('us')
-                    ->join('us.set', 's')
-                    ->where('us.user = :userId')
-                    ->andWhere('s.externalId IN (:externalIds)')
-                    ->setParameter('userId', $userId)
-                    ->setParameter('externalIds', $externalIds)
-                    ->getQuery()
-                    ->getResult()
-            )
-        );
+        return parent::find($id->value())?->toDomain();
     }
 
-    public function findIncompleteBySet(Set $set): UserSetCollection
+    #[\Override]
+    public function findByUserId(EntityId $userId): UserSetCollection
     {
         return new UserSetCollection(
             array_map(
                 fn (DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
-                parent::findBy(['creationStatus' => UserSetCreationStatus::CREATED, 'set' => $set])
+                parent::findBy(['userId' => $userId->value()])
             )
         );
     }
 
+    #[\Override]
+    public function findIncompleteOwnedBySetId(EntityId $setId): UserSetCollection
+    {
+        return new UserSetCollection(
+            array_map(
+                fn (DoctrineUserSet $doctrineUserSet): UserSet => $doctrineUserSet->toDomain(),
+                parent::findBy([
+                    'status' => [UserSetStatus::OWNED, UserSetStatus::BUILT],
+                    'creationStatus' => UserSetCreationStatus::CREATED,
+                    'setId' => $setId
+                ])
+            )
+        );
+    }
+
+    #[\Override]
     public function save(UserSet $userSet): void
     {
-        $doctrineUserSet = $this->find($userSet->getId()) ?? new DoctrineUserSet();
-        $doctrineUserSet->fromDomain($userSet, $this->entityManager->find(DoctrineSet::class, $userSet->getSet()->getId()));
-        $this->entityManager->persist($doctrineUserSet);
+        parent::attachAndSave($userSet);
     }
 }

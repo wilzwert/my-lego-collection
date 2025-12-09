@@ -39,7 +39,7 @@ class UserSetCollectionTest extends TestCase
         self::assertInstanceOf(UserSet::class, $collection->get(1));
         self::assertInstanceOf(UserSet::class, $collection->get(2));
         self::assertNull($collection->get(3));
-        self::assertEquals($localSet1, $collection->get(0)->getSet());
+        self::assertEquals($localSet1->getId(), $collection->get(0)->getSetId());
         self::assertEquals(EntityId::fromString(self::$uuids['userSetId1']), $collection->get(0)->getId());
     }
 

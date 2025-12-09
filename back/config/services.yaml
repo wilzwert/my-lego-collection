@@ -57,6 +57,13 @@ when@test:
         public_upload_dir: '%kernel.project_dir%/var/test/upload'
 
     services:
+        App\Tests\Utilities\DummySyncDomainEventHandler:
+            public: true
+            tags:
+                - { name: 'messenger.message_handler', bus: auth.bus }
+                - { name: 'messenger.message_handler', bus: user.bus }
+                - { name: 'messenger.message_handler', bus: collection_management.bus }
+
         App\Tests\Utilities\DummySyncIntegrationEventHandler:
             public: true
             tags:

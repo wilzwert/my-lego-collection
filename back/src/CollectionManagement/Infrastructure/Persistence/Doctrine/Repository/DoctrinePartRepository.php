@@ -6,20 +6,20 @@ use App\CollectionManagement\Domain\Model\Local\Part;
 use App\CollectionManagement\Domain\Port\Driven\PartRepository;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrinePart;
 use App\Shared\Domain\Model\EntityId;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @author Wilhelm Zwertvaegher
- * @extends ServiceEntityRepository<DoctrinePart>
+ * @extends ExtendedServiceEntityRepository<DoctrinePart, Part>
  */
-class DoctrinePartRepository extends ServiceEntityRepository implements PartRepository
+class DoctrinePartRepository extends ExtendedServiceEntityRepository implements PartRepository
 {
 
-    public function __construct(ManagerRegistry $managerRegistry, private readonly EntityManagerInterface $entityManager)
+    public function __construct(ManagerRegistry $managerRegistry, EntityManagerInterface $entityManager)
     {
-        parent::__construct($managerRegistry, DoctrinePart::class);
+        parent::__construct($managerRegistry, DoctrinePart::class, $entityManager);
     }
 
     public function findById(EntityId $id): ?Part
@@ -30,17 +30,12 @@ class DoctrinePartRepository extends ServiceEntityRepository implements PartRepo
 
     public function findByExternalIds(array $externalIds): array
     {
-        return array_map(
-            fn (DoctrinePart $part) => $part->toDomain(),
-            parent::findBy(['externalId' => $externalIds])
-        );
+        return $this->mapToDomain(parent::findBy(['externalId' => $externalIds]));
     }
 
     public function save(Part $part): void
     {
-        $doctrinePart = $this->find($part->getId()) ?? new DoctrinePart();
-        $doctrinePart->fromDomain($part);
-        $this->entityManager->persist($doctrinePart);
+        parent::attachAndSave($part);
     }
 
     public function saveAll(array $parts): void
