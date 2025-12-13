@@ -8,6 +8,7 @@ use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\Doctrine
 use App\Shared\Domain\Model\EntityId;
 use App\Shared\Infrastructure\Persistence\Doctrine\Repository\ExtendedServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Exception\ORMException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -27,6 +28,13 @@ class DoctrineUserElementRepository extends ExtendedServiceEntityRepository impl
         parent::attachAndSave($setElement);
     }
 
+    /**
+     * Saves all the user elements
+     * TODO : this should be optimized in the future because now it may trigger hundreds of requests (updates and inserts)
+     * @param array<UserElement> $userElements
+     * @return void
+     * @throws ORMException
+     */
     public function saveAll(array $userElements): void
     {
         parent::attachAndSaveAll($userElements);
@@ -54,6 +62,24 @@ class DoctrineUserElementRepository extends ExtendedServiceEntityRepository impl
             ->from(DoctrineUserElement::class, 'u')
             ->where($qb->expr()->in('u.elementId', ':ids'))
             ->setParameter('ids', $elementsIds);
+
+        return $this->mapToDomain($qb->getQuery()->getResult());
+    }
+
+    /**
+     * @param EntityId $userId
+     * @param array<EntityId> $elementIds
+     * @return array<UserElement>
+     */
+    public function findByUserIdAndElementsIds(EntityId $userId, array $elementsIds): array
+    {
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select('u')
+            ->from(DoctrineUserElement::class, 'u')
+            ->where($qb->expr()->in('u.userId', ':id'))
+            ->andWhere($qb->expr()->in('u.elementId', ':ids'))
+            ->setParameter('id', $userId->value())
+            ->setParameter('ids',$elementsIds);
 
         return $this->mapToDomain($qb->getQuery()->getResult());
     }

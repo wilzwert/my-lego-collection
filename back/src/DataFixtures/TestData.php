@@ -45,10 +45,13 @@ class TestData
      * CollectionManagement module
      */
     public const string COMPLETE_SET_ID = '1d160302-39c3-40d9-8c98-5f9162d2fb9d';
+    public const string COMPLETE_SET2_ID = 'dea7b522-797c-4e1e-bd14-18538dc5dfa6';
     public const string INCOMPLETE_SET_ID = '651e2efe-700e-4e97-bfa6-1098c2aa1e78';
 
     public const string COMPLETE_USER1_SET_ID = 'ca5ccec5-1221-484d-b6ec-7dc92c96d90e';
     public const string INCOMPLETE_USER1_SET_ID = 'da448cf3-be1e-4213-8c8c-6273f6547be1';
     public const string INCOMPLETE_USER2_SET_ID = 'b5bb8902-de10-4524-89d0-c17c77eb93fc';
+
+    public const string WANTED_USER2_SET_ID = '24864624-1746-42c0-8545-48d9629772bf';
 
 }

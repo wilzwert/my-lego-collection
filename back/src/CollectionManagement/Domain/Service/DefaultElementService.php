@@ -35,8 +35,8 @@ readonly class DefaultElementService implements ElementService
         foreach ($elementsExternalIdsToCreate as $externalId) {
             $externalElement = $externalElements[$externalId];
             $localElements[$externalElement->getExternalId()] = Element::create(
-                $colors[$externalElement->getExternalColorId()]->getId(),
                 $parts[$externalElement->getExternalPartId()]->getId(),
+                $colors[$externalElement->getExternalColorId()]->getId(),
                 $externalElement->getExternalId(),
                 $parts[$externalElement->getExternalPartId()]->getName().' - '.$colors[$externalElement->getExternalColorId()]->getName(),
                 $externalElement->getImagePath()

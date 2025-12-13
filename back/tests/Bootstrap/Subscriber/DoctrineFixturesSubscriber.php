@@ -43,7 +43,7 @@ readonly class DoctrineFixturesSubscriber implements ExecutionStartedSubscriber
             fwrite(STDOUT, 'Creating database' . PHP_EOL);
             $this->runSymfonyCommand('doctrine:database:create --env=test --if-not-exists', $env);
             fwrite(STDOUT, 'Creating schema' . PHP_EOL);
-            $this->runSymfonyCommand('doctrine:schema:create --env=test --no-interaction', $env);
+            $this->runSymfonyCommand('doctrine:migrations:migrate --env=test --no-interaction', $env);
             fwrite(STDOUT, 'Loading fixtures' . PHP_EOL);
             $this->runSymfonyCommand('doctrine:fixtures:load --env=test --no-interaction', $env);
         }

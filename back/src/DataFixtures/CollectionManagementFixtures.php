@@ -12,6 +12,7 @@ use App\CollectionManagement\Domain\Model\Local\Part;
 use App\CollectionManagement\Domain\Model\Local\Set;
 use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
 use App\CollectionManagement\Domain\Model\Local\SetElement;
+use App\CollectionManagement\Domain\Model\Local\UserElement;
 use App\CollectionManagement\Domain\Model\Local\UserSet;
 use App\CollectionManagement\Domain\Model\Local\UserSetCreationStatus;
 use App\CollectionManagement\Domain\Model\Local\UserSetStatus;
@@ -20,16 +21,18 @@ use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\Doctrine
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrinePart;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSet;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineSetElement;
+use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineUserElement;
 use App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity\DoctrineUserSet;
 use App\Shared\Domain\Model\EntityId;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use PHPUnit\TextUI\TestDirectoryNotFoundException;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
-class CollectionManagementFixtures extends Fixture
+class CollectionManagementFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
@@ -55,6 +58,10 @@ class CollectionManagementFixtures extends Fixture
             '84210pr0002' => new ExternalPart('84210pr0002', '110433', 'Duplo Animal Penguin, Baby with Light Bluish Grey Back, Black Beak Print', 'https://cdn.rebrickable.com/media/parts/elements/6520533.jpg'),
             '110432pr0001' => new ExternalPart('110432pr0001', '110432', 'Duplo Animal Penguin Large with White/Yellow Chest Print', 'https://cdn.rebrickable.com/media/parts/elements/6520531.jpg'),
             '35114' => new ExternalPart('35114', '35114', 'Duplo Brick 3 x 2 Slope 33°', 'https://cdn.rebrickable.com/media/parts/elements/6294369.jpg'),
+
+            // for elements of set2
+            '666' => new ExternalPart('666', '666', 'Fake great brick 666', 'https://cdn.rebrickable.com/media/parts/elements/666.jpg'),
+            '999' => new ExternalPart('999', '999', 'Fake awesome brick 999', 'https://cdn.rebrickable.com/media/parts/elements/999.jpg'),
         ];
 
         $elements = [
@@ -68,20 +75,10 @@ class CollectionManagementFixtures extends Fixture
             '6520533' => new ExternalElement('6520533', '6520533', '84210pr0002', 'https://cdn.rebrickable.com/media/parts/elements/6520533.jpg', '15'),
             '6520531' => new ExternalElement('6520531', '6520531', '110432pr0001', 'https://cdn.rebrickable.com/media/parts/elements/6520531.jpg', '15'),
             '6526715' => new ExternalElement('6526715', '6526715', '35114', 'https://cdn.rebrickable.com/media/parts/elements/6294369.jpg', '15'),
-        ];
 
-        $externalSetId = '10442-1';
-        $setElements = [
-            new ExternalSetElement($externalSetId, $elements['4583789'], $parts['3437'], $colors['10'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6520565'], $parts['53920pr0003'], $colors['191'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6520567'], $parts['109575pr0002'], $colors['191'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6486219'], $parts['98233'], $colors['226'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6421351'], $parts['3118'], $colors['27'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6211342'], $parts['40666'], $colors['322'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6507900'], $parts['3437'], $colors['41'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6520533'], $parts['84210pr0002'], $colors['15'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6520531'], $parts['110432pr0001'], $colors['15'], 1, 0),
-            new ExternalSetElement($externalSetId, $elements['6526715'], $parts['35114'], $colors['15'], 1, 0),
+            // fake elements for set2
+            '666666' => new ExternalElement('666666', '666666', '666', 'https://cdn.rebrickable.com/media/parts/elements/666666.jpg', '15'),
+            '999999' => new ExternalElement('999999', '999999', '999', 'https://cdn.rebrickable.com/media/parts/elements/999999.jpg', '10'),
         ];
 
         $doctrineColors = $doctrineParts  = $doctrineElements = [];
@@ -121,13 +118,27 @@ class CollectionManagementFixtures extends Fixture
                 $doctrinePart->getName().' - '.$doctrineColor->getName(),
                 $externalElement->getImagePath()
             ));
-            $manager->persist($doctrinePart);
+            $manager->persist($doctrineElement);
             $doctrineElements[$externalElementId] = $doctrineElement;
         }
 
         // - a complete Set with some SetElements, to check that :
         //      - a CompleteSetCommand on the Set does nothing,
         //      - UserSet creation for this Set for User2 dispatches the CompleteUserSetCommand
+
+        $externalSetId = '10442-1';
+        $setElements = [
+            new ExternalSetElement($externalSetId, $elements['4583789'], $parts['3437'], $colors['10'], 4, 1),
+            new ExternalSetElement($externalSetId, $elements['6520565'], $parts['53920pr0003'], $colors['191'], 2, 0),
+            new ExternalSetElement($externalSetId, $elements['6520567'], $parts['109575pr0002'], $colors['191'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6486219'], $parts['98233'], $colors['226'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6421351'], $parts['3118'], $colors['27'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6211342'], $parts['40666'], $colors['322'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6507900'], $parts['3437'], $colors['41'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6520533'], $parts['84210pr0002'], $colors['15'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6520531'], $parts['110432pr0001'], $colors['15'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['6526715'], $parts['35114'], $colors['15'], 1, 0),
+        ];
         $doctrineCompleteSet = new DoctrineSet()->fromDomain(new Set(
             EntityId::fromString(TestData::COMPLETE_SET_ID),
             $externalSetId,
@@ -153,6 +164,39 @@ class CollectionManagementFixtures extends Fixture
             $manager->persist($doctrineSetElement);
         }
 
+        // - a second complete Set with some SetElements, to check that :
+        //      - a CompleteUserSetCommand on a linked wanted UserSet does nothing,
+        //        because the user_elements collection should not be updated for a wanted (i.e. not owned) Set
+        $externalSet2Id = '11111-1';
+        $set2Elements = [
+            new ExternalSetElement($externalSetId, $elements['666666'], $parts['666'], $colors['15'], 1, 0),
+            new ExternalSetElement($externalSetId, $elements['999999'], $parts['999'], $colors['10'], 1, 0),
+        ];
+        $doctrineCompleteSet2 = new DoctrineSet()->fromDomain(new Set(
+            EntityId::fromString(TestData::COMPLETE_SET2_ID),
+            $externalSet2Id,
+            '11111',
+            'Wild Animal Families: Tigers & Cobras',
+            2,
+            'https://cdn.rebrickable.com/media/sets/10442-1/149586.jpg',
+            2025,
+            SetCreationStatus::COMPLETED,
+            new \DateTimeImmutable('2025-11-10T12:00:00'),
+            new \DateTimeImmutable('2025-11-10T13:00:00')
+        ));
+        $manager->persist($doctrineCompleteSet2);
+
+        foreach ($set2Elements as $externalSetElement) {
+            $doctrineSetElement2 = new DoctrineSetElement()->fromDomain(new SetElement(
+                EntityId::generate(),
+                EntityId::fromString($doctrineCompleteSet2->getId()),
+                EntityId::fromString($doctrineElements[$externalSetElement->getExternalElement()->getExternalId()]->getId()),
+                $externalSetElement->getQuantity(),
+                $externalSetElement->getSpareQuantity()
+            ));
+            $manager->persist($doctrineSetElement2);
+        }
+
         // - a complete UserSet for User1 linked to the complete Set to check that
         //      - a CompleteUserSetCommand on the UserSet does nothing
         //      - UserSet creation for the complete Set for User1 does nothing (or throws ?), as it already exists
@@ -165,9 +209,9 @@ class CollectionManagementFixtures extends Fixture
                 UserSetCreationStatus::COMPLETED,
                 UserSetStatus::BUILT,
                 new \DateTimeImmutable('2025-11-12T12:02:00')
-            ),
-            $doctrineCompleteSet
+            )
         );
+
         $manager->persist($doctrineCompleteUserSet);
 
 
@@ -200,8 +244,7 @@ class CollectionManagementFixtures extends Fixture
                 UserSetCreationStatus::CREATED,
                 UserSetStatus::BUILT,
                 new \DateTimeImmutable('2025-11-13T12:00:00'),
-            ),
-            $doctrineIncompleteSet
+            )
         );
         $manager->persist($doctrineCreatedUserSet);
 
@@ -216,12 +259,52 @@ class CollectionManagementFixtures extends Fixture
                 UserSetCreationStatus::CREATED,
                 UserSetStatus::BUILT,
                 new \DateTimeImmutable('2025-11-14T12:00:00')
-            ),
-            $doctrineCompleteSet
+            )
         );
         $manager->persist($doctrineCreatedUserSet);
 
-        // Set creation and UserSet creation will also be tested, mainly to check that a CompleteUserSetCommand is not dispatched when creating a UserSet for an incomplete Set
+        // - a wanted UserSet linked to a complete Set to check that
+        //      - a CompleteUserSetCommand throws an exception because a wanted set's elements should not be added to the user
+        $doctrineWantedUserSet = new DoctrineUserSet()->fromDomain(
+            new UserSet(
+                EntityId::fromString(TestData::WANTED_USER2_SET_ID),
+                EntityId::fromString(TestData::USER2_ID),
+                $doctrineCompleteSet2->toDomain()->getId(),
+                new \DateTimeImmutable('2025-11-14T12:00:00'),
+                UserSetCreationStatus::CREATED,
+                UserSetStatus::WANTED,
+                new \DateTimeImmutable('2025-11-14T12:00:00')
+            )
+        );
+        $manager->persist($doctrineWantedUserSet);
+
+        // create UserElements for user2, to check they are updated on user set completion
+        $userElements = [
+            UserElement::create(
+                EntityId::fromString(TestData::USER2_ID),
+                EntityId::fromString($doctrineElements['4583789']->getId()),
+                8,
+                1
+            ),
+            UserElement::create(
+                EntityId::fromString(TestData::USER2_ID),
+                EntityId::fromString($doctrineElements['6520565']->getId()),
+                5,
+                1
+            )
+        ];
+
+        foreach($userElements as $userElement) {
+            $doctrineUserElement = new DoctrineUserElement()->fromDomain($userElement);
+            $manager->persist($doctrineUserElement);
+        }
+
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        // TODO: Implement getDependencies() method.
+        return [UserFixtures::class];
     }
 }

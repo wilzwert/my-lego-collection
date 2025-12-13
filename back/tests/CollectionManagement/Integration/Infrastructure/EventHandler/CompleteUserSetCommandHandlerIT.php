@@ -6,6 +6,7 @@ use App\CollectionManagement\Domain\Event\UserSetCompletedEvent;
 use App\CollectionManagement\Domain\Model\Local\Element;
 use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
 use App\CollectionManagement\Domain\Model\Local\SetElement;
+use App\CollectionManagement\Domain\Model\Local\UserElement;
 use App\CollectionManagement\Domain\Model\Local\UserSetCreationStatus;
 use App\CollectionManagement\Domain\Port\Driven\ElementRepository;
 use App\CollectionManagement\Domain\Port\Driven\SetElementRepository;
@@ -16,6 +17,7 @@ use App\CollectionManagement\Domain\Port\Driven\UserSetRepository;
 use App\CollectionManagement\Infrastructure\EventHandler\CompleteSetCommandHandler;
 use App\CollectionManagement\Infrastructure\EventHandler\CompleteUserSetCommandHandler;
 use App\DataFixtures\TestData;
+use App\Shared\Domain\Exception\EntityNotFoundException;
 use App\Shared\Domain\Exception\InvalidEntityIdException;
 use App\Shared\Domain\Model\EntityId;
 use App\Tests\Traits\MessengerTestingTrait;
@@ -58,15 +60,65 @@ class CompleteUserSetCommandHandlerIT extends KernelTestCase
 
         $handler = $container->get(CompleteUserSetCommandHandler::class);
 
-
-        self::expectNotToPerformAssertions();
         $handler(new CompleteUserSetCommand(TestData::COMPLETE_USER1_SET_ID));
 
-        // TODO : how to check nothing has been emitted ?
-
+        // no UserSetCompletedEvent should have been dispatched
+        /** @var DummySyncDomainEventHandler $dummyHandler */
+        $dummyHandler = $container->get(DummySyncDomainEventHandler::class);
+        self::assertFalse(
+            $this->handlerHas(
+                $dummyHandler,
+                UserSetCompletedEvent::class,
+                fn (UserSetCompletedEvent $event) => $event->getUserSet()->getId()->value() === TestData::COMPLETE_USER1_SET_ID
+            )
+        );
 
     }
 
+    #[Test]
+    public function whenUserSetIsNotOwned_thenCompleteUserSetCommand_shouldThrowInvalidArgumentException(): void
+    {
+        $container = self::getContainer();
+
+        $handler = $container->get(CompleteUserSetCommandHandler::class);
+
+        self::expectException(\InvalidArgumentException::class);
+        $handler(new CompleteUserSetCommand(TestData::WANTED_USER2_SET_ID));
+
+        // no UserSetCompletedEvent should have been dispatched
+        /** @var DummySyncDomainEventHandler $dummyHandler */
+        $dummyHandler = $container->get(DummySyncDomainEventHandler::class);
+        self::assertFalse(
+            $this->handlerHas(
+                $dummyHandler,
+                UserSetCompletedEvent::class,
+                fn (UserSetCompletedEvent $event) => $event->getUserSet()->getId()->value() === TestData::WANTED_USER2_SET_ID
+            )
+        );
+    }
+
+    #[Test]
+    public function whenUserSetIsNotFound_thenCompleteUserSetCommand_shouldThrowEntityNotFoundException(): void
+    {
+        $container = self::getContainer();
+
+        $handler = $container->get(CompleteUserSetCommandHandler::class);
+
+        self::expectException(EntityNotFoundException::class);
+        $handler(new CompleteUserSetCommand(EntityId::generate()));
+
+        // no UserSetCompletedEvent should have been dispatched
+        /** @var DummySyncDomainEventHandler $dummyHandler */
+        $dummyHandler = $container->get(DummySyncDomainEventHandler::class);
+        self::assertFalse(
+            $this->handlerHas(
+                $dummyHandler,
+                UserSetCompletedEvent::class,
+                fn (UserSetCompletedEvent $event) => $event->getUserSet()->getId()->value() === TestData::COMPLETE_USER1_SET_ID
+            )
+        );
+
+    }
 
     /**
      * Tests that the CompleteUserSetCommand on an incomplete owned UserSet is handled :
@@ -88,6 +140,8 @@ class CompleteUserSetCommandHandlerIT extends KernelTestCase
         $entityManager = $container->get(EntityManagerInterface::class);
         /** @var CompleteUserSetCommandHandler $handler */
         $handler = $container->get(CompleteUserSetCommandHandler::class);
+        /** @var ElementRepository $elementRepository */
+        $elementRepository = $container->get(ElementRepository::class);
         /** @var UserSetRepository $userSetRepository */
         $userSetRepository = $container->get(UserSetRepository::class);
         /** @var SetElementRepository $setElementRepository */
@@ -118,17 +172,45 @@ class CompleteUserSetCommandHandlerIT extends KernelTestCase
             $userSetElementsByElementId[$userSetElement->getElementId()->value()] = $userSetElement;
         }
         // compare UserSetElements count and spareCount with related SetElements
-        $setElements = $setElementRepository->findBySetId($userSet->getId());
+        $setElements = $setElementRepository->findBySetId($userSet->getSetId());
         foreach ($setElements as $setElement) {
-            self::assertEquals($setElement->getCount(), $userSetElementsByElementId[$setElement->getId()->value()]->getCount());
-            self::assertEquals($setElement->getSpareCount(), $userSetElementsByElementId[$setElement->getId()->value()]->getSpareCount());
+            self::assertEquals($setElement->getCount(), $userSetElementsByElementId[$setElement->getElementId()->value()]->getCount());
+            self::assertEquals($setElement->getSpareCount(), $userSetElementsByElementId[$setElement->getElementId()->value()]->getSpareCount());
         }
 
         // check user_elements have been created/updated
         $userElements = $userElementRepository->findByUserId($userSet->getUserId());
         self::assertCount(10, $userElements);
 
-        // check UserSetCompletedEvent has been dispatched
+        // we will need to be able to access UserSetElements by their related element's externalId for checks
+        $elements = $elementRepository->findByIds(array_map(fn (UserElement $userElement) => $userElement->getElementId(), $userElements));
+        $elementsExternalIds = [];
+        // we will need to be able to access elements by their id and externalId
+        foreach ($elements as $element) {
+            $elementsExternalIds[$element->getId()->value()] = $element->getExternalId();
+        }
+
+        $userElementsExpectations = [
+            '4583789' => ['setCount' => 12, 'spareCount' => 2],
+            '6520565' => ['setCount' => 7, 'spareCount' => 1],
+            '6520567' => ['setCount' => 1, 'spareCount' => 0],
+            '6486219' => ['setCount' => 1, 'spareCount' => 0],
+            '6421351' => ['setCount' => 1, 'spareCount' => 0],
+            '6211342' => ['setCount' => 1, 'spareCount' => 0],
+            '6507900' => ['setCount' => 1, 'spareCount' => 0],
+            '6520533' => ['setCount' => 1, 'spareCount' => 0],
+            '6520531' => ['setCount' => 1, 'spareCount' => 0],
+            '6526715' => ['setCount' => 1, 'spareCount' => 0],
+        ];
+
+        foreach ($userElements as $userElement) {
+            $externalId = $elementsExternalIds[$userElement->getElementId()->value()];
+            $expectation = $userElementsExpectations[$externalId];
+            self::assertEquals($expectation['setCount'], $userElement->getSetCount());
+            self::assertEquals($expectation['spareCount'], $userElement->getSpareCount());
+        }
+
+        // check UserSetCompletedEvent has been synchronously dispatched
         self::assertTrue(
             $this->handlerHas(
                 $dummyHandler,

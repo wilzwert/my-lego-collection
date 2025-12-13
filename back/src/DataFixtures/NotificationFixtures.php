@@ -8,12 +8,13 @@ use App\Notification\Domain\Model\NotificationType;
 use App\Notification\Infrastructure\Persistence\Doctrine\Entity\DoctrineNotificationLog;
 use App\Shared\Domain\Model\EntityId;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
  * @codeCoverageIgnore
  */
-class NotificationFixtures extends Fixture
+class NotificationFixtures extends Fixture implements DependentFixtureInterface
 {
 
     public function load(ObjectManager $manager): void
@@ -35,5 +36,10 @@ class NotificationFixtures extends Fixture
 
         $manager->persist($notificationLog);
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [UserFixtures::class];
     }
 }

@@ -97,6 +97,7 @@
         ],
         "php-cs-fixer": "php-cs-fixer --rules=@symfony",
         "test": [
+            "Composer\\Config::disableProcessTimeout",
             "XDEBUG_MODE=coverage vendor/bin/phpunit",
             "vendor/bin/coverage-check coverage/clover.xml 80"
         ]

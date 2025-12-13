@@ -2,16 +2,25 @@
 
 namespace App\Tests\CollectionManagement\Unit\Infrastructure\Service;
 
+use App\CollectionManagement\Infrastructure\Service\RebrickableDataFetcher;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /**
  * @author Wilhelm Zwertvaegher
  */
-class RebrickableDataFetcherTest
+class RebrickableDataFetcherTest extends TestCase
 {
-    // TODO
-    public function todo(): void
+    #[Test]
+    public function shouldReturnResponseAsArray(): void
     {
+        $response = $this->createMock(ResponseInterface::class);
+        $response->expects($this->once())->method('toArray')->willReturn(
+            ['results' => ['id' => '123456']]
+        );
+
         $expectedOptions = [
             'headers' => [
                 'Authorization' => 'key FAKE_API_KEY',
@@ -22,10 +31,15 @@ class RebrickableDataFetcherTest
             ->method('request')
             ->with(
                 'GET',
-                $this->stringContains('sets/75353-1'),
+                'https://rebrickable.com/api/v3/lego/sets/75353-1',
                 $expectedOptions
             )
             ->willReturn($response);
+
+        $rebrickableDataFetcher = new RebrickableDataFetcher($httpClient, 'FAKE_API_KEY');
+        $result = $rebrickableDataFetcher->fetchFromApi('sets/75353-1');
+
+        self::assertEquals(['results' => ['id' => '123456']], $result);
     }
 
 }
