@@ -12,12 +12,13 @@ use Doctrine\ORM\Mapping as ORM;
  */
 #[ORM\Entity]
 #[ORM\Table(name: "user_elements")]
+#[ORM\UniqueConstraint(name: "uniq_user_element", columns: ["user_id", "element_id"])]
 class DoctrineUserElement
 {
     #[ORM\Id, ORM\Column(type: "string", length: 36)]
     private string $id;
 
-    #[ORM\Column(type: "string", length: 36, index: true)]
+    #[ORM\Column(type: "string", length: 36)]
     private string $userId;
 
     #[ORM\Column(type: "string", length: 36)]

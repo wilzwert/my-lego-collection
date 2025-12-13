@@ -42,6 +42,7 @@ class DoctrineNotificationLog
     #[ORM\Column(type: 'datetime_immutable')]
     private \DateTimeImmutable $createdAt;
 
+
     public function __construct()
     {
     }

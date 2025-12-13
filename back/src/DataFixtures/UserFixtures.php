@@ -6,12 +6,13 @@ use App\Shared\Domain\Model\EntityId;
 use App\User\Domain\Model\User;
 use App\User\Infrastructure\Persistence\Doctrine\Entity\DoctrineUser;
 use Doctrine\Bundle\FixturesBundle\Fixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
 /**
  * @codeCoverageIgnore
  */
-class UserFixtures extends Fixture
+class UserFixtures extends Fixture implements DependentFixtureInterface
 {
 
     public function load(ObjectManager $manager): void
@@ -41,5 +42,10 @@ class UserFixtures extends Fixture
         $manager->persist($user);
         $manager->persist($user2);
         $manager->flush();
+    }
+
+    public function getDependencies(): array
+    {
+        return [AuthFixtures::class];
     }
 }

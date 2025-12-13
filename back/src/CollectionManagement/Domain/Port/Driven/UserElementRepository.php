@@ -29,8 +29,15 @@ interface UserElementRepository
 
     /**
      * @param array<EntityId> $elementsIds
-     * @return array
+     * @return array<UserElement>
      */
     public function findByElementsIds(array $elementsIds): array;
+
+    /**
+     * @param EntityId $userId
+     * @param array<EntityId> $elementsIds
+     * @return array<UserElement>
+     */
+    public function findByUserIdAndElementsIds(EntityId $userId, array $elementsIds): array;
 
 }

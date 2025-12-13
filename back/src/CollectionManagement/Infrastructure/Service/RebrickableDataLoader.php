@@ -189,26 +189,29 @@ class RebrickableDataLoader implements LegoDataLoader
         $spareElements = [];
         $resultSpareElements = array_filter($allElements, fn ($item) => $item['is_spare'] === true);
         foreach ($resultSpareElements as $element) {
-            $spareElements[$element['element_id']] = $element;
+            $spareElements[$element['element_id'] ?? $element['inv_part_id']] = $element;
         }
 
         // build the final result with only non-spare elements, adding the spareQuantity if available in the previously
         // built spare elements list
 
         $finalResults = array_map(
-            fn ($item) => new ExternalSetElement(
-                $setExternalId,
-                $this->loadExternalElement(
-                    $item['element_id'] ?? $item['inv_part_id'],
-                    $item['part']['part_num'],
-                    'https://cdn.rebrickable.com/media/parts/elements/'.$item['element_id'].'.jpg',
-                    $item['color']['id']
-                ),
-                $this->loadExternalPart($item['part']),
-                $this->loadExternalColor($item['color']),
-                $item['quantity'],
-                isset($spareElements[$item['element_id']]) ? $spareElements[$item['element_id']]['quantity'] : 0
-            ),
+            function ($item) use ($spareElements, $setExternalId) {
+                $elementId = $item['element_id'] ?? $item['inv_part_id'];
+                return new ExternalSetElement(
+                    $setExternalId,
+                    $this->loadExternalElement(
+                        $elementId,
+                        $item['part']['part_num'],
+                        'https://cdn.rebrickable.com/media/parts/elements/'.$elementId.'.jpg',
+                        $item['color']['id']
+                    ),
+                    $this->loadExternalPart($item['part']),
+                    $this->loadExternalColor($item['color']),
+                    $item['quantity'],
+                    isset($spareElements[$elementId]) ? $spareElements[$elementId]['quantity'] : 0
+                );
+            },
             array_filter($allElements, fn ($item) => $item['is_spare'] === false)
         );
 

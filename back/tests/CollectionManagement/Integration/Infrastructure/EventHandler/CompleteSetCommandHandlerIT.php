@@ -2,7 +2,6 @@
 
 namespace App\Tests\CollectionManagement\Integration\Infrastructure\EventHandler;
 
-use App\CollectionManagement\Domain\Model\Local\Element;
 use App\CollectionManagement\Domain\Model\Local\SetCreationStatus;
 use App\CollectionManagement\Domain\Model\Local\SetElement;
 use App\CollectionManagement\Domain\Port\Driven\ElementRepository;

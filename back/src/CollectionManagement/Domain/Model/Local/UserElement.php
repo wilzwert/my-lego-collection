@@ -56,14 +56,26 @@ class UserElement
         return $this->spareCount;
     }
 
-    public function add(int $setCount, int $spareCount): self
+    public function updateCount(int $setCount, int $spareCount): self
     {
+        if ($setCount === 0 && $spareCount === 0) {
+            return $this;
+        }
+
+        if ($this->setCount + $setCount < 0) {
+            throw new \InvalidArgumentException('resulting setCount cannot be less than 0');
+        }
+
+        if ($this->spareCount + $spareCount < 0) {
+            throw new \InvalidArgumentException('resulting spareCount cannot be less than 0');
+        }
+
         return new self(
             $this->id,
             $this->userId,
             $this->elementId,
-            $setCount,
-            $spareCount
+            $this->setCount + $setCount,
+            $this->spareCount    + $spareCount
         );
     }
 }

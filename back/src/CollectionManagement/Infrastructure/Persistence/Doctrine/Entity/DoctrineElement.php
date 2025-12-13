@@ -2,6 +2,7 @@
 
 namespace App\CollectionManagement\Infrastructure\Persistence\Doctrine\Entity;
 
+use App\CollectionManagement\Domain\Model\Local\Color;
 use App\CollectionManagement\Domain\Model\Local\Element;
 use App\CollectionManagement\Domain\Model\Local\Part;
 use App\Shared\Domain\Model\EntityId;
@@ -26,12 +27,12 @@ class DoctrineElement
     #[ORM\Column(unique: true)]
     private string $externalId;
 
-
     #[ORM\Column(type: "string")]
     private readonly string $name;
 
     #[ORM\Column(type: "string")]
     private string $imagePath;
+
     public function __construct()
     {
     }
