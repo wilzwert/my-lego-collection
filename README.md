@@ -2,7 +2,7 @@
 
 [![Backend CI](https://img.shields.io/github/actions/workflow/status/wilzwert/my-lego-collection/ci_backend.yml?label=Backend%20CI&logo=Github)](https://github.com/wilzwert/my-lego-collection/actions/workflows/ci_backend.yml)
 
-[![Backend coverage](https://img.shields.io/codecov/c/github/wilzwert/my-lego-collection?flag=backend&label=Backend%20coverage&logo=PHP)](https://wilzwert.github.io/my-lego-collection/coverage-backend/)
+[![Backend coverage](https://img.shields.io/codecov/c/github/wilzwert/my-lego-collection/main?flag=backend&label=Backend%20coverage&logo=PHP)](https://wilzwert.github.io/my-lego-collection/backend-coverage/)
 [![Backend Quality Gate Status](https://img.shields.io/sonar/quality_gate/my-lego-collection-backend?server=https%3A%2F%2Fsonarcloud.io&logo=sonarcloud&label=Backend%20quality%20gate)](https://sonarcloud.io/summary/new_code?id=my-lego-collection-backend)
 
 [Backend coverage report](https://wilzwert.github.io/my-lego-collection/backend-coverage/)
@@ -23,11 +23,11 @@ Backend :
 - fetch sets and parts from Rebrickable API with Redis caching
 - user registration
 - authentication (JWT and refresh tokens in cookies)
+- quality control tools (coverage, linting, static analysis)
 
 ## Roadmap
-Backend :
+  Backend :
 - shift to TDD or at least better testing strategy
-- setup quality control tools (coverage, linting, static analysis)
 - add sets and parts to the user's collection
 - browse user's collection (view sets, search for part/elements)
 
@@ -50,6 +50,9 @@ You can use the docker/dev/docker-compose.yml to provide
 Your can run tests (unit and integration) in your docker dev container :
 
 `cd back`
+
+To run tests with code coverage, HTML and XML reports, minimum coverage check (80%) :  
+`composer test:full`
 
 To execute tests with code coverage and HTML report :  
   `XDEBUG_MODE=coverage vendor/bin/phpunit`
